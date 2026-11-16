@@ -1,6 +1,6 @@
 schemaVersion: "1"
 title: FM-005 — Incorrect Optional, Nullable, and Required Field Behavior
-specFile: ./openapi.yaml
+specFile: ../openapi.yaml
 steps:
   - label: "user 1: email is a valid non-null string"
     request:

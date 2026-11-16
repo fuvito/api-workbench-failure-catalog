@@ -1,6 +1,6 @@
 schemaVersion: "1"
 title: FM-016 — Rate-Limit and Throttling Failures
-specFile: ./openapi.yaml
+specFile: ../openapi.yaml
 steps:
   - label: "request 1 — within rate limit"
     request:
