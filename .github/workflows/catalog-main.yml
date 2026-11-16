@@ -25,6 +25,7 @@ jobs:
           - { id: "018", slug: "idempotency",          kind: "server" }
           - { id: "027", slug: "lost-update",          kind: "server" }
           - { id: "002", slug: "datetime-format",      kind: "server" }
+          - { id: "006", slug: "error-schema",         kind: "server" }
           # Keep this matrix in sync with catalog.yml
 
     steps:

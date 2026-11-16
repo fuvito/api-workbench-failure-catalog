@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-006** — Inconsistent Error Response Schema (Easy, port 19006)
+  - Broken server returns different error shapes per endpoint (`message`, `code+msg`, `error`)
+  - Detected by `specFile:` binding — non-conforming error bodies fail against the declared `Error` schema
+
 - **FM-002** — Date/Time Format Failures (Easy, port 19002)
   - Broken server returns `created_at` as a Unix timestamp integer; spec declares `type: string, format: date-time`
   - Detected by `specFile:` binding — integer type mismatch against declared `string` fails automatically

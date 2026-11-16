@@ -1,0 +1,30 @@
+schemaVersion: "1"
+title: FM-006 — Inconsistent Error Response Schema
+specFile: ../openapi.yaml
+steps:
+  - label: "GET /users/999 — 404 error body must match declared Error schema"
+    request:
+      method: GET
+      url: "{{baseUrl}}/users/999"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 404
+
+  - label: "GET /orders/999 — 404 error body must match declared Error schema"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/999"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 404
+
+  - label: "GET /products/999 — 404 error body must match declared Error schema"
+    request:
+      method: GET
+      url: "{{baseUrl}}/products/999"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 404
