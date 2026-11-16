@@ -1,28 +1,32 @@
-name: FM-003 — Pagination Contract Failures
+schemaVersion: "1"
+title: FM-003 — Pagination Contract Failures
 steps:
-  - name: "page 1 of 3 (limit=2, 5 total): has_more must be true"
+  - label: "page 1 of 3 (limit=2, 5 total): has_more must be true"
     request:
       method: GET
-      path: /products?page=1&limit=2
+      url: "{{baseUrl}}/products?page=1&limit=2"
     assertions:
       - type: jsonpath
         path: $.has_more
+        operator: eq
         expected: true
 
-  - name: "page 2 of 3 (limit=2, 5 total): has_more must be true"
+  - label: "page 2 of 3 (limit=2, 5 total): has_more must be true"
     request:
       method: GET
-      path: /products?page=2&limit=2
+      url: "{{baseUrl}}/products?page=2&limit=2"
     assertions:
       - type: jsonpath
         path: $.has_more
+        operator: eq
         expected: true
 
-  - name: "page 3 of 3 (limit=2, 5 total): has_more must be false — no more pages"
+  - label: "page 3 of 3 (limit=2, 5 total): has_more must be false — no more pages"
     request:
       method: GET
-      path: /products?page=3&limit=2
+      url: "{{baseUrl}}/products?page=3&limit=2"
     assertions:
       - type: jsonpath
         path: $.has_more
+        operator: eq
         expected: false

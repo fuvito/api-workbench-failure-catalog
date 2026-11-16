@@ -1,21 +1,17 @@
-name: FM-005 — Incorrect Optional, Nullable, and Required Field Behavior
+schemaVersion: "1"
+title: FM-005 — Incorrect Optional, Nullable, and Required Field Behavior
+specFile: ./openapi.yaml
 steps:
-  - name: user with email — field is a non-null string
+  - label: "user 1: email is a valid non-null string"
     request:
       method: GET
-      path: /users/1
+      url: "{{baseUrl}}/users/1"
     assertions:
       - type: schema
-        path: $.email
-        schema:
-          type: string
 
-  - name: user without email — null violates required non-nullable field
+  - label: "user 2: email must not be null — required field must be a string"
     request:
       method: GET
-      path: /users/2
+      url: "{{baseUrl}}/users/2"
     assertions:
       - type: schema
-        path: $.email
-        schema:
-          type: string

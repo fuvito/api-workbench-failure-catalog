@@ -1,1 +1,4 @@
-baseUrl: http://localhost:19022
+schemaVersion: "1"
+variables:
+  - name: baseUrl
+    value: "http://localhost:19022"

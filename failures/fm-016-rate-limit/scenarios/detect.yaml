@@ -1,23 +1,24 @@
+schemaVersion: "1"
+title: FM-016 — Rate-Limit and Throttling Failures
 specFile: ./openapi.yaml
-name: FM-016 — Rate-Limit and Throttling Failures
 steps:
-  - name: request 1 — within rate limit
+  - label: "request 1 — within rate limit"
     request:
       method: GET
-      path: /items
+      url: "{{baseUrl}}/items"
     assertions:
       - type: schema
 
-  - name: request 2 — within rate limit
+  - label: "request 2 — within rate limit"
     request:
       method: GET
-      path: /items
+      url: "{{baseUrl}}/items"
     assertions:
       - type: schema
 
-  - name: request 3 — limit exceeded, server returns undeclared 429
+  - label: "request 3 — limit exceeded, server returns undeclared 429"
     request:
       method: GET
-      path: /items
+      url: "{{baseUrl}}/items"
     assertions:
       - type: schema

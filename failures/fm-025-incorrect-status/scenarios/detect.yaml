@@ -1,17 +1,20 @@
-name: FM-025 — Incorrect HTTP Status and Business-Error Semantics
+schemaVersion: "1"
+title: FM-025 — Incorrect HTTP Status and Business-Error Semantics
 steps:
-  - name: existing product returns 200
+  - label: "existing product returns 200"
     request:
       method: GET
-      path: /products/1
+      url: "{{baseUrl}}/products/1"
     assertions:
       - type: status
+        operator: eq
         expected: 200
 
-  - name: missing product must return 404
+  - label: "missing product must return 404"
     request:
       method: GET
-      path: /products/9999
+      url: "{{baseUrl}}/products/9999"
     assertions:
       - type: status
+        operator: eq
         expected: 404
