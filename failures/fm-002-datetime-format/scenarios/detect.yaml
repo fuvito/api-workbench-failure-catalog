@@ -1,0 +1,15 @@
+schemaVersion: "1"
+title: FM-002 — Date/Time Format Failures
+specFile: ../openapi.yaml
+steps:
+  - label: "event 1 — created_at and scheduled_for must be strings, not integers"
+    request:
+      method: GET
+      url: "{{baseUrl}}/events/1"
+    assertions: []
+
+  - label: "event 2 — created_at and scheduled_for must be strings, not integers"
+    request:
+      method: GET
+      url: "{{baseUrl}}/events/2"
+    assertions: []

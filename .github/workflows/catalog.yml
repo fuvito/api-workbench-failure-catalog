@@ -28,6 +28,7 @@ jobs:
           - { id: "003", slug: "pagination-contract",  kind: "server" }
           - { id: "018", slug: "idempotency",          kind: "server" }
           - { id: "027", slug: "lost-update",          kind: "server" }
+          - { id: "002", slug: "datetime-format",      kind: "server" }
           # Add entries here as sub-projects land — see docs/TASKS.md §7.4
 
     steps:

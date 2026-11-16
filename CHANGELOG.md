@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-002** — Date/Time Format Failures (Easy, port 19002)
+  - Broken server returns `created_at` as a Unix timestamp integer; spec declares `type: string, format: date-time`
+  - Detected by `specFile:` binding — integer type mismatch against declared `string` fails automatically
+
 - **FM-027** — Concurrent Update and Lost-Update Failures (Hard, port 19027)
   - Broken server ignores `version` field on PUT; stale writes silently overwrite current data
   - Detected by a 3-step scenario; step 3 (stale PUT) expects 409, broken returns 200

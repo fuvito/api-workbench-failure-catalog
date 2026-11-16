@@ -24,6 +24,7 @@ jobs:
           - { id: "003", slug: "pagination-contract",  kind: "server" }
           - { id: "018", slug: "idempotency",          kind: "server" }
           - { id: "027", slug: "lost-update",          kind: "server" }
+          - { id: "002", slug: "datetime-format",      kind: "server" }
           # Keep this matrix in sync with catalog.yml
 
     steps:

@@ -1,0 +1,51 @@
+openapi: "3.0.3"
+info:
+  title: FM-002 Date/Time Format
+  version: "1.0.0"
+paths:
+  /events/{id}:
+    get:
+      summary: Get event by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Event:
+      type: object
+      required: [id, name, created_at, scheduled_for]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp
+        scheduled_for:
+          type: string
+          format: date
+          description: ISO 8601 date (YYYY-MM-DD)
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
