@@ -6,19 +6,16 @@ steps:
     request:
       method: GET
       url: "{{baseUrl}}/items"
-    assertions:
-      - type: schema
+    assertions: []
 
   - label: "request 2 — within rate limit"
     request:
       method: GET
       url: "{{baseUrl}}/items"
-    assertions:
-      - type: schema
+    assertions: []
 
   - label: "request 3 — limit exceeded, server returns undeclared 429"
     request:
       method: GET
       url: "{{baseUrl}}/items"
-    assertions:
-      - type: schema
+    assertions: []

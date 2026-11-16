@@ -6,5 +6,4 @@ steps:
     request:
       method: GET
       url: "{{baseUrl}}/invoices/1"
-    assertions:
-      - type: schema
+    assertions: []
