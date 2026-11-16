@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-029** — Boolean Field Type Confusion (Easy, port 19029)
+  - Broken server returns booleans as strings (`"true"`) or integers (`1`/`0`) instead of JSON booleans
+  - Detected by `specFile:` binding — string/integer types do not satisfy `type: boolean`
+
 - **FM-023** — Empty Collection vs Null (Easy, port 19023)
   - Broken server returns `null` for empty arrays; Go nil slices marshal to null instead of `[]`
   - Detected by `specFile:` binding — `null` does not satisfy `type: array` in OpenAPI 3.0
