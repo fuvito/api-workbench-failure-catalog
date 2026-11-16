@@ -1,0 +1,77 @@
+openapi: "3.0.3"
+info:
+  title: FM-007 Authentication Error Code Confusion
+  version: "1.0.0"
+paths:
+  /login:
+    post:
+      summary: Authenticate with username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /profile:
+    get:
+      summary: Get current user profile (requires Authorization header)
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        "401":
+          description: Missing or invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Token:
+      type: object
+      required: [token]
+      properties:
+        token:
+          type: string
+    Profile:
+      type: object
+      required: [id, username]
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

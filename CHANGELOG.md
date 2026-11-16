@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-007** — Authentication Error Code Confusion (Easy, port 19007)
+  - Broken server returns 200 with `{"error":"..."}` instead of 401 on bad credentials and missing token
+  - Detected by explicit `type: status` assertions — specFile binding alone cannot catch wrong status codes
+
 - **FM-006** — Inconsistent Error Response Schema (Easy, port 19006)
   - Broken server returns different error shapes per endpoint (`message`, `code+msg`, `error`)
   - Detected by `specFile:` binding — non-conforming error bodies fail against the declared `Error` schema
