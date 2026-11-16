@@ -31,6 +31,7 @@ jobs:
           - { id: "002", slug: "datetime-format",      kind: "server" }
           - { id: "006", slug: "error-schema",         kind: "server" }
           - { id: "007", slug: "auth-error-code",      kind: "server" }
+          - { id: "023", slug: "null-collection",      kind: "server" }
           # Add entries here as sub-projects land — see docs/TASKS.md §7.4
 
     steps:

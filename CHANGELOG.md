@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-023** — Empty Collection vs Null (Easy, port 19023)
+  - Broken server returns `null` for empty arrays; Go nil slices marshal to null instead of `[]`
+  - Detected by `specFile:` binding — `null` does not satisfy `type: array` in OpenAPI 3.0
+
 - **FM-007** — Authentication Error Code Confusion (Easy, port 19007)
   - Broken server returns 200 with `{"error":"..."}` instead of 401 on bad credentials and missing token
   - Detected by explicit `type: status` assertions — specFile binding alone cannot catch wrong status codes
