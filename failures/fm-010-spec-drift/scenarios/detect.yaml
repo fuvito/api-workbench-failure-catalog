@@ -1,0 +1,9 @@
+specFile: ./openapi.yaml
+name: FM-010 — OpenAPI Specification and Implementation Drift
+steps:
+  - name: item response must match the declared OpenAPI spec
+    request:
+      method: GET
+      path: /items/1
+    assertions:
+      - type: schema

@@ -1,0 +1,44 @@
+openapi: "3.0.3"
+info:
+  title: Items API
+  version: "1.0.0"
+paths:
+  /items:
+    get:
+      operationId: listItems
+      summary: List all items
+      responses:
+        "200":
+          description: Items list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        # 429 is intentionally absent — the broken server returns it anyway,
+        # which clrsig flags as an undeclared response status
+components:
+  schemas:
+    Item:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Error:
+      type: object
+      required: [error, code]
+      properties:
+        error:
+          type: string
+        code:
+          type: string

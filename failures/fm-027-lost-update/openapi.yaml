@@ -1,0 +1,105 @@
+openapi: "3.0.3"
+info:
+  title: Item API
+  version: "1.0.0"
+paths:
+  /items/{id}:
+    get:
+      operationId: getItem
+      summary: Get an item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Item found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "404":
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      operationId: updateItem
+      summary: Update an item using optimistic locking
+      description: >
+        The request body must include the version read from the last GET.
+        If the version does not match the current server version (another
+        writer updated the item since the client last read it), the server
+        returns 409 Conflict. The client must re-read the item and retry.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemUpdate"
+      responses:
+        "200":
+          description: Item updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "409":
+          description: Version conflict — item was modified by another writer since last read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Item:
+      type: object
+      required: [id, name, value, version]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        value:
+          type: integer
+        version:
+          type: integer
+          description: Incremented on every successful write; use for optimistic locking
+    ItemUpdate:
+      type: object
+      required: [value, version]
+      properties:
+        value:
+          type: integer
+        version:
+          type: integer
+          description: Must match the current server version or the write is rejected
+    Error:
+      type: object
+      required: [error, code]
+      properties:
+        error:
+          type: string
+        code:
+          type: string

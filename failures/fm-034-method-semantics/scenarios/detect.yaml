@@ -1,0 +1,19 @@
+specFile: ./openapi.yaml
+name: FM-034 — HTTP Method and Operation Semantics Failures
+steps:
+  - name: "POST /articles must return 201 Created (spec declares 201, broken returns 200)"
+    request:
+      method: POST
+      path: /articles
+      body:
+        title: "Hello World"
+        author: "Alice"
+    assertions:
+      - type: schema
+
+  - name: "DELETE /articles/1 must return 204 No Content (spec declares 204, broken returns 200)"
+    request:
+      method: DELETE
+      path: /articles/1
+    assertions:
+      - type: schema

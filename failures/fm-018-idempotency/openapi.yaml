@@ -1,0 +1,96 @@
+openapi: "3.0.3"
+info:
+  title: Payment API
+  version: "1.0.0"
+paths:
+  /payments:
+    get:
+      operationId: listPayments
+      summary: List all payments
+      responses:
+        "200":
+          description: Payment list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentList"
+    post:
+      operationId: createPayment
+      summary: Submit a payment
+      description: >
+        order_id is the natural idempotency key. Submitting the same order_id
+        more than once must return the existing payment (200), not create a
+        duplicate (201). Clients may safely retry on network failure.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentInput"
+      responses:
+        "201":
+          description: Payment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+        "200":
+          description: Duplicate request — existing payment returned unchanged
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    PaymentInput:
+      type: object
+      required: [order_id, amount, currency]
+      properties:
+        order_id:
+          type: string
+          description: Natural idempotency key — unique per payment intent
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+    Payment:
+      type: object
+      required: [id, order_id, amount, currency, status]
+      properties:
+        id:
+          type: integer
+        order_id:
+          type: string
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+        status:
+          type: string
+    PaymentList:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Payment"
+        count:
+          type: integer
+          description: Total number of payments (must equal 1 after a single order_id is submitted twice)
+    Error:
+      type: object
+      required: [error, code]
+      properties:
+        error:
+          type: string
+        code:
+          type: string

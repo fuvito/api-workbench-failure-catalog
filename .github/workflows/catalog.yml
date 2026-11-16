@@ -1,0 +1,100 @@
+name: Failure Catalog (released)
+
+env:
+  CLRSIG_VERSION: v0.3.0  # bump manually on each clrsig release; see docs/TASKS.md §7.2
+
+on:
+  push:
+  schedule:
+    - cron: "0 6 * * *"  # nightly against the pinned released build
+
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false   # one failure does not cancel the rest
+      matrix:
+        fm:
+          - { id: "025", slug: "incorrect-status",   kind: "server" }
+          - { id: "001", slug: "number-precision",    kind: "server" }
+          - { id: "005", slug: "nullable-required",   kind: "server" }
+          - { id: "010", slug: "spec-drift",          kind: "server" }
+          - { id: "004", slug: "renamed-removed-field", kind: "diff"   }
+          - { id: "016", slug: "rate-limit",           kind: "server" }
+          - { id: "022", slug: "semantically-invalid", kind: "server" }
+          - { id: "034", slug: "method-semantics",     kind: "server" }
+          - { id: "044", slug: "sensitive-data",       kind: "server" }
+          - { id: "003", slug: "pagination-contract",  kind: "server" }
+          - { id: "018", slug: "idempotency",          kind: "server" }
+          - { id: "027", slug: "lost-update",          kind: "server" }
+          # Add entries here as sub-projects land — see docs/TASKS.md §7.4
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+
+      - name: Install clrsig
+        run: |
+          curl -sSfL \
+            https://github.com/fuvito/api-workbench/releases/download/${{ env.CLRSIG_VERSION }}/clrsig-linux-amd64 \
+            -o /usr/local/bin/clrsig && chmod +x /usr/local/bin/clrsig
+
+      # Server-based: compile first to avoid cold-compile race, then poll for readiness
+      - name: Build and start broken server
+        if: matrix.fm.kind == 'server'
+        timeout-minutes: 2
+        run: |
+          go build -o /tmp/server-broken \
+            ./failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/broken/
+          /tmp/server-broken &
+          for i in $(seq 1 50); do
+            curl -sf http://localhost:19${{ matrix.fm.id }}/health && break
+            [ $i -eq 50 ] && { echo "Server did not become ready after 10s"; exit 1; }
+            sleep 0.2
+          done
+
+      - name: "Detect (must exit 1)"
+        if: matrix.fm.kind == 'server'
+        run: |
+          set +e
+          clrsig run failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/scenarios/detect.yaml \
+            --env failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/environments/local.yaml
+          test $? -eq 1
+
+      - name: Stop broken server
+        if: matrix.fm.kind == 'server'
+        run: pkill -f server-broken || true
+
+      - name: Build and start fixed server
+        if: matrix.fm.kind == 'server'
+        timeout-minutes: 2
+        run: |
+          go build -o /tmp/server-fixed \
+            ./failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/fixed/
+          /tmp/server-fixed &
+          for i in $(seq 1 50); do
+            curl -sf http://localhost:19${{ matrix.fm.id }}/health && break
+            [ $i -eq 50 ] && { echo "Server did not become ready after 10s"; exit 1; }
+            sleep 0.2
+          done
+
+      - name: "Fix (must exit 0)"
+        if: matrix.fm.kind == 'server'
+        run: |
+          clrsig run failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/scenarios/detect.yaml \
+            --env failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/environments/local.yaml
+
+      # Diff-based: no server needed
+      - name: "Diff (must exit 1)"
+        if: matrix.fm.kind == 'diff'
+        run: |
+          set +e
+          clrsig diff \
+            failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/v1/openapi.yaml \
+            failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/v2/openapi.yaml \
+            --breaking-only
+          test $? -eq 1

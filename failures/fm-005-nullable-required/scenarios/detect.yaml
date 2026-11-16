@@ -1,0 +1,21 @@
+name: FM-005 — Incorrect Optional, Nullable, and Required Field Behavior
+steps:
+  - name: user with email — field is a non-null string
+    request:
+      method: GET
+      path: /users/1
+    assertions:
+      - type: schema
+        path: $.email
+        schema:
+          type: string
+
+  - name: user without email — null violates required non-nullable field
+    request:
+      method: GET
+      path: /users/2
+    assertions:
+      - type: schema
+        path: $.email
+        schema:
+          type: string

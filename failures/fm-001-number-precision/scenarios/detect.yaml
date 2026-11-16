@@ -1,0 +1,19 @@
+name: FM-001 — Currency, Number, and Precision Formatting Failures
+steps:
+  - name: invoice monetary fields must be numbers, not strings
+    request:
+      method: GET
+      path: /invoices/1
+    assertions:
+      - type: schema
+        path: $.subtotal
+        schema:
+          type: number
+      - type: schema
+        path: $.tax
+        schema:
+          type: number
+      - type: schema
+        path: $.total
+        schema:
+          type: number

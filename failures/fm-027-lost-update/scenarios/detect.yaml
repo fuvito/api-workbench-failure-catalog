@@ -1,0 +1,32 @@
+name: FM-027 — Concurrent Update and Lost-Update Failures
+steps:
+  - name: "read item — confirm starting version is 1"
+    request:
+      method: GET
+      path: /items/1
+    assertions:
+      - type: jsonpath
+        path: $.version
+        expected: 1
+
+  - name: "first write — update with version=1 (must succeed)"
+    request:
+      method: PUT
+      path: /items/1
+      body:
+        value: 20
+        version: 1
+    assertions:
+      - type: status
+        expected: 200
+
+  - name: "stale write — update again with the original version=1 (must be rejected with 409)"
+    request:
+      method: PUT
+      path: /items/1
+      body:
+        value: 99
+        version: 1
+    assertions:
+      - type: status
+        expected: 409

@@ -50,18 +50,18 @@ point `environments/local.yaml` at your API, and run.
 
 | FM | Failure mode | Difficulty | Detection | Port | Status |
 |---|---|---|---|---|---|
-| [FM-001](https://clrsig.com/failures/fm-001/) | Currency, Number, and Precision Formatting Failures | Easy | `clrsig run` schema assertion | 19001 | pending |
-| [FM-003](https://clrsig.com/failures/fm-003/) | Pagination Contract Failures | Hard | `clrsig run` multi-step scenario | 19003 | pending |
-| [FM-004](https://clrsig.com/failures/fm-004/) | Renamed or Removed Response Fields | Medium | `clrsig diff` v1 vs v2 | — | pending |
-| [FM-005](https://clrsig.com/failures/fm-005/) | Incorrect Optional, Nullable, and Required Field Behavior | Easy | `clrsig run` schema assertion | 19005 | pending |
-| [FM-010](https://clrsig.com/failures/fm-010/) | OpenAPI Specification and Implementation Drift | Easy | `clrsig run` + `specFile:` schema assertions | 19010 | pending |
-| [FM-016](https://clrsig.com/failures/fm-016/) | Rate-Limit and Throttling Failures | Medium | `clrsig run` undeclared 429 | 19016 | pending |
-| [FM-018](https://clrsig.com/failures/fm-018/) | Idempotency and Duplicate-Operation Failures | Hard | `clrsig run` multi-step scenario | 19018 | pending |
-| [FM-022](https://clrsig.com/failures/fm-022/) | Syntactically Valid but Semantically Invalid Payloads | Medium | `clrsig run` jsonpath assertions | 19022 | pending |
-| [FM-025](https://clrsig.com/failures/fm-025/) | Incorrect HTTP Status and Business-Error Semantics | Easy | `clrsig run` status assertion | 19025 | pending |
-| [FM-027](https://clrsig.com/failures/fm-027/) | Concurrent Update and Lost-Update Failures | Hard | `clrsig run` multi-step scenario | 19027 | pending |
-| [FM-034](https://clrsig.com/failures/fm-034/) | HTTP Method and Operation Semantics Failures | Medium | `clrsig run` + `specFile:` schema assertions | 19034 | pending |
-| [FM-044](https://clrsig.com/failures/fm-044/) | Sensitive Data Exposure in API Responses | Medium | `clrsig run` schema (`additionalProperties: false`) | 19044 | pending |
+| [FM-001](https://clrsig.com/failures/fm-001/) | Currency, Number, and Precision Formatting Failures | Easy | `clrsig run` schema assertion | 19001 | **done** |
+| [FM-003](https://clrsig.com/failures/fm-003/) | Pagination Contract Failures | Hard | `clrsig run` multi-step scenario | 19003 | **done** |
+| [FM-004](https://clrsig.com/failures/fm-004/) | Renamed or Removed Response Fields | Medium | `clrsig diff` v1 vs v2 | — | **done** |
+| [FM-005](https://clrsig.com/failures/fm-005/) | Incorrect Optional, Nullable, and Required Field Behavior | Easy | `clrsig run` schema assertion | 19005 | **done** |
+| [FM-010](https://clrsig.com/failures/fm-010/) | OpenAPI Specification and Implementation Drift | Easy | `clrsig run` + `specFile:` schema assertions | 19010 | **done** |
+| [FM-016](https://clrsig.com/failures/fm-016/) | Rate-Limit and Throttling Failures | Medium | `clrsig run` undeclared 429 | 19016 | **done** |
+| [FM-018](https://clrsig.com/failures/fm-018/) | Idempotency and Duplicate-Operation Failures | Hard | `clrsig run` multi-step scenario | 19018 | **done** |
+| [FM-022](https://clrsig.com/failures/fm-022/) | Syntactically Valid but Semantically Invalid Payloads | Medium | `clrsig run` jsonpath assertions | 19022 | **done** |
+| [FM-025](https://clrsig.com/failures/fm-025/) | Incorrect HTTP Status and Business-Error Semantics | Easy | `clrsig run` status assertion | 19025 | **done** |
+| [FM-027](https://clrsig.com/failures/fm-027/) | Concurrent Update and Lost-Update Failures | Hard | `clrsig run` multi-step scenario | 19027 | **done** |
+| [FM-034](https://clrsig.com/failures/fm-034/) | HTTP Method and Operation Semantics Failures | Medium | `clrsig run` + `specFile:` schema assertions | 19034 | **done** |
+| [FM-044](https://clrsig.com/failures/fm-044/) | Sensitive Data Exposure in API Responses | Medium | `clrsig run` schema (`additionalProperties: false`) | 19044 | **done** |
 
 The full catalog of all 50 failure modes lives at
 [clrsig.com/failures](https://clrsig.com/failures/). The 38 modes not in v1 are

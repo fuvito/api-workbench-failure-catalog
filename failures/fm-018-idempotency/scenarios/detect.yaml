@@ -1,0 +1,35 @@
+name: FM-018 — Idempotency and Duplicate-Operation Failures
+steps:
+  - name: "submit payment for order-42"
+    request:
+      method: POST
+      path: /payments
+      body:
+        order_id: "order-42"
+        amount: 99.99
+        currency: "USD"
+    assertions:
+      - type: status
+        expected: 201
+
+  - name: "retry: same payment for order-42 (simulates network retry)"
+    request:
+      method: POST
+      path: /payments
+      body:
+        order_id: "order-42"
+        amount: 99.99
+        currency: "USD"
+    assertions:
+      - type: jsonpath
+        path: $.order_id
+        expected: "order-42"
+
+  - name: "only one payment must exist — a count of 2 means the retry was processed as a duplicate charge"
+    request:
+      method: GET
+      path: /payments
+    assertions:
+      - type: jsonpath
+        path: $.count
+        expected: 1
