@@ -1,0 +1,42 @@
+openapi: "3.0.3"
+info:
+  title: FM-035 Sort Order Contract
+  version: "1.0.0"
+paths:
+  /products:
+    get:
+      summary: List products with optional sort
+      parameters:
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [price_asc, price_desc, name_asc]
+      responses:
+        "200":
+          description: Product list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductList'
+components:
+  schemas:
+    ProductList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    Product:
+      type: object
+      required: [id, name, price]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: number

@@ -1,0 +1,42 @@
+schemaVersion: "1"
+title: FM-038 — PATCH Semantics Failure
+steps:
+  - label: "confirm initial state — user 1 has name Alice and role admin"
+    request:
+      method: GET
+      url: "{{baseUrl}}/users/1"
+    assertions:
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Alice"
+      - type: jsonpath
+        path: "$.role"
+        operator: eq
+        expected: "admin"
+
+  - label: "PATCH email only — must not affect name or role"
+    request:
+      method: PATCH
+      url: "{{baseUrl}}/users/1"
+      body:
+        type: json
+        content: '{"email":"alice@new.example.com"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+
+  - label: "after PATCH — name must still be Alice, role must still be admin"
+    request:
+      method: GET
+      url: "{{baseUrl}}/users/1"
+    assertions:
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Alice"
+      - type: jsonpath
+        path: "$.role"
+        operator: eq
+        expected: "admin"

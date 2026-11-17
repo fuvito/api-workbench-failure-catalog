@@ -11,6 +11,14 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-038** — PATCH Semantics Failure (Medium, port 19038)
+  - Broken server replaces entire resource on PATCH instead of merging only provided fields
+  - Detected by 3-step read-modify-read scenario; jsonpath assertions catch zeroed-out fields after PATCH
+
+- **FM-035** — Sort Order Contract (Easy, port 19035)
+  - Broken server ignores `sort` query parameter and always returns insertion order
+  - Detected by jsonpath assertions on `$.items[0].price` for ascending and descending sorts
+
 - **FM-030** — Enum Value Violation (Easy, port 19030)
   - Broken server returns wrong-case (`"PENDING"`) and undeclared (`"SHIPPED"`) enum values
   - Detected by `specFile:` binding — JSON Schema enum validation is exact and case-sensitive

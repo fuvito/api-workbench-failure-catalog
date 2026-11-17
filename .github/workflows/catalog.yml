@@ -34,6 +34,8 @@ jobs:
           - { id: "023", slug: "null-collection",      kind: "server" }
           - { id: "029", slug: "boolean-type",         kind: "server" }
           - { id: "030", slug: "enum-violation",       kind: "server" }
+          - { id: "035", slug: "sort-order",           kind: "server" }
+          - { id: "038", slug: "patch-semantics",      kind: "server" }
           # Add entries here as sub-projects land — see docs/TASKS.md §7.4
 
     steps:
