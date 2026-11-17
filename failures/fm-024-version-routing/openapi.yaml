@@ -1,0 +1,38 @@
+openapi: "3.0.3"
+info:
+  title: FM-024 API Version Routing (v2)
+  version: "2.0.0"
+paths:
+  /v2/products:
+    get:
+      summary: List products (v2 — includes sku field)
+      responses:
+        "200":
+          description: Products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductList'
+components:
+  schemas:
+    ProductList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    Product:
+      type: object
+      required: [id, name, price, sku]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: number
+        sku:
+          type: string
+          description: Stock-keeping unit — new in v2

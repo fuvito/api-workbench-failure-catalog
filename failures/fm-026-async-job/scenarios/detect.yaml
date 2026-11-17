@@ -1,0 +1,24 @@
+schemaVersion: "1"
+title: FM-026 — Async Job Status Never Transitions
+steps:
+  - label: "POST /jobs — create a new job"
+    request:
+      method: POST
+      url: "{{baseUrl}}/jobs"
+      body:
+        type: json
+        content: '{"type":"report"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 201
+
+  - label: "GET /jobs/1 — status must be completed, not stuck at processing"
+    request:
+      method: GET
+      url: "{{baseUrl}}/jobs/1"
+    assertions:
+      - type: jsonpath
+        path: "$.status"
+        operator: eq
+        expected: "completed"

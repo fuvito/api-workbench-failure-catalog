@@ -36,6 +36,11 @@ jobs:
           - { id: "030", slug: "enum-violation",       kind: "server" }
           - { id: "035", slug: "sort-order",           kind: "server" }
           - { id: "038", slug: "patch-semantics",      kind: "server" }
+          - { id: "020", slug: "batch-atomicity",      kind: "server" }
+          - { id: "024", slug: "version-routing",      kind: "server" }
+          - { id: "026", slug: "async-job",            kind: "server" }
+          - { id: "028", slug: "filter-ignored",       kind: "server" }
+          - { id: "039", slug: "bulk-delete",          kind: "server" }
           # Add entries here as sub-projects land — see docs/TASKS.md §7.4
 
     steps:

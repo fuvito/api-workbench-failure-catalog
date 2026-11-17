@@ -11,6 +11,26 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-039** — Bulk Delete No-Op (Easy, port 19039)
+  - Broken server returns 204 but never removes items; GET after delete still returns 200
+  - Detected by status assertion: step 3 expects 404 on deleted item
+
+- **FM-028** — Filter Parameter Ignored (Easy, port 19028)
+  - Broken server ignores `?status=` filter and returns all orders every time
+  - Detected by jsonpath assertion on `$.count` for completed and pending filters
+
+- **FM-026** — Async Job Status Never Transitions (Easy, port 19026)
+  - Broken server sets job status to "processing" and never advances it to "completed"
+  - Detected by jsonpath assertion `$.status == "completed"` on GET /jobs/1
+
+- **FM-024** — API Version Routing (Easy, port 19024)
+  - Broken server routes /v2/products to v1 handler; required `sku` field is missing
+  - Detected by `specFile:` binding — missing required property in v2 schema
+
+- **FM-020** — Batch Operation Atomicity (Medium, port 19020)
+  - Broken server partially creates valid items in a batch containing an invalid one
+  - Detected by status assertion: expects 422 (reject all), broken returns 201 (partial success)
+
 - **FM-038** — PATCH Semantics Failure (Medium, port 19038)
   - Broken server replaces entire resource on PATCH instead of merging only provided fields
   - Detected by 3-step read-modify-read scenario; jsonpath assertions catch zeroed-out fields after PATCH

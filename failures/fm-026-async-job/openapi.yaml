@@ -1,0 +1,66 @@
+openapi: "3.0.3"
+info:
+  title: FM-026 Async Job Status
+  version: "1.0.0"
+paths:
+  /jobs:
+    post:
+      summary: Start an async job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type]
+              properties:
+                type:
+                  type: string
+      responses:
+        "201":
+          description: Job created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+  /jobs/{id}:
+    get:
+      summary: Get job status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Job:
+      type: object
+      required: [id, type, status]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        status:
+          type: string
+          enum: [queued, processing, completed, failed]
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

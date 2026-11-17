@@ -1,0 +1,81 @@
+openapi: "3.0.3"
+info:
+  title: FM-020 Batch Operation Atomicity
+  version: "1.0.0"
+paths:
+  /items/batch:
+    post:
+      summary: Create multiple items atomically — all succeed or none are created
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/NewItem'
+      responses:
+        "201":
+          description: All items created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResult'
+        "422":
+          description: Validation failed — no items created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /items:
+    get:
+      summary: List all items
+      responses:
+        "200":
+          description: Items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemList'
+components:
+  schemas:
+    NewItem:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+    BatchResult:
+      type: object
+      required: [created]
+      properties:
+        created:
+          type: integer
+    ItemList:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        count:
+          type: integer
+    Item:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
