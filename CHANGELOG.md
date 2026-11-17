@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-030** — Enum Value Violation (Easy, port 19030)
+  - Broken server returns wrong-case (`"PENDING"`) and undeclared (`"SHIPPED"`) enum values
+  - Detected by `specFile:` binding — JSON Schema enum validation is exact and case-sensitive
+
 - **FM-029** — Boolean Field Type Confusion (Easy, port 19029)
   - Broken server returns booleans as strings (`"true"`) or integers (`1`/`0`) instead of JSON booleans
   - Detected by `specFile:` binding — string/integer types do not satisfy `type: boolean`

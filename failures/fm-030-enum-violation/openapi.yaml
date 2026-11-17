@@ -1,0 +1,47 @@
+openapi: "3.0.3"
+info:
+  title: FM-030 Enum Value Violation
+  version: "1.0.0"
+paths:
+  /orders/{id}:
+    get:
+      summary: Get order by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Order:
+      type: object
+      required: [id, status, priority]
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+          enum: [pending, processing, completed, cancelled]
+        priority:
+          type: string
+          enum: [low, medium, high]
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
