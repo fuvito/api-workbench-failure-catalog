@@ -1,6 +1,15 @@
 schemaVersion: "1"
 title: FM-017 — Stale Read After Write
 steps:
+  - label: "GET /items/1 — prime the cache on the broken server"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items/1"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+
   - label: "PUT /items/1 to rename to Updated — must return 200"
     request:
       method: PUT
@@ -13,7 +22,7 @@ steps:
         operator: eq
         expected: 200
 
-  - label: "GET /items/1 — must reflect the write (broken server returns stale cached name)"
+  - label: "GET /items/1 again — must reflect the write (broken server returns stale cached name)"
     request:
       method: GET
       url: "{{baseUrl}}/items/1"
