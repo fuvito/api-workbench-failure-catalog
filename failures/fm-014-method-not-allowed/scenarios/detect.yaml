@@ -1,0 +1,20 @@
+schemaVersion: "1"
+title: FM-014 — Unsupported Method Returns Wrong Status
+steps:
+  - label: "GET /settings — must return 200 (valid method)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/settings"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+
+  - label: "DELETE /settings — must return 405 (broken server returns 200)"
+    request:
+      method: DELETE
+      url: "{{baseUrl}}/settings"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 405

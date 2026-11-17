@@ -11,6 +11,26 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-014** — Unsupported Method Returns Wrong Status (Easy, port 19014)
+  - Broken server accepts any method on a read-only endpoint; DELETE returns 200 instead of 405
+  - Detected by status assertion: DELETE expects 405
+
+- **FM-013** — Response ID Mismatch (Easy, port 19013)
+  - Broken server ignores path ID and always returns the first record; GET /products/5 returns id=1
+  - Detected by jsonpath assertion: `$.id == 5`
+
+- **FM-012** — Off-by-One in Page Offset (Easy, port 19012)
+  - Broken server uses `page*perPage` instead of `(page-1)*perPage`, skipping the first page of results
+  - Detected by jsonpath assertion: `$.items[0].id == 1` on page 1 and `$.items[0].id == 4` on page 2
+
+- **FM-009** — Field Name Casing Error (Easy, port 19009)
+  - Broken server returns camelCase fields (`userId`, `firstName`); spec declares snake_case (`user_id`, `first_name`)
+  - Detected by `specFile:` binding — required snake_case fields missing; `additionalProperties: false` rejects camelCase
+
+- **FM-008** — Bare Array Instead of Object Wrapper (Easy, port 19008)
+  - Broken server returns `GET /users` as a bare JSON array; spec declares an object with `items` and `count`
+  - Detected by `specFile:` binding — array fails `type: object` check
+
 - **FM-041** — Minimum Value Constraint Violated (Easy, port 19041)
   - Broken server returns products with negative `price` and `stock` values
   - Detected by `specFile:` binding — `minimum: 0` constraint in JSON Schema validation

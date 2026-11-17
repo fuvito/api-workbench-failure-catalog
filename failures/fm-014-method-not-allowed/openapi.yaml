@@ -1,0 +1,18 @@
+openapi: "3.0.3"
+info:
+  title: FM-014 Unsupported Method Returns Wrong Status
+  version: "1.0.0"
+paths:
+  /settings:
+    get:
+      summary: Get application settings
+      responses:
+        "200":
+          description: Settings object
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "405":
+          description: Method not allowed

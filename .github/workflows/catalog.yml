@@ -51,6 +51,11 @@ jobs:
           - { id: "033", slug: "nonidempotent-get",    kind: "server" }
           - { id: "036", slug: "soft-delete",          kind: "server" }
           - { id: "041", slug: "minimum-value",        kind: "server" }
+          - { id: "008", slug: "bare-array",           kind: "server" }
+          - { id: "009", slug: "field-name-casing",    kind: "server" }
+          - { id: "012", slug: "page-offset",          kind: "server" }
+          - { id: "013", slug: "id-mismatch",          kind: "server" }
+          - { id: "014", slug: "method-not-allowed",   kind: "server" }
           # Add entries here as sub-projects land — see docs/TASKS.md §7.4
 
     steps:
