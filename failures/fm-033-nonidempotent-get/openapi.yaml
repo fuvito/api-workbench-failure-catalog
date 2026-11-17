@@ -1,0 +1,36 @@
+openapi: "3.0.3"
+info:
+  title: FM-033 Non-Idempotent GET
+  version: "1.0.0"
+paths:
+  /tickets/{id}:
+    get:
+      summary: Get ticket by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ticket
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ticket"
+        "404":
+          description: Not found
+components:
+  schemas:
+    Ticket:
+      type: object
+      required: [id, title, status]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        status:
+          type: string
+          enum: [unread, read]

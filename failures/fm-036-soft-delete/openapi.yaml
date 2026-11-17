@@ -1,0 +1,53 @@
+openapi: "3.0.3"
+info:
+  title: FM-036 Soft Delete Becomes Hard Delete
+  version: "1.0.0"
+paths:
+  /items/{id}:
+    get:
+      summary: Get item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "404":
+          description: Not found
+    delete:
+      summary: Soft-delete item (marks deleted_at, keeps record)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Soft-deleted item with deleted_at timestamp
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "404":
+          description: Not found
+components:
+  schemas:
+    Item:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        deleted_at:
+          type: string
+          format: date-time

@@ -46,6 +46,11 @@ jobs:
           - { id: "032", slug: "nested-required",      kind: "server" }
           - { id: "042", slug: "duplicate-create",     kind: "server" }
           - { id: "043", slug: "validation-error-code", kind: "server" }
+          - { id: "017", slug: "stale-read",           kind: "server" }
+          - { id: "021", slug: "object-as-string",     kind: "server" }
+          - { id: "033", slug: "nonidempotent-get",    kind: "server" }
+          - { id: "036", slug: "soft-delete",          kind: "server" }
+          - { id: "041", slug: "minimum-value",        kind: "server" }
           # Add entries here as sub-projects land — see docs/TASKS.md §7.4
 
     steps:

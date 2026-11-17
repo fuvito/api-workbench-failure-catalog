@@ -1,0 +1,22 @@
+schemaVersion: "1"
+title: FM-033 — Non-Idempotent GET
+steps:
+  - label: "first GET /tickets/1 — must return status unread"
+    request:
+      method: GET
+      url: "{{baseUrl}}/tickets/1"
+    assertions:
+      - type: jsonpath
+        path: "$.status"
+        operator: eq
+        expected: "unread"
+
+  - label: "second GET /tickets/1 — must still return unread (GET must not mutate state)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/tickets/1"
+    assertions:
+      - type: jsonpath
+        path: "$.status"
+        operator: eq
+        expected: "unread"

@@ -1,0 +1,41 @@
+openapi: "3.0.3"
+info:
+  title: FM-041 Minimum Value Constraint Violated
+  version: "1.0.0"
+paths:
+  /products:
+    get:
+      summary: List products
+      responses:
+        "200":
+          description: Product list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductList"
+components:
+  schemas:
+    ProductList:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+        count:
+          type: integer
+    Product:
+      type: object
+      required: [id, name, price, stock]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: number
+          minimum: 0
+        stock:
+          type: integer
+          minimum: 0

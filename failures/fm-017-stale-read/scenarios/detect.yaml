@@ -1,0 +1,24 @@
+schemaVersion: "1"
+title: FM-017 — Stale Read After Write
+steps:
+  - label: "PUT /items/1 to rename to Updated — must return 200"
+    request:
+      method: PUT
+      url: "{{baseUrl}}/items/1"
+      body:
+        type: json
+        content: '{"name":"Updated"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+
+  - label: "GET /items/1 — must reflect the write (broken server returns stale cached name)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items/1"
+    assertions:
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Updated"

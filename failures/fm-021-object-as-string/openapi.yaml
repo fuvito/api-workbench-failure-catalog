@@ -1,0 +1,36 @@
+openapi: "3.0.3"
+info:
+  title: FM-021 Nested Object Serialized as String
+  version: "1.0.0"
+paths:
+  /documents/{id}:
+    get:
+      summary: Get document by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Document
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "404":
+          description: Not found
+components:
+  schemas:
+    Document:
+      type: object
+      required: [id, title, metadata]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true

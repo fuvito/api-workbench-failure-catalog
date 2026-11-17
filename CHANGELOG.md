@@ -11,6 +11,26 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-041** — Minimum Value Constraint Violated (Easy, port 19041)
+  - Broken server returns products with negative `price` and `stock` values
+  - Detected by `specFile:` binding — `minimum: 0` constraint in JSON Schema validation
+
+- **FM-036** — Soft Delete Becomes Hard Delete (Easy, port 19036)
+  - Broken server permanently removes item on DELETE and returns 204; spec requires 200 with `deleted_at`
+  - Detected by status assertion: DELETE expects 200; GET after delete expects 200
+
+- **FM-033** — Non-Idempotent GET (Easy, port 19033)
+  - Broken server mutates ticket state on GET — marks it "read" after first access
+  - Detected by two consecutive GET assertions: both expect `$.status == "unread"`
+
+- **FM-021** — Nested Object Serialized as String (Easy, port 19021)
+  - Broken server returns `metadata` as a JSON-encoded string instead of a nested object
+  - Detected by `specFile:` binding — `type: object` fails against actual string value
+
+- **FM-017** — Stale Read After Write (Medium, port 19017)
+  - Broken server caches GET responses and never invalidates the cache on PUT
+  - Detected by jsonpath assertion: `$.name == "Updated"` after a PUT is ignored by stale cache
+
 - **FM-043** — Validation Error Returns 500 Instead of 422 (Easy, port 19043)
   - Broken server treats missing-field validation the same as runtime errors, returning 500
   - Detected by status assertion: expects 422
