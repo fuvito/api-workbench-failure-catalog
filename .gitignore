@@ -26,6 +26,10 @@ profile.cov
 go.work
 go.work.sum
 
+# Locally built failure-mode server binaries (extensionless)
+failures/**/broken-server
+failures/**/fixed-server
+
 # env file
 .env
 
