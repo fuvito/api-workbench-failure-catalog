@@ -1,0 +1,24 @@
+schemaVersion: "1"
+title: FM-046 — Write Returns 200 But Doesn't Persist
+steps:
+  - label: "PUT /config to change theme to dark — must return 200"
+    request:
+      method: PUT
+      url: "{{baseUrl}}/config"
+      body:
+        type: json
+        content: '{"theme":"dark","language":"en"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+
+  - label: "GET /config — theme must now be dark (broken server discards the write)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/config"
+    assertions:
+      - type: jsonpath
+        path: "$.theme"
+        operator: eq
+        expected: "dark"

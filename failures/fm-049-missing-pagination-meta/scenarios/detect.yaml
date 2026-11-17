@@ -1,0 +1,12 @@
+schemaVersion: "1"
+title: FM-049 — Missing Pagination Metadata Fields
+specFile: ../openapi.yaml
+steps:
+  - label: "GET /posts — response must include total_pages and has_more (broken server omits them)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/posts"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200

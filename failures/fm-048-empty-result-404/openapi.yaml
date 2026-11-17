@@ -1,0 +1,42 @@
+openapi: "3.0.3"
+info:
+  title: FM-048 Empty Result Set Returns 404
+  version: "1.0.0"
+paths:
+  /users:
+    get:
+      summary: List users, optionally filtered by role
+      parameters:
+        - name: role
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User list (may be empty)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserList"
+components:
+  schemas:
+    UserList:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+        count:
+          type: integer
+    User:
+      type: object
+      required: [id, name, role]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        role:
+          type: string

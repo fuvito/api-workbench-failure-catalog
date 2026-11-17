@@ -1,0 +1,44 @@
+openapi: "3.0.3"
+info:
+  title: FM-047 Conditional Required Field Not Enforced
+  version: "1.0.0"
+paths:
+  /shipments:
+    post:
+      summary: Create a shipment
+      description: >
+        When status is "shipped", tracking_number is required.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [pending, processing, shipped]
+                tracking_number:
+                  type: string
+      responses:
+        "201":
+          description: Created shipment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Shipment"
+        "422":
+          description: Validation error
+components:
+  schemas:
+    Shipment:
+      type: object
+      required: [id, status]
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+        tracking_number:
+          type: string

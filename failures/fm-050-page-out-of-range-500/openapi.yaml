@@ -1,0 +1,43 @@
+openapi: "3.0.3"
+info:
+  title: FM-050 Out-of-Range Page Returns 500
+  version: "1.0.0"
+paths:
+  /items:
+    get:
+      summary: List items with pagination
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Item list (empty when page exceeds last page)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemPage"
+components:
+  schemas:
+    ItemPage:
+      type: object
+      required: [items, count, page]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+        count:
+          type: integer
+        page:
+          type: integer
+    Item:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string

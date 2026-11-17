@@ -11,6 +11,26 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-050** — Out-of-Range Page Returns 500 (Easy, port 19050)
+  - Broken server returns 500 when `?page=9999` exceeds the dataset; spec requires 200 with empty list
+  - Detected by status assertion: out-of-range page expects 200
+
+- **FM-049** — Missing Pagination Metadata Fields (Easy, port 19049)
+  - Broken server omits `total_pages` and `has_more` from list responses; both are required
+  - Detected by `specFile:` binding — missing required fields fail schema validation
+
+- **FM-048** — Empty Result Set Returns 404 (Easy, port 19048)
+  - Broken server returns 404 when a filter matches zero records instead of 200 with empty list
+  - Detected by status assertion: filtered query with no matches expects 200
+
+- **FM-047** — Conditional Required Field Not Enforced (Medium, port 19047)
+  - Broken server accepts `status:"shipped"` without `tracking_number`; spec requires it conditionally
+  - Detected by status assertion: shipped shipment without tracking_number expects 422
+
+- **FM-046** — Write Returns 200 But Doesn't Persist (Medium, port 19046)
+  - Broken server decodes PUT body but never writes it to the store; GET after PUT returns stale value
+  - Detected by jsonpath: `$.theme == "dark"` after PUT with `{"theme":"dark"}`
+
 - **FM-045** — Empty String Accepted for Required Field (Easy, port 19045)
   - Broken server checks only for missing fields; `username: ""` returns 201 instead of 422
   - Detected by status assertion: second POST with empty username expects 422

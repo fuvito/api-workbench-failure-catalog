@@ -61,6 +61,11 @@ jobs:
           - { id: "037", slug: "case-insensitive-enum", kind: "server" }
           - { id: "040", slug: "limit-ignored",       kind: "server" }
           - { id: "045", slug: "empty-string-accepted", kind: "server" }
+          - { id: "046", slug: "write-not-persisted",  kind: "server" }
+          - { id: "047", slug: "conditional-required", kind: "server" }
+          - { id: "048", slug: "empty-result-404",     kind: "server" }
+          - { id: "049", slug: "missing-pagination-meta", kind: "server" }
+          - { id: "050", slug: "page-out-of-range-500", kind: "server" }
           # Add entries here as sub-projects land — see docs/TASKS.md §7.4
 
     steps:

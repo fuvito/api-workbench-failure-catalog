@@ -1,0 +1,36 @@
+openapi: "3.0.3"
+info:
+  title: FM-046 Write Returns 200 But Doesn't Persist
+  version: "1.0.0"
+paths:
+  /config:
+    get:
+      summary: Get current config
+      responses:
+        "200":
+          description: Config object
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+    put:
+      summary: Replace config
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+      responses:
+        "200":
+          description: Updated config
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string

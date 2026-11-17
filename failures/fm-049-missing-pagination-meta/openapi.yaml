@@ -1,0 +1,39 @@
+openapi: "3.0.3"
+info:
+  title: FM-049 Missing Pagination Metadata Fields
+  version: "1.0.0"
+paths:
+  /posts:
+    get:
+      summary: List posts
+      responses:
+        "200":
+          description: Paginated post list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostPage"
+components:
+  schemas:
+    PostPage:
+      type: object
+      required: [items, count, total_pages, has_more]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+        count:
+          type: integer
+        total_pages:
+          type: integer
+        has_more:
+          type: boolean
+    Post:
+      type: object
+      required: [id, title]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
