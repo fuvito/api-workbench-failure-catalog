@@ -12,56 +12,56 @@ jobs:
       fail-fast: false
       matrix:
         fm:
-          - { id: "025", slug: "incorrect-status",   kind: "server" }
-          - { id: "001", slug: "number-precision",    kind: "server" }
-          - { id: "005", slug: "nullable-required",   kind: "server" }
-          - { id: "010", slug: "spec-drift",          kind: "server" }
-          - { id: "004", slug: "renamed-removed-field", kind: "diff"   }
-          - { id: "016", slug: "rate-limit",           kind: "server" }
-          - { id: "022", slug: "semantically-invalid", kind: "server" }
-          - { id: "034", slug: "method-semantics",     kind: "server" }
-          - { id: "044", slug: "sensitive-data",       kind: "server" }
-          - { id: "003", slug: "pagination-contract",  kind: "server" }
-          - { id: "018", slug: "idempotency",          kind: "server" }
-          - { id: "027", slug: "lost-update",          kind: "server" }
-          - { id: "002", slug: "datetime-format",      kind: "server" }
-          - { id: "006", slug: "error-schema",         kind: "server" }
-          - { id: "007", slug: "auth-error-code",      kind: "server" }
-          - { id: "023", slug: "null-collection",      kind: "server" }
-          - { id: "029", slug: "boolean-type",         kind: "server" }
-          - { id: "030", slug: "enum-violation",       kind: "server" }
-          - { id: "035", slug: "sort-order",           kind: "server" }
-          - { id: "038", slug: "patch-semantics",      kind: "server" }
-          - { id: "020", slug: "batch-atomicity",      kind: "server" }
-          - { id: "024", slug: "version-routing",      kind: "server" }
-          - { id: "026", slug: "async-job",            kind: "server" }
-          - { id: "028", slug: "filter-ignored",       kind: "server" }
-          - { id: "039", slug: "bulk-delete",          kind: "server" }
-          - { id: "011", slug: "redirect-instead-of-response", kind: "server" }
-          - { id: "031", slug: "page-overflow",        kind: "server" }
-          - { id: "032", slug: "nested-required",      kind: "server" }
-          - { id: "042", slug: "duplicate-create",     kind: "server" }
-          - { id: "043", slug: "validation-error-code", kind: "server" }
-          - { id: "017", slug: "stale-read",           kind: "server" }
-          - { id: "021", slug: "object-as-string",     kind: "server" }
-          - { id: "033", slug: "nonidempotent-get",    kind: "server" }
-          - { id: "036", slug: "soft-delete",          kind: "server" }
-          - { id: "041", slug: "minimum-value",        kind: "server" }
-          - { id: "008", slug: "bare-array",           kind: "server" }
-          - { id: "009", slug: "field-name-casing",    kind: "server" }
-          - { id: "012", slug: "page-offset",          kind: "server" }
-          - { id: "013", slug: "id-mismatch",          kind: "server" }
-          - { id: "014", slug: "method-not-allowed",   kind: "server" }
-          - { id: "015", slug: "array-item-type",     kind: "server" }
-          - { id: "019", slug: "default-not-applied", kind: "server" }
-          - { id: "037", slug: "case-insensitive-enum", kind: "server" }
-          - { id: "040", slug: "limit-ignored",       kind: "server" }
-          - { id: "045", slug: "empty-string-accepted", kind: "server" }
-          - { id: "046", slug: "write-not-persisted",  kind: "server" }
-          - { id: "047", slug: "conditional-required", kind: "server" }
-          - { id: "048", slug: "empty-result-404",     kind: "server" }
-          - { id: "049", slug: "missing-pagination-meta", kind: "server" }
-          - { id: "050", slug: "page-out-of-range-500", kind: "server" }
+          - { dir: "fm-001-01-number-precision",           port: 19001, kind: "server" }
+          - { dir: "fm-001-02-datetime-format",            port: 19002, kind: "server" }
+          - { dir: "fm-003-01-pagination-contract",        port: 19003, kind: "server" }
+          - { dir: "fm-003-02-page-overflow",              port: 19031, kind: "server" }
+          - { dir: "fm-003-03-page-offset",                port: 19012, kind: "server" }
+          - { dir: "fm-003-04-missing-pagination-meta",    port: 19049, kind: "server" }
+          - { dir: "fm-004-01-renamed-removed-field",                   kind: "diff"   }
+          - { dir: "fm-004-02-field-name-casing",          port: 19009, kind: "server" }
+          - { dir: "fm-005-01-nullable-required",          port: 19005, kind: "server" }
+          - { dir: "fm-005-02-null-collection",            port: 19023, kind: "server" }
+          - { dir: "fm-005-03-nested-required",            port: 19032, kind: "server" }
+          - { dir: "fm-005-04-default-not-applied",        port: 19019, kind: "server" }
+          - { dir: "fm-007-01-version-routing",            port: 19024, kind: "server" }
+          - { dir: "fm-010-01-spec-drift",                 port: 19010, kind: "server" }
+          - { dir: "fm-010-02-error-schema",               port: 19006, kind: "server" }
+          - { dir: "fm-010-03-bare-array",                 port: 19008, kind: "server" }
+          - { dir: "fm-010-04-object-as-string",           port: 19021, kind: "server" }
+          - { dir: "fm-010-05-boolean-type",               port: 19029, kind: "server" }
+          - { dir: "fm-010-06-array-item-type",            port: 19015, kind: "server" }
+          - { dir: "fm-010-07-minimum-value",              port: 19041, kind: "server" }
+          - { dir: "fm-016-01-rate-limit",                 port: 19016, kind: "server" }
+          - { dir: "fm-017-01-stale-read",                 port: 19017, kind: "server" }
+          - { dir: "fm-018-01-idempotency",                port: 19018, kind: "server" }
+          - { dir: "fm-018-02-duplicate-create",           port: 19042, kind: "server" }
+          - { dir: "fm-020-01-batch-atomicity",            port: 19020, kind: "server" }
+          - { dir: "fm-022-01-semantically-invalid",       port: 19022, kind: "server" }
+          - { dir: "fm-022-02-filter-ignored",             port: 19028, kind: "server" }
+          - { dir: "fm-022-03-enum-violation",             port: 19030, kind: "server" }
+          - { dir: "fm-022-04-sort-order",                 port: 19035, kind: "server" }
+          - { dir: "fm-022-05-limit-ignored",              port: 19040, kind: "server" }
+          - { dir: "fm-022-06-case-insensitive-enum",      port: 19037, kind: "server" }
+          - { dir: "fm-022-07-empty-string-accepted",      port: 19045, kind: "server" }
+          - { dir: "fm-022-08-conditional-required",       port: 19047, kind: "server" }
+          - { dir: "fm-022-09-id-mismatch",                port: 19013, kind: "server" }
+          - { dir: "fm-025-01-incorrect-status",           port: 19025, kind: "server" }
+          - { dir: "fm-025-02-auth-error-code",            port: 19007, kind: "server" }
+          - { dir: "fm-025-03-redirect-instead-of-response", port: 19011, kind: "server" }
+          - { dir: "fm-025-04-validation-error-code",      port: 19043, kind: "server" }
+          - { dir: "fm-025-05-empty-result-404",           port: 19048, kind: "server" }
+          - { dir: "fm-025-06-page-out-of-range-500",      port: 19050, kind: "server" }
+          - { dir: "fm-027-01-lost-update",                port: 19027, kind: "server" }
+          - { dir: "fm-028-01-async-job",                  port: 19026, kind: "server" }
+          - { dir: "fm-034-01-method-semantics",           port: 19034, kind: "server" }
+          - { dir: "fm-034-02-method-not-allowed",         port: 19014, kind: "server" }
+          - { dir: "fm-034-03-nonidempotent-get",          port: 19033, kind: "server" }
+          - { dir: "fm-034-04-patch-semantics",            port: 19038, kind: "server" }
+          - { dir: "fm-034-05-soft-delete",                port: 19036, kind: "server" }
+          - { dir: "fm-034-06-bulk-delete",                port: 19039, kind: "server" }
+          - { dir: "fm-038-01-write-not-persisted",        port: 19046, kind: "server" }
+          - { dir: "fm-044-01-sensitive-data",             port: 19044, kind: "server" }
           # Keep this matrix in sync with catalog.yml
 
     steps:
@@ -81,10 +81,10 @@ jobs:
         timeout-minutes: 2
         run: |
           go build -o /tmp/server-broken \
-            ./failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/broken/
+            ./failures/${{ matrix.fm.dir }}/broken/
           /tmp/server-broken &
           for i in $(seq 1 50); do
-            curl -sf http://localhost:19${{ matrix.fm.id }}/health && break
+            curl -sf http://localhost:${{ matrix.fm.port }}/health && break
             [ $i -eq 50 ] && { echo "Server did not become ready after 10s"; exit 1; }
             sleep 0.2
           done
@@ -93,8 +93,8 @@ jobs:
         if: matrix.fm.kind == 'server'
         run: |
           set +e
-          clrsig run failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/scenarios/detect.yaml \
-            --env failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/environments/local.yaml
+          clrsig run failures/${{ matrix.fm.dir }}/scenarios/detect.yaml \
+            --env failures/${{ matrix.fm.dir }}/environments/local.yaml
           test $? -eq 1
 
       - name: Stop broken server
@@ -106,10 +106,10 @@ jobs:
         timeout-minutes: 2
         run: |
           go build -o /tmp/server-fixed \
-            ./failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/fixed/
+            ./failures/${{ matrix.fm.dir }}/fixed/
           /tmp/server-fixed &
           for i in $(seq 1 50); do
-            curl -sf http://localhost:19${{ matrix.fm.id }}/health && break
+            curl -sf http://localhost:${{ matrix.fm.port }}/health && break
             [ $i -eq 50 ] && { echo "Server did not become ready after 10s"; exit 1; }
             sleep 0.2
           done
@@ -117,15 +117,15 @@ jobs:
       - name: "Fix (must exit 0)"
         if: matrix.fm.kind == 'server'
         run: |
-          clrsig run failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/scenarios/detect.yaml \
-            --env failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/environments/local.yaml
+          clrsig run failures/${{ matrix.fm.dir }}/scenarios/detect.yaml \
+            --env failures/${{ matrix.fm.dir }}/environments/local.yaml
 
       - name: "Diff (must exit 1)"
         if: matrix.fm.kind == 'diff'
         run: |
           set +e
           clrsig diff \
-            failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/v1/openapi.yaml \
-            failures/fm-${{ matrix.fm.id }}-${{ matrix.fm.slug }}/v2/openapi.yaml \
+            failures/${{ matrix.fm.dir }}/v1/openapi.yaml \
+            failures/${{ matrix.fm.dir }}/v2/openapi.yaml \
             --breaking-only
           test $? -eq 1

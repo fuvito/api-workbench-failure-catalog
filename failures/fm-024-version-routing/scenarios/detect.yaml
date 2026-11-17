@@ -1,9 +1,0 @@
-schemaVersion: "1"
-title: FM-024 — API Version Routing
-specFile: ../openapi.yaml
-steps:
-  - label: "GET /v2/products — each product must include the required sku field"
-    request:
-      method: GET
-      url: "{{baseUrl}}/v2/products"
-    assertions: []

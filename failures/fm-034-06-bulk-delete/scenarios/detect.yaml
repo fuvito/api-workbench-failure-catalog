@@ -1,0 +1,32 @@
+schemaVersion: "1"
+title: fm-034-06 — Bulk Delete No-Op
+steps:
+  - label: "confirm items 1 and 2 exist before delete"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items/1"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+
+  - label: "POST /items/bulk-delete with ids [1, 2] — must return 204"
+    request:
+      method: POST
+      url: "{{baseUrl}}/items/bulk-delete"
+      body:
+        type: json
+        content: '{"ids":[1,2]}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 204
+
+  - label: "GET /items/1 — must return 404 (item was deleted)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items/1"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 404

@@ -1,0 +1,12 @@
+schemaVersion: "1"
+title: fm-022-09 — Response ID Mismatch
+steps:
+  - label: "GET /products/5 — response id must equal 5 (broken server always returns id=1)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/products/5"
+    assertions:
+      - type: jsonpath
+        path: "$.id"
+        operator: eq
+        expected: 5

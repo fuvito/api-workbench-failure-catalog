@@ -1,0 +1,15 @@
+schemaVersion: "1"
+title: fm-044-01 — Sensitive Data Exposure in API Responses
+specFile: ../openapi.yaml
+steps:
+  - label: "user 1 response must not include undeclared fields (password_hash, api_key, role)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/users/1"
+    assertions: []
+
+  - label: "user 2 response must not include undeclared fields (password_hash, api_key, role)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/users/2"
+    assertions: []

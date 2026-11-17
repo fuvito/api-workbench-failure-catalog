@@ -1,0 +1,30 @@
+schemaVersion: "1"
+title: fm-016-01 — Rate-Limit and Throttling Failures
+specFile: ../openapi.yaml
+steps:
+  - label: "request 1 — within rate limit, must return 200"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+
+  - label: "request 2 — within rate limit, must return 200"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+
+  - label: "request 3 — must return 200 (broken server returns undeclared 429)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200

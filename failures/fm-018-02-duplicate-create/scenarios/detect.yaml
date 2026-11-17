@@ -1,0 +1,26 @@
+schemaVersion: "1"
+title: fm-018-02 — Duplicate Create Returns 200 Instead of 409
+steps:
+  - label: "first POST — create user alice@example.com (must succeed with 201)"
+    request:
+      method: POST
+      url: "{{baseUrl}}/users"
+      body:
+        type: json
+        content: '{"name":"Alice","email":"alice@example.com"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 201
+
+  - label: "second POST — same email must return 409 Conflict, not 201"
+    request:
+      method: POST
+      url: "{{baseUrl}}/users"
+      body:
+        type: json
+        content: '{"name":"Alice","email":"alice@example.com"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 409

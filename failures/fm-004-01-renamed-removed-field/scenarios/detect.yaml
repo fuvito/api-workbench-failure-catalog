@@ -1,0 +1,14 @@
+name: fm-004-01 — Renamed or Removed Response Fields
+kind: diff
+
+# Run from the repo root:
+#   clrsig diff failures/fm-004-renamed-removed-field/v1/openapi.yaml \
+#               failures/fm-004-renamed-removed-field/v2/openapi.yaml \
+#               --breaking-only
+# Expected exit: 1
+
+expectedBreaking:
+  - path: /users/{id}
+    change: required response field 'full_name' removed (renamed to 'name' without deprecation)
+  - path: /users/{id}
+    change: required response field 'phone' removed

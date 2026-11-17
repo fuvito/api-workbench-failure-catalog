@@ -1,9 +1,0 @@
-schemaVersion: "1"
-title: FM-010 — OpenAPI Specification and Implementation Drift
-specFile: ../openapi.yaml
-steps:
-  - label: "item response must match the declared OpenAPI spec"
-    request:
-      method: GET
-      url: "{{baseUrl}}/items/1"
-    assertions: []

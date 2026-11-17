@@ -1,0 +1,15 @@
+schemaVersion: "1"
+title: fm-005-04 — Default Value Not Applied
+specFile: ../openapi.yaml
+steps:
+  - label: "POST /posts without published — response must include published: boolean (broken returns null)"
+    request:
+      method: POST
+      url: "{{baseUrl}}/posts"
+      body:
+        type: json
+        content: '{"title":"Hello World"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 201

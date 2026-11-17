@@ -1,0 +1,26 @@
+schemaVersion: "1"
+title: fm-025-04 — Validation Error Returns 500 Instead of 422
+steps:
+  - label: "POST with missing name — must return 422, not 500"
+    request:
+      method: POST
+      url: "{{baseUrl}}/products"
+      body:
+        type: json
+        content: '{"price":9.99}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 422
+
+  - label: "POST with missing price — must return 422, not 500"
+    request:
+      method: POST
+      url: "{{baseUrl}}/products"
+      body:
+        type: json
+        content: '{"name":"Widget"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 422

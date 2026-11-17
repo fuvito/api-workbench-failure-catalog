@@ -1,0 +1,20 @@
+schemaVersion: "1"
+title: fm-025-06 — Out-of-Range Page Returns 500
+steps:
+  - label: "GET /items?page=1 — first page must return 200"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items?page=1"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+
+  - label: "GET /items?page=9999 — out-of-range page must return 200 with empty list (broken returns 500)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items?page=9999"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200

@@ -1,0 +1,22 @@
+schemaVersion: "1"
+title: fm-022-02 — Filter Parameter Ignored
+steps:
+  - label: "GET /orders?status=completed — must return only the 2 completed orders"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders?status=completed"
+    assertions:
+      - type: jsonpath
+        path: "$.count"
+        operator: eq
+        expected: 2
+
+  - label: "GET /orders?status=pending — must return only the 1 pending order"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders?status=pending"
+    assertions:
+      - type: jsonpath
+        path: "$.count"
+        operator: eq
+        expected: 1

@@ -1,0 +1,26 @@
+schemaVersion: "1"
+title: fm-022-07 — Empty String Accepted for Required Field
+steps:
+  - label: "POST with valid username and email — must return 201"
+    request:
+      method: POST
+      url: "{{baseUrl}}/users"
+      body:
+        type: json
+        content: '{"username":"alice","email":"alice@example.com"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 201
+
+  - label: "POST with empty username — must return 422 (broken server accepts empty string)"
+    request:
+      method: POST
+      url: "{{baseUrl}}/users"
+      body:
+        type: json
+        content: '{"username":"","email":"alice@example.com"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 422

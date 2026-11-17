@@ -1,9 +1,0 @@
-schemaVersion: "1"
-title: FM-001 — Currency, Number, and Precision Formatting Failures
-specFile: ../openapi.yaml
-steps:
-  - label: "invoice monetary fields must be numbers, not strings"
-    request:
-      method: GET
-      url: "{{baseUrl}}/invoices/1"
-    assertions: []

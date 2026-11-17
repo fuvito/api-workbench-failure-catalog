@@ -1,0 +1,26 @@
+schemaVersion: "1"
+title: fm-022-08 — Conditional Required Field Not Enforced
+steps:
+  - label: "POST shipped shipment with tracking number — must return 201"
+    request:
+      method: POST
+      url: "{{baseUrl}}/shipments"
+      body:
+        type: json
+        content: '{"status":"shipped","tracking_number":"TRK-001"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 201
+
+  - label: "POST shipped shipment without tracking number — must return 422 (broken accepts it)"
+    request:
+      method: POST
+      url: "{{baseUrl}}/shipments"
+      body:
+        type: json
+        content: '{"status":"shipped"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 422

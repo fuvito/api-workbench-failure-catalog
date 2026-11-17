@@ -1,0 +1,22 @@
+schemaVersion: "1"
+title: fm-003-03 — Off-by-One in Page Offset
+steps:
+  - label: "GET page 1 — first item must be id=1 (Alpha)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items?page=1&per_page=3"
+    assertions:
+      - type: jsonpath
+        path: "$.items[0].id"
+        operator: eq
+        expected: 1
+
+  - label: "GET page 2 — first item must be id=4 (Delta); broken server skips to id=7 (empty)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items?page=2&per_page=3"
+    assertions:
+      - type: jsonpath
+        path: "$.items[0].id"
+        operator: eq
+        expected: 4

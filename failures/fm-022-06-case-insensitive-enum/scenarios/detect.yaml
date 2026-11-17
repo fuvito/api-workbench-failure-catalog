@@ -1,0 +1,26 @@
+schemaVersion: "1"
+title: fm-022-06 — Case-Insensitive Enum Accepted
+steps:
+  - label: "POST with valid lowercase status — must return 201"
+    request:
+      method: POST
+      url: "{{baseUrl}}/orders"
+      body:
+        type: json
+        content: '{"status":"pending"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 201
+
+  - label: "POST with uppercase PENDING — must return 422 (broken server accepts it)"
+    request:
+      method: POST
+      url: "{{baseUrl}}/orders"
+      body:
+        type: json
+        content: '{"status":"PENDING"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 422
