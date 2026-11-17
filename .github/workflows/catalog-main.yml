@@ -95,7 +95,12 @@ jobs:
           set +e
           clrsig run failures/${{ matrix.fm.dir }}/scenarios/detect.yaml \
             --env failures/${{ matrix.fm.dir }}/environments/local.yaml
-          test $? -eq 1
+          EXIT=$?
+          if [ $EXIT -ne 1 ]; then
+            echo "DETECTION FAILED: expected clrsig to exit 1 (broken server should trigger assertions), got exit $EXIT"
+            echo "The broken server passed all assertions — the scenario does not catch the bug."
+            exit 1
+          fi
 
       - name: Stop broken server
         if: matrix.fm.kind == 'server'
@@ -128,4 +133,9 @@ jobs:
             failures/${{ matrix.fm.dir }}/v1/openapi.yaml \
             failures/${{ matrix.fm.dir }}/v2/openapi.yaml \
             --breaking-only
-          test $? -eq 1
+          EXIT=$?
+          if [ $EXIT -ne 1 ]; then
+            echo "DETECTION FAILED: expected clrsig diff to exit 1 (breaking changes should be detected), got exit $EXIT"
+            echo "No breaking changes were reported — the specs may not encode the intended breaking change."
+            exit 1
+          fi
