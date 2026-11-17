@@ -1,0 +1,27 @@
+openapi: "3.0.3"
+info:
+  title: FM-015 Array Item Type Mismatch
+  version: "1.0.0"
+paths:
+  /tags:
+    get:
+      summary: List tags
+      responses:
+        "200":
+          description: Tag list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TagList"
+components:
+  schemas:
+    TagList:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            type: string
+        count:
+          type: integer

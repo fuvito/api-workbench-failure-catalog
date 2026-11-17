@@ -56,6 +56,11 @@ jobs:
           - { id: "012", slug: "page-offset",          kind: "server" }
           - { id: "013", slug: "id-mismatch",          kind: "server" }
           - { id: "014", slug: "method-not-allowed",   kind: "server" }
+          - { id: "015", slug: "array-item-type",     kind: "server" }
+          - { id: "019", slug: "default-not-applied", kind: "server" }
+          - { id: "037", slug: "case-insensitive-enum", kind: "server" }
+          - { id: "040", slug: "limit-ignored",       kind: "server" }
+          - { id: "045", slug: "empty-string-accepted", kind: "server" }
           # Add entries here as sub-projects land — see docs/TASKS.md §7.4
 
     steps:

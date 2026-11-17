@@ -1,0 +1,12 @@
+schemaVersion: "1"
+title: FM-040 — Limit Parameter Ignored
+steps:
+  - label: "GET /items?limit=2 — count must be 2 (broken server ignores limit and returns all 5)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items?limit=2"
+    assertions:
+      - type: jsonpath
+        path: "$.count"
+        operator: eq
+        expected: 2

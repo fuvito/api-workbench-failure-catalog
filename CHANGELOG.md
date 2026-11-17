@@ -11,6 +11,26 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-045** — Empty String Accepted for Required Field (Easy, port 19045)
+  - Broken server checks only for missing fields; `username: ""` returns 201 instead of 422
+  - Detected by status assertion: second POST with empty username expects 422
+
+- **FM-040** — Limit Parameter Ignored (Easy, port 19040)
+  - Broken server parses `?limit=` but never applies it; always returns the full dataset
+  - Detected by jsonpath assertion: `$.count == 2` for `?limit=2` with 5 items in store
+
+- **FM-037** — Case-Insensitive Enum Accepted (Easy, port 19037)
+  - Broken server normalises input with `strings.ToLower`; `"PENDING"` is accepted when only `"pending"` is valid
+  - Detected by status assertion: POST with uppercase enum value expects 422
+
+- **FM-019** — Default Value Not Applied (Easy, port 19019)
+  - Broken server uses `*bool` for `published`; omitting it in POST returns `null` instead of the declared default `false`
+  - Detected by `specFile:` binding — `null` does not satisfy `type: boolean`
+
+- **FM-015** — Array Item Type Mismatch (Easy, port 19015)
+  - Broken server returns integer `42` in a string-typed array due to a missing type conversion
+  - Detected by `specFile:` binding — integer fails `items: { type: string }` validation
+
 - **FM-014** — Unsupported Method Returns Wrong Status (Easy, port 19014)
   - Broken server accepts any method on a read-only endpoint; DELETE returns 200 instead of 405
   - Detected by status assertion: DELETE expects 405

@@ -1,0 +1,12 @@
+schemaVersion: "1"
+title: FM-015 — Array Item Type Mismatch
+specFile: ../openapi.yaml
+steps:
+  - label: "GET /tags — all items must be strings; broken server includes integer 42 in the array"
+    request:
+      method: GET
+      url: "{{baseUrl}}/tags"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
