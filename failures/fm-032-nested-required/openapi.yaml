@@ -1,0 +1,57 @@
+openapi: "3.0.3"
+info:
+  title: FM-032 Nested Required Field Missing
+  version: "1.0.0"
+paths:
+  /orders/{id}:
+    get:
+      summary: Get order by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Order:
+      type: object
+      required: [id, total, shipping_address]
+      properties:
+        id:
+          type: integer
+        total:
+          type: number
+        shipping_address:
+          $ref: '#/components/schemas/Address'
+    Address:
+      type: object
+      required: [street, city, country]
+      properties:
+        street:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        postal_code:
+          type: string
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

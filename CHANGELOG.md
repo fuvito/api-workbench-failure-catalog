@@ -11,6 +11,26 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **FM-043** — Validation Error Returns 500 Instead of 422 (Easy, port 19043)
+  - Broken server treats missing-field validation the same as runtime errors, returning 500
+  - Detected by status assertion: expects 422
+
+- **FM-042** — Duplicate Create Returns 200 Instead of 409 (Easy, port 19042)
+  - Broken server inserts duplicate records without checking uniqueness constraint
+  - Detected by status assertion: second POST with same email expects 409
+
+- **FM-032** — Nested Required Field Missing (Easy, port 19032)
+  - `omitempty` on `street` field silently drops it when empty; spec declares it required
+  - Detected by `specFile:` binding — missing required property inside nested Address object
+
+- **FM-031** — Page Overflow Returns Wrong Data (Easy, port 19031)
+  - Broken server wraps page number with modulo; page=99 returns page=1 data
+  - Detected by jsonpath assertion: `$.count == 0` for out-of-range page
+
+- **FM-011** — Redirect Instead of Response (Easy, port 19011)
+  - Broken server returns 301 for all requests due to misconfigured redirect middleware
+  - Detected by status assertion: expects 200
+
 - **FM-039** — Bulk Delete No-Op (Easy, port 19039)
   - Broken server returns 204 but never removes items; GET after delete still returns 200
   - Detected by status assertion: step 3 expects 404 on deleted item

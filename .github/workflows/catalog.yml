@@ -41,6 +41,11 @@ jobs:
           - { id: "026", slug: "async-job",            kind: "server" }
           - { id: "028", slug: "filter-ignored",       kind: "server" }
           - { id: "039", slug: "bulk-delete",          kind: "server" }
+          - { id: "011", slug: "redirect-instead-of-response", kind: "server" }
+          - { id: "031", slug: "page-overflow",        kind: "server" }
+          - { id: "032", slug: "nested-required",      kind: "server" }
+          - { id: "042", slug: "duplicate-create",     kind: "server" }
+          - { id: "043", slug: "validation-error-code", kind: "server" }
           # Add entries here as sub-projects land — see docs/TASKS.md §7.4
 
     steps:

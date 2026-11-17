@@ -1,0 +1,15 @@
+schemaVersion: "1"
+title: FM-032 — Nested Required Field Missing
+specFile: ../openapi.yaml
+steps:
+  - label: "order 1 — shipping_address with street present must be valid"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/1"
+    assertions: []
+
+  - label: "order 2 — shipping_address.street must not be omitted (omitempty drops required field)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/2"
+    assertions: []

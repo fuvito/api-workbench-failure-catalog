@@ -1,0 +1,55 @@
+openapi: "3.0.3"
+info:
+  title: FM-043 Validation Error Returns 500 Instead of 422
+  version: "1.0.0"
+paths:
+  /products:
+    post:
+      summary: Create a product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, price]
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+      responses:
+        "201":
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+components:
+  schemas:
+    Product:
+      type: object
+      required: [id, name, price]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: number
+    ValidationError:
+      type: object
+      required: [error, fields]
+      properties:
+        error:
+          type: string
+        fields:
+          type: array
+          items:
+            type: string

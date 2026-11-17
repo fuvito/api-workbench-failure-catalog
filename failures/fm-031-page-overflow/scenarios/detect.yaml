@@ -1,0 +1,23 @@
+schemaVersion: "1"
+title: FM-031 — Page Overflow Returns Wrong Data
+specFile: ../openapi.yaml
+steps:
+  - label: "page=1 — returns items normally"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items?page=1"
+    assertions:
+      - type: jsonpath
+        path: "$.count"
+        operator: eq
+        expected: 3
+
+  - label: "page=99 — beyond last page, must return empty result (count=0)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/items?page=99"
+    assertions:
+      - type: jsonpath
+        path: "$.count"
+        operator: eq
+        expected: 0
