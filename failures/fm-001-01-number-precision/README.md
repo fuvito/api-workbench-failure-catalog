@@ -29,9 +29,9 @@ The consequence: consumer code that does arithmetic on the values (`total + tax`
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-001-number-precision/broken/main.go &
-clrsig run failures/fm-001-number-precision/scenarios/detect.yaml \
-  --env failures/fm-001-number-precision/environments/local.yaml
+go run failures/fm-001-01-number-precision/broken/main.go &
+clrsig run failures/fm-001-01-number-precision/scenarios/detect.yaml \
+  --env failures/fm-001-01-number-precision/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — `$.subtotal`, `$.tax`, and `$.total` have type `string`; spec requires `type: number`.
@@ -72,9 +72,9 @@ See [schema assertions](https://clrsig.com/docs/format-spec/) in the Clear Signa
 ## Fix
 
 ```bash
-go run failures/fm-001-number-precision/fixed/main.go &
-clrsig run failures/fm-001-number-precision/scenarios/detect.yaml \
-  --env failures/fm-001-number-precision/environments/local.yaml
+go run failures/fm-001-01-number-precision/fixed/main.go &
+clrsig run failures/fm-001-01-number-precision/scenarios/detect.yaml \
+  --env failures/fm-001-01-number-precision/environments/local.yaml
 # exits 0
 ```
 
@@ -126,8 +126,8 @@ If you need to add it back after a reset, uncomment in both `catalog.yml` and `c
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-001-number-precision\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-001-number-precision/scenarios/detect.yaml `
-  --env failures/fm-001-number-precision/environments/local.yaml
+clrsig run failures/fm-001-01-number-precision/scenarios/detect.yaml `
+  --env failures/fm-001-01-number-precision/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19001).OwningProcess
 
@@ -135,8 +135,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19001).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-001-number-precision\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-001-number-precision/scenarios/detect.yaml `
-  --env failures/fm-001-number-precision/environments/local.yaml
+clrsig run failures/fm-001-01-number-precision/scenarios/detect.yaml `
+  --env failures/fm-001-01-number-precision/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

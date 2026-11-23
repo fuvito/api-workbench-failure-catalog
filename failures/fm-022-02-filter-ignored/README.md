@@ -11,9 +11,9 @@ The `status` query parameter is accepted but ignored — the server always retur
 ## Reproduce it
 
 ```bash
-go run failures/fm-028-filter-ignored/broken/main.go &
-clrsig run failures/fm-028-filter-ignored/scenarios/detect.yaml \
-  --env failures/fm-028-filter-ignored/environments/local.yaml
+go run failures/fm-022-02-filter-ignored/broken/main.go &
+clrsig run failures/fm-022-02-filter-ignored/scenarios/detect.yaml \
+  --env failures/fm-022-02-filter-ignored/environments/local.yaml
 ```
 
 Expected: **exits 1** — `?status=completed` returns `count: 3` (all orders); assertion expects `2`.
@@ -25,9 +25,9 @@ Both steps assert `$.count` via jsonpath. The broken server returns `3` regardle
 ## Fix
 
 ```bash
-go run failures/fm-028-filter-ignored/fixed/main.go &
-clrsig run failures/fm-028-filter-ignored/scenarios/detect.yaml \
-  --env failures/fm-028-filter-ignored/environments/local.yaml
+go run failures/fm-022-02-filter-ignored/fixed/main.go &
+clrsig run failures/fm-022-02-filter-ignored/scenarios/detect.yaml \
+  --env failures/fm-022-02-filter-ignored/environments/local.yaml
 # exits 0
 ```
 

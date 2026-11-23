@@ -29,9 +29,9 @@ The consequence: HTTP clients, proxies, and monitoring tools that rely on status
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-007-auth-error-code/broken/main.go &
-clrsig run failures/fm-007-auth-error-code/scenarios/detect.yaml \
-  --env failures/fm-007-auth-error-code/environments/local.yaml
+go run failures/fm-025-02-auth-error-code/broken/main.go &
+clrsig run failures/fm-025-02-auth-error-code/scenarios/detect.yaml \
+  --env failures/fm-025-02-auth-error-code/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — both steps receive `200`; assertions expect `401`.
@@ -53,9 +53,9 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19007).OwningProcess
 ## Fix
 
 ```bash
-go run failures/fm-007-auth-error-code/fixed/main.go &
-clrsig run failures/fm-007-auth-error-code/scenarios/detect.yaml \
-  --env failures/fm-007-auth-error-code/environments/local.yaml
+go run failures/fm-025-02-auth-error-code/fixed/main.go &
+clrsig run failures/fm-025-02-auth-error-code/scenarios/detect.yaml \
+  --env failures/fm-025-02-auth-error-code/environments/local.yaml
 # exits 0
 ```
 
@@ -74,8 +74,8 @@ clrsig run failures/fm-007-auth-error-code/scenarios/detect.yaml \
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-007-auth-error-code\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-007-auth-error-code/scenarios/detect.yaml `
-  --env failures/fm-007-auth-error-code/environments/local.yaml
+clrsig run failures/fm-025-02-auth-error-code/scenarios/detect.yaml `
+  --env failures/fm-025-02-auth-error-code/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19007).OwningProcess
 
@@ -83,8 +83,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19007).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-007-auth-error-code\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-007-auth-error-code/scenarios/detect.yaml `
-  --env failures/fm-007-auth-error-code/environments/local.yaml
+clrsig run failures/fm-025-02-auth-error-code/scenarios/detect.yaml `
+  --env failures/fm-025-02-auth-error-code/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

@@ -29,9 +29,9 @@ The consequence: a partial update silently corrupts the resource. A mobile app u
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-038-patch-semantics/broken/main.go &
-clrsig run failures/fm-038-patch-semantics/scenarios/detect.yaml \
-  --env failures/fm-038-patch-semantics/environments/local.yaml
+go run failures/fm-034-04-patch-semantics/broken/main.go &
+clrsig run failures/fm-034-04-patch-semantics/scenarios/detect.yaml \
+  --env failures/fm-034-04-patch-semantics/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — after `PATCH {"email":...}`, step 3 reads back `name: ""` and `role: ""`; assertions expect `"Alice"` and `"admin"`.
@@ -66,9 +66,9 @@ The broken server zeroes out `name` and `role` in step 2. Step 3's `type: jsonpa
 ## Fix
 
 ```bash
-go run failures/fm-038-patch-semantics/fixed/main.go &
-clrsig run failures/fm-038-patch-semantics/scenarios/detect.yaml \
-  --env failures/fm-038-patch-semantics/environments/local.yaml
+go run failures/fm-034-04-patch-semantics/fixed/main.go &
+clrsig run failures/fm-034-04-patch-semantics/scenarios/detect.yaml \
+  --env failures/fm-034-04-patch-semantics/environments/local.yaml
 # exits 0
 ```
 
@@ -87,8 +87,8 @@ clrsig run failures/fm-038-patch-semantics/scenarios/detect.yaml \
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-038-patch-semantics\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-038-patch-semantics/scenarios/detect.yaml `
-  --env failures/fm-038-patch-semantics/environments/local.yaml
+clrsig run failures/fm-034-04-patch-semantics/scenarios/detect.yaml `
+  --env failures/fm-034-04-patch-semantics/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19038).OwningProcess
 
@@ -96,8 +96,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19038).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-038-patch-semantics\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-038-patch-semantics/scenarios/detect.yaml `
-  --env failures/fm-038-patch-semantics/environments/local.yaml
+clrsig run failures/fm-034-04-patch-semantics/scenarios/detect.yaml `
+  --env failures/fm-034-04-patch-semantics/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

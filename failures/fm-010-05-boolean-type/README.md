@@ -30,9 +30,9 @@ The consequence: consumer code doing `if (user.active)` evaluates `"false"` as t
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-029-boolean-type/broken/main.go &
-clrsig run failures/fm-029-boolean-type/scenarios/detect.yaml \
-  --env failures/fm-029-boolean-type/environments/local.yaml
+go run failures/fm-010-05-boolean-type/broken/main.go &
+clrsig run failures/fm-010-05-boolean-type/scenarios/detect.yaml \
+  --env failures/fm-010-05-boolean-type/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — `active` and `email_verified` have type `string`; feature flags have type `integer`; spec requires `type: boolean` for all.
@@ -61,9 +61,9 @@ No explicit assertions needed beyond `assertions: []`.
 ## Fix
 
 ```bash
-go run failures/fm-029-boolean-type/fixed/main.go &
-clrsig run failures/fm-029-boolean-type/scenarios/detect.yaml \
-  --env failures/fm-029-boolean-type/environments/local.yaml
+go run failures/fm-010-05-boolean-type/fixed/main.go &
+clrsig run failures/fm-010-05-boolean-type/scenarios/detect.yaml \
+  --env failures/fm-010-05-boolean-type/environments/local.yaml
 # exits 0
 ```
 
@@ -82,8 +82,8 @@ clrsig run failures/fm-029-boolean-type/scenarios/detect.yaml \
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-029-boolean-type\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-029-boolean-type/scenarios/detect.yaml `
-  --env failures/fm-029-boolean-type/environments/local.yaml
+clrsig run failures/fm-010-05-boolean-type/scenarios/detect.yaml `
+  --env failures/fm-010-05-boolean-type/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19029).OwningProcess
 
@@ -91,8 +91,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19029).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-029-boolean-type\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-029-boolean-type/scenarios/detect.yaml `
-  --env failures/fm-029-boolean-type/environments/local.yaml
+clrsig run failures/fm-010-05-boolean-type/scenarios/detect.yaml `
+  --env failures/fm-010-05-boolean-type/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

@@ -24,9 +24,9 @@ A consumer that checks the schema sees a `number` in `total` and considers the r
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-022-semantically-invalid/broken/main.go &
-clrsig run failures/fm-022-semantically-invalid/scenarios/detect.yaml \
-  --env failures/fm-022-semantically-invalid/environments/local.yaml
+go run failures/fm-022-01-semantically-invalid/broken/main.go &
+clrsig run failures/fm-022-01-semantically-invalid/scenarios/detect.yaml \
+  --env failures/fm-022-01-semantically-invalid/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — both orders return `total` equal to `unit_price` (10.00 and 24.99) instead of the correct products (30.00 and 49.98).
@@ -68,9 +68,9 @@ Schema validation alone would not catch this — both `10.00` and `30.00` satisf
 ## Fix
 
 ```bash
-go run failures/fm-022-semantically-invalid/fixed/main.go &
-clrsig run failures/fm-022-semantically-invalid/scenarios/detect.yaml \
-  --env failures/fm-022-semantically-invalid/environments/local.yaml
+go run failures/fm-022-01-semantically-invalid/fixed/main.go &
+clrsig run failures/fm-022-01-semantically-invalid/scenarios/detect.yaml \
+  --env failures/fm-022-01-semantically-invalid/environments/local.yaml
 # exits 0
 ```
 
@@ -124,8 +124,8 @@ Add to both `catalog.yml` and `catalog-main.yml`.
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-022-semantically-invalid\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-022-semantically-invalid/scenarios/detect.yaml `
-  --env failures/fm-022-semantically-invalid/environments/local.yaml
+clrsig run failures/fm-022-01-semantically-invalid/scenarios/detect.yaml `
+  --env failures/fm-022-01-semantically-invalid/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19022).OwningProcess
 
@@ -133,8 +133,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19022).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-022-semantically-invalid\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-022-semantically-invalid/scenarios/detect.yaml `
-  --env failures/fm-022-semantically-invalid/environments/local.yaml
+clrsig run failures/fm-022-01-semantically-invalid/scenarios/detect.yaml `
+  --env failures/fm-022-01-semantically-invalid/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

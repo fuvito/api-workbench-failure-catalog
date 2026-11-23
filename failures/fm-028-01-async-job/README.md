@@ -11,9 +11,9 @@ Jobs are created but never transition beyond `"processing"`. The worker that adv
 ## Reproduce it
 
 ```bash
-go run failures/fm-026-async-job/broken/main.go &
-clrsig run failures/fm-026-async-job/scenarios/detect.yaml \
-  --env failures/fm-026-async-job/environments/local.yaml
+go run failures/fm-028-01-async-job/broken/main.go &
+clrsig run failures/fm-028-01-async-job/scenarios/detect.yaml \
+  --env failures/fm-028-01-async-job/environments/local.yaml
 ```
 
 Expected: **exits 1** — `GET /jobs/1` returns `{"status":"processing"}`; assertion expects `"completed"`.
@@ -25,9 +25,9 @@ Step 2 asserts `$.status == "completed"`. The broken server always returns `"pro
 ## Fix
 
 ```bash
-go run failures/fm-026-async-job/fixed/main.go &
-clrsig run failures/fm-026-async-job/scenarios/detect.yaml \
-  --env failures/fm-026-async-job/environments/local.yaml
+go run failures/fm-028-01-async-job/fixed/main.go &
+clrsig run failures/fm-028-01-async-job/scenarios/detect.yaml \
+  --env failures/fm-028-01-async-job/environments/local.yaml
 # exits 0
 ```
 

@@ -34,9 +34,9 @@ The consequence: consumer code doing `if (order.status === "pending")` never mat
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-030-enum-violation/broken/main.go &
-clrsig run failures/fm-030-enum-violation/scenarios/detect.yaml \
-  --env failures/fm-030-enum-violation/environments/local.yaml
+go run failures/fm-022-03-enum-violation/broken/main.go &
+clrsig run failures/fm-022-03-enum-violation/scenarios/detect.yaml \
+  --env failures/fm-022-03-enum-violation/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — orders 1 and 3 have wrong-case values; order 2 has an undeclared `"SHIPPED"` status.
@@ -64,9 +64,9 @@ No explicit assertions needed — `assertions: []` is sufficient.
 ## Fix
 
 ```bash
-go run failures/fm-030-enum-violation/fixed/main.go &
-clrsig run failures/fm-030-enum-violation/scenarios/detect.yaml \
-  --env failures/fm-030-enum-violation/environments/local.yaml
+go run failures/fm-022-03-enum-violation/fixed/main.go &
+clrsig run failures/fm-022-03-enum-violation/scenarios/detect.yaml \
+  --env failures/fm-022-03-enum-violation/environments/local.yaml
 # exits 0
 ```
 
@@ -85,8 +85,8 @@ clrsig run failures/fm-030-enum-violation/scenarios/detect.yaml \
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-030-enum-violation\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-030-enum-violation/scenarios/detect.yaml `
-  --env failures/fm-030-enum-violation/environments/local.yaml
+clrsig run failures/fm-022-03-enum-violation/scenarios/detect.yaml `
+  --env failures/fm-022-03-enum-violation/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19030).OwningProcess
 
@@ -94,8 +94,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19030).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-030-enum-violation\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-030-enum-violation/scenarios/detect.yaml `
-  --env failures/fm-030-enum-violation/environments/local.yaml
+clrsig run failures/fm-022-03-enum-violation/scenarios/detect.yaml `
+  --env failures/fm-022-03-enum-violation/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

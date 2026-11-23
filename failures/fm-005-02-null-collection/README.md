@@ -29,9 +29,9 @@ The consequence: consumer code that iterates `response.members.forEach(...)` thr
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-023-null-collection/broken/main.go &
-clrsig run failures/fm-023-null-collection/scenarios/detect.yaml \
-  --env failures/fm-023-null-collection/environments/local.yaml
+go run failures/fm-005-02-null-collection/broken/main.go &
+clrsig run failures/fm-005-02-null-collection/scenarios/detect.yaml \
+  --env failures/fm-005-02-null-collection/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — team 2 returns `{"members":null}` and project 2 returns `{"tags":null}`; spec requires `type: array`.
@@ -59,9 +59,9 @@ No explicit assertions needed — `assertions: []` is sufficient.
 ## Fix
 
 ```bash
-go run failures/fm-023-null-collection/fixed/main.go &
-clrsig run failures/fm-023-null-collection/scenarios/detect.yaml \
-  --env failures/fm-023-null-collection/environments/local.yaml
+go run failures/fm-005-02-null-collection/fixed/main.go &
+clrsig run failures/fm-005-02-null-collection/scenarios/detect.yaml \
+  --env failures/fm-005-02-null-collection/environments/local.yaml
 # exits 0
 ```
 
@@ -80,8 +80,8 @@ clrsig run failures/fm-023-null-collection/scenarios/detect.yaml \
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-023-null-collection\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-023-null-collection/scenarios/detect.yaml `
-  --env failures/fm-023-null-collection/environments/local.yaml
+clrsig run failures/fm-005-02-null-collection/scenarios/detect.yaml `
+  --env failures/fm-005-02-null-collection/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19023).OwningProcess
 
@@ -89,8 +89,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19023).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-023-null-collection\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-023-null-collection/scenarios/detect.yaml `
-  --env failures/fm-023-null-collection/environments/local.yaml
+clrsig run failures/fm-005-02-null-collection/scenarios/detect.yaml `
+  --env failures/fm-005-02-null-collection/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

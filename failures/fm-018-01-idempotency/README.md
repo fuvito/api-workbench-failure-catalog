@@ -36,9 +36,9 @@ Steps 1 and 2 both return `200`-range responses on both servers; the discriminat
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-018-idempotency/broken/main.go &
-clrsig run failures/fm-018-idempotency/scenarios/detect.yaml \
-  --env failures/fm-018-idempotency/environments/local.yaml
+go run failures/fm-018-01-idempotency/broken/main.go &
+clrsig run failures/fm-018-01-idempotency/scenarios/detect.yaml \
+  --env failures/fm-018-01-idempotency/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — step 3 returns `{"count": 2, ...}`; the assertion expects `$.count == 1`.
@@ -78,9 +78,9 @@ A count of 2 means the server processed the retry as a new operation. A count of
 ## Fix
 
 ```bash
-go run failures/fm-018-idempotency/fixed/main.go &
-clrsig run failures/fm-018-idempotency/scenarios/detect.yaml \
-  --env failures/fm-018-idempotency/environments/local.yaml
+go run failures/fm-018-01-idempotency/fixed/main.go &
+clrsig run failures/fm-018-01-idempotency/scenarios/detect.yaml \
+  --env failures/fm-018-01-idempotency/environments/local.yaml
 # exits 0
 ```
 
@@ -181,8 +181,8 @@ Add to both `catalog.yml` and `catalog-main.yml`.
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-018-idempotency\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-018-idempotency/scenarios/detect.yaml `
-  --env failures/fm-018-idempotency/environments/local.yaml
+clrsig run failures/fm-018-01-idempotency/scenarios/detect.yaml `
+  --env failures/fm-018-01-idempotency/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19018).OwningProcess
 
@@ -190,8 +190,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19018).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-018-idempotency\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-018-idempotency/scenarios/detect.yaml `
-  --env failures/fm-018-idempotency/environments/local.yaml
+clrsig run failures/fm-018-01-idempotency/scenarios/detect.yaml `
+  --env failures/fm-018-01-idempotency/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

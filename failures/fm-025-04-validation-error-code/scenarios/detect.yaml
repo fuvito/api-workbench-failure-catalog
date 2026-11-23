@@ -2,6 +2,7 @@ schemaVersion: "1"
 title: fm-025-04 — Validation Error Returns 500 Instead of 422
 steps:
   - label: "POST with missing name — must return 422, not 500"
+    failPolicy: continue
     request:
       method: POST
       url: "{{baseUrl}}/products"

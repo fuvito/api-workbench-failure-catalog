@@ -28,9 +28,9 @@ Both are syntactically valid JSON responses (or empty). Schema validation alone 
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-034-method-semantics/broken/main.go &
-clrsig run failures/fm-034-method-semantics/scenarios/detect.yaml \
-  --env failures/fm-034-method-semantics/environments/local.yaml
+go run failures/fm-034-01-method-semantics/broken/main.go &
+clrsig run failures/fm-034-01-method-semantics/scenarios/detect.yaml \
+  --env failures/fm-034-01-method-semantics/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — step 1 receives `200` (spec declares `201` only); step 2 receives `200` (spec declares `204` only). Both status codes are undeclared.
@@ -68,9 +68,9 @@ When the broken server returns `200` for both, clrsig flags the undeclared statu
 ## Fix
 
 ```bash
-go run failures/fm-034-method-semantics/fixed/main.go &
-clrsig run failures/fm-034-method-semantics/scenarios/detect.yaml \
-  --env failures/fm-034-method-semantics/environments/local.yaml
+go run failures/fm-034-01-method-semantics/fixed/main.go &
+clrsig run failures/fm-034-01-method-semantics/scenarios/detect.yaml \
+  --env failures/fm-034-01-method-semantics/environments/local.yaml
 # exits 0
 ```
 
@@ -138,8 +138,8 @@ Add to both `catalog.yml` and `catalog-main.yml`.
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-034-method-semantics\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-034-method-semantics/scenarios/detect.yaml `
-  --env failures/fm-034-method-semantics/environments/local.yaml
+clrsig run failures/fm-034-01-method-semantics/scenarios/detect.yaml `
+  --env failures/fm-034-01-method-semantics/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19034).OwningProcess
 
@@ -147,8 +147,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19034).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-034-method-semantics\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-034-method-semantics/scenarios/detect.yaml `
-  --env failures/fm-034-method-semantics/environments/local.yaml
+clrsig run failures/fm-034-01-method-semantics/scenarios/detect.yaml `
+  --env failures/fm-034-01-method-semantics/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

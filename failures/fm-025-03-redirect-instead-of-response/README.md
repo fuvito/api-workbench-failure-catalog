@@ -11,9 +11,9 @@
 ## Reproduce it
 
 ```bash
-go run failures/fm-011-redirect-instead-of-response/broken/main.go &
-clrsig run failures/fm-011-redirect-instead-of-response/scenarios/detect.yaml \
-  --env failures/fm-011-redirect-instead-of-response/environments/local.yaml
+go run failures/fm-025-03-redirect-instead-of-response/broken/main.go &
+clrsig run failures/fm-025-03-redirect-instead-of-response/scenarios/detect.yaml \
+  --env failures/fm-025-03-redirect-instead-of-response/environments/local.yaml
 ```
 
 Expected: **exits 1** — both steps receive `301`; assertions expect `200`.
@@ -21,9 +21,9 @@ Expected: **exits 1** — both steps receive `301`; assertions expect `200`.
 ## Fix
 
 ```bash
-go run failures/fm-011-redirect-instead-of-response/fixed/main.go &
-clrsig run failures/fm-011-redirect-instead-of-response/scenarios/detect.yaml \
-  --env failures/fm-011-redirect-instead-of-response/environments/local.yaml
+go run failures/fm-025-03-redirect-instead-of-response/fixed/main.go &
+clrsig run failures/fm-025-03-redirect-instead-of-response/scenarios/detect.yaml \
+  --env failures/fm-025-03-redirect-instead-of-response/environments/local.yaml
 # exits 0
 ```
 

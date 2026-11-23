@@ -24,8 +24,8 @@ This sub-project is diff-based: there are no servers to run. The two spec files 
 Run from the **repo root**:
 
 ```bash
-clrsig diff failures/fm-004-renamed-removed-field/v1/openapi.yaml \
-            failures/fm-004-renamed-removed-field/v2/openapi.yaml \
+clrsig diff failures/fm-004-01-renamed-removed-field/v1/openapi.yaml \
+            failures/fm-004-01-renamed-removed-field/v2/openapi.yaml \
             --breaking-only
 ```
 
@@ -76,7 +76,7 @@ Consumers migrate to `name` on their own schedule. Remove `full_name` only in v3
 **Running the non-breaking diff:**
 ```bash
 # With the corrected v2 above, clrsig diff exits 0:
-clrsig diff failures/fm-004-renamed-removed-field/v1/openapi.yaml \
+clrsig diff failures/fm-004-01-renamed-removed-field/v1/openapi.yaml \
             path/to/corrected-v2.yaml \
             --breaking-only
 # exits 0 — no breaking changes
@@ -116,8 +116,8 @@ No server build, no health poll, no stop step — diff-based modes are significa
 ### Verify locally — Windows (PowerShell)
 
 ```powershell
-clrsig diff failures/fm-004-renamed-removed-field/v1/openapi.yaml `
-            failures/fm-004-renamed-removed-field/v2/openapi.yaml `
+clrsig diff failures/fm-004-01-renamed-removed-field/v1/openapi.yaml `
+            failures/fm-004-01-renamed-removed-field/v2/openapi.yaml `
             --breaking-only
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 ```

@@ -11,9 +11,9 @@
 ## Reproduce it
 
 ```bash
-go run failures/fm-032-nested-required/broken/main.go &
-clrsig run failures/fm-032-nested-required/scenarios/detect.yaml \
-  --env failures/fm-032-nested-required/environments/local.yaml
+go run failures/fm-005-03-nested-required/broken/main.go &
+clrsig run failures/fm-005-03-nested-required/scenarios/detect.yaml \
+  --env failures/fm-005-03-nested-required/environments/local.yaml
 ```
 
 Expected: **exits 1** — order 2's `shipping_address` is missing the required `street` property.
@@ -21,9 +21,9 @@ Expected: **exits 1** — order 2's `shipping_address` is missing the required `
 ## Fix
 
 ```bash
-go run failures/fm-032-nested-required/fixed/main.go &
-clrsig run failures/fm-032-nested-required/scenarios/detect.yaml \
-  --env failures/fm-032-nested-required/environments/local.yaml
+go run failures/fm-005-03-nested-required/fixed/main.go &
+clrsig run failures/fm-005-03-nested-required/scenarios/detect.yaml \
+  --env failures/fm-005-03-nested-required/environments/local.yaml
 # exits 0
 ```
 

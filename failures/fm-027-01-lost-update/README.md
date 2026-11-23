@@ -34,9 +34,9 @@ Step 3 is the discriminator. After step 2 the server is at version 2; a write wi
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-027-lost-update/broken/main.go &
-clrsig run failures/fm-027-lost-update/scenarios/detect.yaml \
-  --env failures/fm-027-lost-update/environments/local.yaml
+go run failures/fm-027-01-lost-update/broken/main.go &
+clrsig run failures/fm-027-01-lost-update/scenarios/detect.yaml \
+  --env failures/fm-027-01-lost-update/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — step 3 returns `200 OK`; the assertion expects `409 Conflict`.
@@ -78,9 +78,9 @@ The broken server returns `200` here — it never checks whether version 1 is st
 ## Fix
 
 ```bash
-go run failures/fm-027-lost-update/fixed/main.go &
-clrsig run failures/fm-027-lost-update/scenarios/detect.yaml \
-  --env failures/fm-027-lost-update/environments/local.yaml
+go run failures/fm-027-01-lost-update/fixed/main.go &
+clrsig run failures/fm-027-01-lost-update/scenarios/detect.yaml \
+  --env failures/fm-027-01-lost-update/environments/local.yaml
 # exits 0
 ```
 
@@ -174,8 +174,8 @@ Add to both `catalog.yml` and `catalog-main.yml`.
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-027-lost-update\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-027-lost-update/scenarios/detect.yaml `
-  --env failures/fm-027-lost-update/environments/local.yaml
+clrsig run failures/fm-027-01-lost-update/scenarios/detect.yaml `
+  --env failures/fm-027-01-lost-update/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19027).OwningProcess
 
@@ -183,8 +183,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19027).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-027-lost-update\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-027-lost-update/scenarios/detect.yaml `
-  --env failures/fm-027-lost-update/environments/local.yaml
+clrsig run failures/fm-027-01-lost-update/scenarios/detect.yaml `
+  --env failures/fm-027-01-lost-update/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

@@ -24,9 +24,9 @@ This is different from "rate limiting is bad". Rate limiting is correct. The fai
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-016-rate-limit/broken/main.go &
-clrsig run failures/fm-016-rate-limit/scenarios/detect.yaml \
-  --env failures/fm-016-rate-limit/environments/local.yaml
+go run failures/fm-016-01-rate-limit/broken/main.go &
+clrsig run failures/fm-016-01-rate-limit/scenarios/detect.yaml \
+  --env failures/fm-016-01-rate-limit/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — step 3 receives `429 Too Many Requests`; `openapi.yaml` only declares `200` and `404`, so `429` is an undeclared response status.
@@ -61,9 +61,9 @@ Steps 1 and 2 pass because they return `200`, which is declared.
 ## Fix
 
 ```bash
-go run failures/fm-016-rate-limit/fixed/main.go &
-clrsig run failures/fm-016-rate-limit/scenarios/detect.yaml \
-  --env failures/fm-016-rate-limit/environments/local.yaml
+go run failures/fm-016-01-rate-limit/fixed/main.go &
+clrsig run failures/fm-016-01-rate-limit/scenarios/detect.yaml \
+  --env failures/fm-016-01-rate-limit/environments/local.yaml
 # exits 0
 ```
 
@@ -130,8 +130,8 @@ Add to both `catalog.yml` and `catalog-main.yml`.
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-016-rate-limit\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-016-rate-limit/scenarios/detect.yaml `
-  --env failures/fm-016-rate-limit/environments/local.yaml
+clrsig run failures/fm-016-01-rate-limit/scenarios/detect.yaml `
+  --env failures/fm-016-01-rate-limit/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19016).OwningProcess
 
@@ -139,8 +139,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19016).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-016-rate-limit\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-016-rate-limit/scenarios/detect.yaml `
-  --env failures/fm-016-rate-limit/environments/local.yaml
+clrsig run failures/fm-016-01-rate-limit/scenarios/detect.yaml `
+  --env failures/fm-016-01-rate-limit/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

@@ -24,9 +24,9 @@ A `null` value fails the `type: string` assertion because OpenAPI 3.0's `type: s
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-005-nullable-required/broken/main.go &
-clrsig run failures/fm-005-nullable-required/scenarios/detect.yaml \
-  --env failures/fm-005-nullable-required/environments/local.yaml
+go run failures/fm-005-01-nullable-required/broken/main.go &
+clrsig run failures/fm-005-01-nullable-required/scenarios/detect.yaml \
+  --env failures/fm-005-01-nullable-required/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — step 2 (`/users/2`) returns `"email": null`; spec requires `type: string`.
@@ -67,9 +67,9 @@ See [schema assertions](https://clrsig.com/docs/format-spec/) in the Clear Signa
 ## Fix
 
 ```bash
-go run failures/fm-005-nullable-required/fixed/main.go &
-clrsig run failures/fm-005-nullable-required/scenarios/detect.yaml \
-  --env failures/fm-005-nullable-required/environments/local.yaml
+go run failures/fm-005-01-nullable-required/fixed/main.go &
+clrsig run failures/fm-005-01-nullable-required/scenarios/detect.yaml \
+  --env failures/fm-005-01-nullable-required/environments/local.yaml
 # exits 0
 ```
 
@@ -119,8 +119,8 @@ Add to both `catalog.yml` and `catalog-main.yml`.
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-005-nullable-required\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-005-nullable-required/scenarios/detect.yaml `
-  --env failures/fm-005-nullable-required/environments/local.yaml
+clrsig run failures/fm-005-01-nullable-required/scenarios/detect.yaml `
+  --env failures/fm-005-01-nullable-required/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19005).OwningProcess
 
@@ -128,8 +128,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19005).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-005-nullable-required\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-005-nullable-required/scenarios/detect.yaml `
-  --env failures/fm-005-nullable-required/environments/local.yaml
+clrsig run failures/fm-005-01-nullable-required/scenarios/detect.yaml `
+  --env failures/fm-005-01-nullable-required/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

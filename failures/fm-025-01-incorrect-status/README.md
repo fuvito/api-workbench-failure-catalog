@@ -24,9 +24,9 @@ This pattern appears when developers route all error handling through a uniform 
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-025-incorrect-status/broken/main.go &
-clrsig run failures/fm-025-incorrect-status/scenarios/detect.yaml \
-  --env failures/fm-025-incorrect-status/environments/local.yaml
+go run failures/fm-025-01-incorrect-status/broken/main.go &
+clrsig run failures/fm-025-01-incorrect-status/scenarios/detect.yaml \
+  --env failures/fm-025-01-incorrect-status/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — the step "missing product must return 404" received `200 OK`.
@@ -65,9 +65,9 @@ See [status assertions](https://clrsig.com/docs/format-spec/) in the Clear Signa
 ## Fix
 
 ```bash
-go run failures/fm-025-incorrect-status/fixed/main.go &
-clrsig run failures/fm-025-incorrect-status/scenarios/detect.yaml \
-  --env failures/fm-025-incorrect-status/environments/local.yaml
+go run failures/fm-025-01-incorrect-status/fixed/main.go &
+clrsig run failures/fm-025-01-incorrect-status/scenarios/detect.yaml \
+  --env failures/fm-025-01-incorrect-status/environments/local.yaml
 # exits 0
 ```
 
@@ -134,16 +134,16 @@ Checkout → Install Go 1.22 → Download clrsig binary
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-025-incorrect-status\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-025-incorrect-status/scenarios/detect.yaml `
-  --env failures/fm-025-incorrect-status/environments/local.yaml
+clrsig run failures/fm-025-01-incorrect-status/scenarios/detect.yaml `
+  --env failures/fm-025-01-incorrect-status/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19025).OwningProcess
 
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-025-incorrect-status\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-025-incorrect-status/scenarios/detect.yaml `
-  --env failures/fm-025-incorrect-status/environments/local.yaml
+clrsig run failures/fm-025-01-incorrect-status/scenarios/detect.yaml `
+  --env failures/fm-025-01-incorrect-status/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

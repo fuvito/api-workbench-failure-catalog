@@ -26,9 +26,9 @@ This is the class of data leak that code review misses because the struct is "co
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-044-sensitive-data/broken/main.go &
-clrsig run failures/fm-044-sensitive-data/scenarios/detect.yaml \
-  --env failures/fm-044-sensitive-data/environments/local.yaml
+go run failures/fm-044-01-sensitive-data/broken/main.go &
+clrsig run failures/fm-044-01-sensitive-data/scenarios/detect.yaml \
+  --env failures/fm-044-01-sensitive-data/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — both user responses include `password_hash`, `api_key`, and `role`, which are not in the spec schema. `additionalProperties: false` causes the schema assertion to fail on each step.
@@ -71,9 +71,9 @@ With `specFile:` bound in the scenario, each `type: schema` assertion validates 
 ## Fix
 
 ```bash
-go run failures/fm-044-sensitive-data/fixed/main.go &
-clrsig run failures/fm-044-sensitive-data/scenarios/detect.yaml \
-  --env failures/fm-044-sensitive-data/environments/local.yaml
+go run failures/fm-044-01-sensitive-data/fixed/main.go &
+clrsig run failures/fm-044-01-sensitive-data/scenarios/detect.yaml \
+  --env failures/fm-044-01-sensitive-data/environments/local.yaml
 # exits 0
 ```
 
@@ -160,8 +160,8 @@ Add to both `catalog.yml` and `catalog-main.yml`.
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-044-sensitive-data\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-044-sensitive-data/scenarios/detect.yaml `
-  --env failures/fm-044-sensitive-data/environments/local.yaml
+clrsig run failures/fm-044-01-sensitive-data/scenarios/detect.yaml `
+  --env failures/fm-044-01-sensitive-data/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19044).OwningProcess
 
@@ -169,8 +169,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19044).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-044-sensitive-data\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-044-sensitive-data/scenarios/detect.yaml `
-  --env failures/fm-044-sensitive-data/environments/local.yaml
+clrsig run failures/fm-044-01-sensitive-data/scenarios/detect.yaml `
+  --env failures/fm-044-01-sensitive-data/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

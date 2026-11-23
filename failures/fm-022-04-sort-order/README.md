@@ -30,9 +30,9 @@ The consequence: consumers that build UIs with sort controls observe that the or
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-035-sort-order/broken/main.go &
-clrsig run failures/fm-035-sort-order/scenarios/detect.yaml \
-  --env failures/fm-035-sort-order/environments/local.yaml
+go run failures/fm-022-04-sort-order/broken/main.go &
+clrsig run failures/fm-022-04-sort-order/scenarios/detect.yaml \
+  --env failures/fm-022-04-sort-order/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — `sort=price_asc` returns `$.items[0].price = 79.99` (insertion order) instead of `29.99`; `sort=price_desc` also returns `79.99` instead of `349.99`.
@@ -63,9 +63,9 @@ The broken server always returns `79.99` as the first item (insertion order), fa
 ## Fix
 
 ```bash
-go run failures/fm-035-sort-order/fixed/main.go &
-clrsig run failures/fm-035-sort-order/scenarios/detect.yaml \
-  --env failures/fm-035-sort-order/environments/local.yaml
+go run failures/fm-022-04-sort-order/fixed/main.go &
+clrsig run failures/fm-022-04-sort-order/scenarios/detect.yaml \
+  --env failures/fm-022-04-sort-order/environments/local.yaml
 # exits 0
 ```
 
@@ -84,8 +84,8 @@ clrsig run failures/fm-035-sort-order/scenarios/detect.yaml \
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-035-sort-order\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-035-sort-order/scenarios/detect.yaml `
-  --env failures/fm-035-sort-order/environments/local.yaml
+clrsig run failures/fm-022-04-sort-order/scenarios/detect.yaml `
+  --env failures/fm-022-04-sort-order/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19035).OwningProcess
 
@@ -93,8 +93,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19035).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-035-sort-order\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-035-sort-order/scenarios/detect.yaml `
-  --env failures/fm-035-sort-order/environments/local.yaml
+clrsig run failures/fm-022-04-sort-order/scenarios/detect.yaml `
+  --env failures/fm-022-04-sort-order/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

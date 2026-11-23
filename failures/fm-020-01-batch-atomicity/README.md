@@ -11,23 +11,23 @@ A batch create endpoint partially succeeds instead of rolling back atomically. W
 ## Reproduce it
 
 ```bash
-go run failures/fm-020-batch-atomicity/broken/main.go &
-clrsig run failures/fm-020-batch-atomicity/scenarios/detect.yaml \
-  --env failures/fm-020-batch-atomicity/environments/local.yaml
+go run failures/fm-020-01-batch-atomicity/broken/main.go &
+clrsig run failures/fm-020-01-batch-atomicity/scenarios/detect.yaml \
+  --env failures/fm-020-01-batch-atomicity/environments/local.yaml
 ```
 
 Expected: **exits 1** — broken server returns `201` (partial success); assertion expects `422`.
 
 ## Why clrsig catches it
 
-Step 1 asserts `status 422` on the batch POST with one invalid item. Broken returns `201` → fails. Step 2 would additionally check `$.count == 0` but is skipped after step 1 fails.
+Step 1 asserts `status 422` on the batch POST with one invalid item. Broken returns `201` → fails. Step 2 checks `$.count == 0`. Step 1 carries `failPolicy: continue`, so step 2 still runs after step 1 fails and shows the items the broken server created (a partial write).
 
 ## Fix
 
 ```bash
-go run failures/fm-020-batch-atomicity/fixed/main.go &
-clrsig run failures/fm-020-batch-atomicity/scenarios/detect.yaml \
-  --env failures/fm-020-batch-atomicity/environments/local.yaml
+go run failures/fm-020-01-batch-atomicity/fixed/main.go &
+clrsig run failures/fm-020-01-batch-atomicity/scenarios/detect.yaml \
+  --env failures/fm-020-01-batch-atomicity/environments/local.yaml
 # exits 0
 ```
 

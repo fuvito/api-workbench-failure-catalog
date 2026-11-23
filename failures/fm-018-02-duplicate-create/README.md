@@ -12,9 +12,9 @@ Creating a user with an email that already exists returns `201 Created` and inse
 ## Reproduce it
 
 ```bash
-go run failures/fm-042-duplicate-create/broken/main.go &
-clrsig run failures/fm-042-duplicate-create/scenarios/detect.yaml \
-  --env failures/fm-042-duplicate-create/environments/local.yaml
+go run failures/fm-018-02-duplicate-create/broken/main.go &
+clrsig run failures/fm-018-02-duplicate-create/scenarios/detect.yaml \
+  --env failures/fm-018-02-duplicate-create/environments/local.yaml
 ```
 
 Expected: **exits 1** — second POST with same email returns `201`; assertion expects `409`.
@@ -22,9 +22,9 @@ Expected: **exits 1** — second POST with same email returns `201`; assertion e
 ## Fix
 
 ```bash
-go run failures/fm-042-duplicate-create/fixed/main.go &
-clrsig run failures/fm-042-duplicate-create/scenarios/detect.yaml \
-  --env failures/fm-042-duplicate-create/environments/local.yaml
+go run failures/fm-018-02-duplicate-create/fixed/main.go &
+clrsig run failures/fm-018-02-duplicate-create/scenarios/detect.yaml \
+  --env failures/fm-018-02-duplicate-create/environments/local.yaml
 # exits 0
 ```
 

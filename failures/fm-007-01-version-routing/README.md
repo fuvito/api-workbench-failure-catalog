@@ -11,9 +11,9 @@ The `/v2/products` endpoint returns a v1-shaped response — missing the `sku` f
 ## Reproduce it
 
 ```bash
-go run failures/fm-024-version-routing/broken/main.go &
-clrsig run failures/fm-024-version-routing/scenarios/detect.yaml \
-  --env failures/fm-024-version-routing/environments/local.yaml
+go run failures/fm-007-01-version-routing/broken/main.go &
+clrsig run failures/fm-007-01-version-routing/scenarios/detect.yaml \
+  --env failures/fm-007-01-version-routing/environments/local.yaml
 ```
 
 Expected: **exits 1** — `sku` is required in the v2 spec but absent from every product in the response.
@@ -25,9 +25,9 @@ Expected: **exits 1** — `sku` is required in the v2 spec but absent from every
 ## Fix
 
 ```bash
-go run failures/fm-024-version-routing/fixed/main.go &
-clrsig run failures/fm-024-version-routing/scenarios/detect.yaml \
-  --env failures/fm-024-version-routing/environments/local.yaml
+go run failures/fm-007-01-version-routing/fixed/main.go &
+clrsig run failures/fm-007-01-version-routing/scenarios/detect.yaml \
+  --env failures/fm-007-01-version-routing/environments/local.yaml
 # exits 0
 ```
 

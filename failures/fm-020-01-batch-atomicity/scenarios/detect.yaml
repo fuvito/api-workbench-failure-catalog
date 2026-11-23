@@ -2,6 +2,7 @@ schemaVersion: "1"
 title: fm-020-01 — Batch Operation Atomicity
 steps:
   - label: "batch with one invalid item (empty name) must be rejected with 422"
+    failPolicy: continue
     request:
       method: POST
       url: "{{baseUrl}}/items/batch"

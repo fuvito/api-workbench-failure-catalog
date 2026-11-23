@@ -36,9 +36,9 @@ The broken server returns `has_more: true` on all three pages. The scenario's fi
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-003-pagination-contract/broken/main.go &
-clrsig run failures/fm-003-pagination-contract/scenarios/detect.yaml \
-  --env failures/fm-003-pagination-contract/environments/local.yaml
+go run failures/fm-003-01-pagination-contract/broken/main.go &
+clrsig run failures/fm-003-01-pagination-contract/scenarios/detect.yaml \
+  --env failures/fm-003-01-pagination-contract/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — step 3 (`page=3&limit=2`) returns `has_more: true`; the assertion expects `false`.
@@ -88,9 +88,9 @@ Steps 1 and 2 pass on both servers — `has_more: true` is correct for pages wit
 ## Fix
 
 ```bash
-go run failures/fm-003-pagination-contract/fixed/main.go &
-clrsig run failures/fm-003-pagination-contract/scenarios/detect.yaml \
-  --env failures/fm-003-pagination-contract/environments/local.yaml
+go run failures/fm-003-01-pagination-contract/fixed/main.go &
+clrsig run failures/fm-003-01-pagination-contract/scenarios/detect.yaml \
+  --env failures/fm-003-01-pagination-contract/environments/local.yaml
 # exits 0
 ```
 
@@ -170,8 +170,8 @@ Add to both `catalog.yml` and `catalog-main.yml`.
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-003-pagination-contract\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-003-pagination-contract/scenarios/detect.yaml `
-  --env failures/fm-003-pagination-contract/environments/local.yaml
+clrsig run failures/fm-003-01-pagination-contract/scenarios/detect.yaml `
+  --env failures/fm-003-01-pagination-contract/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19003).OwningProcess
 
@@ -179,8 +179,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19003).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-003-pagination-contract\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-003-pagination-contract/scenarios/detect.yaml `
-  --env failures/fm-003-pagination-contract/environments/local.yaml
+clrsig run failures/fm-003-01-pagination-contract/scenarios/detect.yaml `
+  --env failures/fm-003-01-pagination-contract/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

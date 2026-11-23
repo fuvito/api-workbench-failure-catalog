@@ -11,9 +11,9 @@ Requesting a page number beyond the last page returns the first page's data (mod
 ## Reproduce it
 
 ```bash
-go run failures/fm-031-page-overflow/broken/main.go &
-clrsig run failures/fm-031-page-overflow/scenarios/detect.yaml \
-  --env failures/fm-031-page-overflow/environments/local.yaml
+go run failures/fm-003-02-page-overflow/broken/main.go &
+clrsig run failures/fm-003-02-page-overflow/scenarios/detect.yaml \
+  --env failures/fm-003-02-page-overflow/environments/local.yaml
 ```
 
 Expected: **exits 1** — `page=99` returns `count: 3` (wrapped); assertion expects `0`.
@@ -21,9 +21,9 @@ Expected: **exits 1** — `page=99` returns `count: 3` (wrapped); assertion expe
 ## Fix
 
 ```bash
-go run failures/fm-031-page-overflow/fixed/main.go &
-clrsig run failures/fm-031-page-overflow/scenarios/detect.yaml \
-  --env failures/fm-031-page-overflow/environments/local.yaml
+go run failures/fm-003-02-page-overflow/fixed/main.go &
+clrsig run failures/fm-003-02-page-overflow/scenarios/detect.yaml \
+  --env failures/fm-003-02-page-overflow/environments/local.yaml
 # exits 0
 ```
 

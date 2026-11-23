@@ -34,9 +34,9 @@ The consequence: consumer error-handling code that reads `response.error` works 
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-006-error-schema/broken/main.go &
-clrsig run failures/fm-006-error-schema/scenarios/detect.yaml \
-  --env failures/fm-006-error-schema/environments/local.yaml
+go run failures/fm-010-02-error-schema/broken/main.go &
+clrsig run failures/fm-010-02-error-schema/scenarios/detect.yaml \
+  --env failures/fm-010-02-error-schema/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — `/users/999` returns `{"message":...}` and `/orders/999` returns `{"code":...,"msg":...}`; both fail the `Error` schema.
@@ -58,9 +58,9 @@ The scenario sends 404-triggering requests to three endpoints. With `specFile: .
 ## Fix
 
 ```bash
-go run failures/fm-006-error-schema/fixed/main.go &
-clrsig run failures/fm-006-error-schema/scenarios/detect.yaml \
-  --env failures/fm-006-error-schema/environments/local.yaml
+go run failures/fm-010-02-error-schema/fixed/main.go &
+clrsig run failures/fm-010-02-error-schema/scenarios/detect.yaml \
+  --env failures/fm-010-02-error-schema/environments/local.yaml
 # exits 0
 ```
 
@@ -81,8 +81,8 @@ This sub-project is included in the CI matrix. If you need to add it back:
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-006-error-schema\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-006-error-schema/scenarios/detect.yaml `
-  --env failures/fm-006-error-schema/environments/local.yaml
+clrsig run failures/fm-010-02-error-schema/scenarios/detect.yaml `
+  --env failures/fm-010-02-error-schema/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19006).OwningProcess
 
@@ -90,8 +90,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19006).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-006-error-schema\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-006-error-schema/scenarios/detect.yaml `
-  --env failures/fm-006-error-schema/environments/local.yaml
+clrsig run failures/fm-010-02-error-schema/scenarios/detect.yaml `
+  --env failures/fm-010-02-error-schema/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

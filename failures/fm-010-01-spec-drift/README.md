@@ -24,9 +24,9 @@ The difference from FM-001 and FM-005: this scenario uses `specFile:` binding in
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-010-spec-drift/broken/main.go &
-clrsig run failures/fm-010-spec-drift/scenarios/detect.yaml \
-  --env failures/fm-010-spec-drift/environments/local.yaml
+go run failures/fm-010-01-spec-drift/broken/main.go &
+clrsig run failures/fm-010-01-spec-drift/scenarios/detect.yaml \
+  --env failures/fm-010-01-spec-drift/environments/local.yaml
 ```
 
 Expected: **clrsig exits 1** — `category` and `in_stock` are missing from the response; `product_type` and `available` are present but not in the spec.
@@ -68,9 +68,9 @@ See [specFile binding](https://clrsig.com/docs/format-spec/) in the Clear Signal
 ## Fix
 
 ```bash
-go run failures/fm-010-spec-drift/fixed/main.go &
-clrsig run failures/fm-010-spec-drift/scenarios/detect.yaml \
-  --env failures/fm-010-spec-drift/environments/local.yaml
+go run failures/fm-010-01-spec-drift/fixed/main.go &
+clrsig run failures/fm-010-01-spec-drift/scenarios/detect.yaml \
+  --env failures/fm-010-01-spec-drift/environments/local.yaml
 # exits 0
 ```
 
@@ -114,8 +114,8 @@ Add to both `catalog.yml` and `catalog-main.yml`.
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-010-spec-drift\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-010-spec-drift/scenarios/detect.yaml `
-  --env failures/fm-010-spec-drift/environments/local.yaml
+clrsig run failures/fm-010-01-spec-drift/scenarios/detect.yaml `
+  --env failures/fm-010-01-spec-drift/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19010).OwningProcess
 
@@ -123,8 +123,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19010).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-010-spec-drift\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-010-spec-drift/scenarios/detect.yaml `
-  --env failures/fm-010-spec-drift/environments/local.yaml
+clrsig run failures/fm-010-01-spec-drift/scenarios/detect.yaml `
+  --env failures/fm-010-01-spec-drift/environments/local.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

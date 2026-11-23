@@ -30,9 +30,9 @@ The consequence: consumer code that expects to parse an ISO 8601 string (`new Da
 Run from the **repo root**:
 
 ```bash
-go run failures/fm-002-datetime-format/broken/main.go &
-clrsig run failures/fm-002-datetime-format/scenarios/detect.yaml \
-  --env failures/fm-002-datetime-format/scenarios/env.yaml
+go run failures/fm-001-02-datetime-format/broken/main.go &
+clrsig run failures/fm-001-02-datetime-format/scenarios/detect.yaml \
+  --env failures/fm-001-02-datetime-format/scenarios/env.yaml
 ```
 
 Expected: **clrsig exits 1** — `created_at` has type `integer`; spec requires `type: string`.
@@ -65,9 +65,9 @@ No assertions needed beyond `assertions: []` — the `specFile:` binding does th
 ## Fix
 
 ```bash
-go run failures/fm-002-datetime-format/fixed/main.go &
-clrsig run failures/fm-002-datetime-format/scenarios/detect.yaml \
-  --env failures/fm-002-datetime-format/scenarios/env.yaml
+go run failures/fm-001-02-datetime-format/fixed/main.go &
+clrsig run failures/fm-001-02-datetime-format/scenarios/detect.yaml \
+  --env failures/fm-001-02-datetime-format/scenarios/env.yaml
 # exits 0
 ```
 
@@ -114,8 +114,8 @@ If you need to add it back after a reset, add to both `catalog.yml` and `catalog
 go build -o "$env:TEMP\server-broken.exe" .\failures\fm-002-datetime-format\broken\
 & "$env:TEMP\server-broken.exe"
 # In a second terminal:
-clrsig run failures/fm-002-datetime-format/scenarios/detect.yaml `
-  --env failures/fm-002-datetime-format/scenarios/env.yaml
+clrsig run failures/fm-001-02-datetime-format/scenarios/detect.yaml `
+  --env failures/fm-001-02-datetime-format/scenarios/env.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 1
 Stop-Process -Id (Get-NetTCPConnection -LocalPort 19002).OwningProcess
 
@@ -123,8 +123,8 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19002).OwningProcess
 go build -o "$env:TEMP\server-fixed.exe" .\failures\fm-002-datetime-format\fixed\
 & "$env:TEMP\server-fixed.exe"
 # In a second terminal:
-clrsig run failures/fm-002-datetime-format/scenarios/detect.yaml `
-  --env failures/fm-002-datetime-format/scenarios/env.yaml
+clrsig run failures/fm-001-02-datetime-format/scenarios/detect.yaml `
+  --env failures/fm-001-02-datetime-format/scenarios/env.yaml
 Write-Host "Exit: $LASTEXITCODE"   # expect: 0
 ```
 

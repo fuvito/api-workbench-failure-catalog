@@ -11,9 +11,9 @@ When required fields are missing from the request body, the server returns `500 
 ## Reproduce it
 
 ```bash
-go run failures/fm-043-validation-error-code/broken/main.go &
-clrsig run failures/fm-043-validation-error-code/scenarios/detect.yaml \
-  --env failures/fm-043-validation-error-code/environments/local.yaml
+go run failures/fm-025-04-validation-error-code/broken/main.go &
+clrsig run failures/fm-025-04-validation-error-code/scenarios/detect.yaml \
+  --env failures/fm-025-04-validation-error-code/environments/local.yaml
 ```
 
 Expected: **exits 1** — both steps receive `500`; assertions expect `422`.
@@ -21,9 +21,9 @@ Expected: **exits 1** — both steps receive `500`; assertions expect `422`.
 ## Fix
 
 ```bash
-go run failures/fm-043-validation-error-code/fixed/main.go &
-clrsig run failures/fm-043-validation-error-code/scenarios/detect.yaml \
-  --env failures/fm-043-validation-error-code/environments/local.yaml
+go run failures/fm-025-04-validation-error-code/fixed/main.go &
+clrsig run failures/fm-025-04-validation-error-code/scenarios/detect.yaml \
+  --env failures/fm-025-04-validation-error-code/environments/local.yaml
 # exits 0
 ```
 
