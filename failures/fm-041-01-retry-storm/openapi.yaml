@@ -1,0 +1,63 @@
+openapi: "3.0.3"
+info:
+  title: FM-041 Retry Storm
+  description: >
+    A reservation calls the inventory service at most 3 times, with backoff, and
+    only for temporary failures. After a request uses all its attempts, later
+    requests get 503 with Retry-After without calling inventory, for 30 seconds.
+    A rejection is passed on as 422 after one call.
+  version: "1.0.0"
+paths:
+  /reservations:
+    post:
+      operationId: createReservation
+      responses:
+        "201":
+          description: Reserved
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: {type: string}
+        "422": {$ref: '#/components/responses/Error'}
+        "503": {$ref: '#/components/responses/Error'}
+  /test/inventory:
+    put:
+      operationId: setInventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mode]
+              properties:
+                mode: {type: string, enum: [up, failing, rejecting]}
+      responses:
+        "204":
+          description: Mode set and call counter reset
+    get:
+      operationId: inventoryStats
+      responses:
+        "200":
+          description: Calls made to inventory since the last reset
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [calls]
+                properties:
+                  calls: {type: integer}
+components:
+  responses:
+    Error:
+      description: Not reserved
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}

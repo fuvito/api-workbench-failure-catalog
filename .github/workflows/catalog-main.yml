@@ -72,6 +72,7 @@ jobs:
           - { dir: "fm-038-01-write-not-persisted",        port: 19046, kind: "server" }
           - { dir: "fm-039-01-out-of-order-events",        port: 19065, kind: "server" }
           - { dir: "fm-040-01-partial-write",              port: 19067, kind: "server" }
+          - { dir: "fm-041-01-retry-storm",                port: 19068, kind: "server" }
           - { dir: "fm-042-01-fault-isolation",            port: 19066, kind: "server" }
           - { dir: "fm-043-01-mass-assignment",            port: 19052, kind: "server" }
           - { dir: "fm-044-01-sensitive-data",             port: 19044, kind: "server" }

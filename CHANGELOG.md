@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-041-01** — Retry Storm (Hard, port 19068)
+  - Broken server retries a failing or rejecting dependency 10 times for every request
+  - Detected by asserting the dependency call count after one and two requests and after a rejection
+
 - **fm-040-01** — Partial Write (Medium, port 19067)
   - Broken server keeps the invoice header and earlier lines when a later write fails
   - Detected by reading back and retrying after an injected write failure and a constraint violation

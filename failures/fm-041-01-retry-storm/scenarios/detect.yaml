@@ -1,0 +1,69 @@
+schemaVersion: "1"
+title: fm-041-01 — Retry Storm
+description: "Makes a dependency fail through a test hook and counts how many times the API calls it. The last step switches it back on."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: inventory up"
+    request: {method: PUT, url: "{{baseUrl}}/test/inventory", body: {type: json, content: '{"mode":"up"}'}}
+    assertions:
+      - {type: status, operator: eq, expected: 204}
+
+  - label: "Control: reservation succeeds"
+    request: {method: POST, url: "{{baseUrl}}/reservations"}
+    assertions:
+      - {type: status, operator: eq, expected: 201}
+    failPolicy: continue
+
+  - label: "Make inventory fail"
+    request: {method: PUT, url: "{{baseUrl}}/test/inventory", body: {type: json, content: '{"mode":"failing"}'}}
+    assertions:
+      - {type: status, operator: eq, expected: 204}
+
+  - label: "One reservation during the outage"
+    request: {method: POST, url: "{{baseUrl}}/reservations"}
+    assertions:
+      - {type: status, operator: eq, expected: 503}
+    failPolicy: continue
+
+  - label: "Retries are limited"
+    request: {method: GET, url: "{{baseUrl}}/test/inventory"}
+    assertions:
+      - {type: jsonpath, path: "$.calls", operator: lt, expected: 4}
+    extractions:
+      - {name: callsAfterFirst, source: jsonpath, path: "$.calls"}
+    failPolicy: continue
+
+  - label: "A second reservation fails fast"
+    request: {method: POST, url: "{{baseUrl}}/reservations"}
+    assertions:
+      - {type: status, operator: eq, expected: 503}
+      - {type: header, path: Retry-After, operator: matches, expected: "^[0-9]+$"}
+    failPolicy: continue
+
+  - label: "It added no load"
+    request: {method: GET, url: "{{baseUrl}}/test/inventory"}
+    assertions:
+      - {type: jsonpath, path: "$.calls", operator: eq, expected: "{{callsAfterFirst}}"}
+    failPolicy: continue
+
+  - label: "Make inventory reject requests"
+    request: {method: PUT, url: "{{baseUrl}}/test/inventory", body: {type: json, content: '{"mode":"rejecting"}'}}
+    assertions:
+      - {type: status, operator: eq, expected: 204}
+
+  - label: "A rejection is passed on"
+    request: {method: POST, url: "{{baseUrl}}/reservations"}
+    assertions:
+      - {type: status, operator: eq, expected: 422}
+    failPolicy: continue
+
+  - label: "A rejection is not retried"
+    request: {method: GET, url: "{{baseUrl}}/test/inventory"}
+    assertions:
+      - {type: jsonpath, path: "$.calls", operator: eq, expected: 1}
+    failPolicy: continue
+
+  - label: "Cleanup: inventory up"
+    request: {method: PUT, url: "{{baseUrl}}/test/inventory", body: {type: json, content: '{"mode":"up"}'}}
+    assertions:
+      - {type: status, operator: eq, expected: 204}
