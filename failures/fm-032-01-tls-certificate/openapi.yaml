@@ -1,0 +1,27 @@
+openapi: "3.0.3"
+info:
+  title: FM-032 TLS Certificates
+  description: >
+    Every endpoint presents an in-date certificate for the requested host name,
+    with the full chain up to the root.
+  version: "1.0.0"
+paths:
+  /status:
+    get:
+      operationId: getStatus
+      responses:
+        "200":
+          description: Service status
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: {type: string}
+  /health:
+    get:
+      operationId: getHealth
+      responses:
+        "200":
+          description: Ready

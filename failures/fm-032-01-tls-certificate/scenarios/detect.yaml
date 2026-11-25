@@ -1,0 +1,28 @@
+schemaVersion: "1"
+title: fm-032-01 — TLS Certificates
+description: "Connects to each TLS endpoint, trusting only the system roots and the CA given with --ca-cert or CLRSIG_CA_CERT. A bad certificate fails the step before any HTTP response."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: the server is running (plain HTTP)"
+    request: {method: GET, url: "{{healthUrl}}/health"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "API endpoint sends a complete certificate chain"
+    request: {method: GET, url: "{{apiUrl}}/status"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "Admin endpoint certificate is in date"
+    request: {method: GET, url: "{{adminUrl}}/status"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "Partner endpoint certificate matches its host name"
+    request: {method: GET, url: "{{partnerUrl}}/status"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue

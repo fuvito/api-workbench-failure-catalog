@@ -1,0 +1,11 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: healthUrl
+    value: "http://localhost:19076"
+  - name: apiUrl
+    value: "https://localhost:19077"
+  - name: adminUrl
+    value: "https://localhost:19085"
+  - name: partnerUrl
+    value: "https://localhost:19086"

@@ -11,6 +11,11 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-032-01** — TLS Certificates (Medium, port 19076)
+  - Broken endpoints send no intermediate, an expired certificate and a certificate for another host name
+  - Detected by clrsig's TLS verification with a test CA generated at start-up
+  - Adds an optional per-example ci.env step to both workflows
+
 - **fm-048-01** — Streaming Completion (Medium, port 19083)
   - Broken export reports a truncated stream as complete and ignores the resume cursor (partial coverage of FM-048)
   - Detected by completion-marker and resume assertions after an injected source failure
