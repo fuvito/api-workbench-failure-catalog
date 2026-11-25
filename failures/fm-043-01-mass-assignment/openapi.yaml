@@ -1,0 +1,106 @@
+openapi: "3.0.3"
+info:
+  title: FM-043 Mass Assignment
+  description: >
+    A customer may change only name and billing.invoice_email. A request that
+    contains any other property is rejected with 400 and changes nothing.
+  version: "1.0.0"
+security:
+  - bearerAuth: []
+paths:
+  /customers/me:
+    get:
+      operationId: getMe
+      summary: Get the caller's customer record
+      responses:
+        "200":
+          description: The customer record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+    patch:
+      operationId: updateMe
+      summary: Change the caller's editable fields
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerUpdate'
+      responses:
+        "200":
+          description: The updated customer record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        "400":
+          description: Invalid body, or a property the caller may not change
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  responses:
+    Unauthorized:
+      description: Missing or invalid token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Customer:
+      type: object
+      required: [id, tenant_id, name, role, billing]
+      properties:
+        id:
+          type: string
+          readOnly: true
+        tenant_id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+        role:
+          type: string
+          enum: [member, admin]
+          readOnly: true
+        billing:
+          type: object
+          required: [invoice_email, credit_limit]
+          properties:
+            invoice_email:
+              type: string
+              format: email
+            credit_limit:
+              type: integer
+              minimum: 0
+              readOnly: true
+    CustomerUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        billing:
+          type: object
+          additionalProperties: false
+          properties:
+            invoice_email:
+              type: string
+              format: email
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

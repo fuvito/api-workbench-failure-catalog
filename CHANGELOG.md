@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-043-01** — Mass Assignment (Easy, port 19052)
+  - Broken server lets a customer set role, tenant_id and the nested billing.credit_limit through PATCH
+  - Detected by status assertions plus re-reads of the stored values, with a control step for editable fields
+
 - **fm-023-01** — Broken Object-Level Authorization (Easy, port 19051)
   - Broken server lets any authenticated user read, update and delete another tenant's invoice by ID
   - Detected by status assertions with two users, plus control steps and owner re-reads

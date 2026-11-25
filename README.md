@@ -70,7 +70,8 @@ One official failure mode may have multiple concrete examples here.
 | 15 | [FM-028](https://clrsig.com/failures/fm-028/) | Long-Running Operation and Asynchronous API Failures | [fm-028-01-async-job](failures/fm-028-01-async-job/) |
 | 16 | [FM-034](https://clrsig.com/failures/fm-034/) | HTTP Method and Operation Semantics Failures | [fm-034-01-method-semantics](failures/fm-034-01-method-semantics/) · [fm-034-02-method-not-allowed](failures/fm-034-02-method-not-allowed/) · [fm-034-03-nonidempotent-get](failures/fm-034-03-nonidempotent-get/) · [fm-034-04-patch-semantics](failures/fm-034-04-patch-semantics/) · [fm-034-05-soft-delete](failures/fm-034-05-soft-delete/) · [fm-034-06-bulk-delete](failures/fm-034-06-bulk-delete/) |
 | 17 | [FM-038](https://clrsig.com/failures/fm-038/) | Eventual Consistency and Read-After-Write Failures | [fm-038-01-write-not-persisted](failures/fm-038-01-write-not-persisted/) |
-| 18 | [FM-044](https://clrsig.com/failures/fm-044/) | Sensitive Data Exposure in API Responses | [fm-044-01-sensitive-data](failures/fm-044-01-sensitive-data/) |
+| 18 | [FM-043](https://clrsig.com/failures/fm-043/) | Mass Assignment and Unauthorized Field Modification | [fm-043-01-mass-assignment](failures/fm-043-01-mass-assignment/) |
+| 19 | [FM-044](https://clrsig.com/failures/fm-044/) | Sensitive Data Exposure in API Responses | [fm-044-01-sensitive-data](failures/fm-044-01-sensitive-data/) |
 
 ## Failure Modes without Examples
 
@@ -104,13 +105,12 @@ As examples are added, rows move up into the index above.
 | 23 | [FM-040](https://clrsig.com/failures/fm-040/) | Database Transaction and Atomicity Failures |
 | 24 | [FM-041](https://clrsig.com/failures/fm-041/) | Retry Storm and Cascading Failure |
 | 25 | [FM-042](https://clrsig.com/failures/fm-042/) | Dependency Failure and Fault Isolation |
-| 26 | [FM-043](https://clrsig.com/failures/fm-043/) | Mass Assignment and Unauthorized Field Modification |
-| 27 | [FM-045](https://clrsig.com/failures/fm-045/) | Authentication and Authorization Confusion Across Services |
-| 28 | [FM-046](https://clrsig.com/failures/fm-046/) | Security Policy and Secret Leakage Failures |
-| 29 | [FM-047](https://clrsig.com/failures/fm-047/) | Character Encoding and Unicode Handling Failures |
-| 30 | [FM-048](https://clrsig.com/failures/fm-048/) | Streaming and Large-Response Handling Failures |
-| 31 | [FM-049](https://clrsig.com/failures/fm-049/) | API Documentation and Example Drift |
-| 32 | [FM-050](https://clrsig.com/failures/fm-050/) | Environment Configuration and Feature-Flag Drift |
+| 26 | [FM-045](https://clrsig.com/failures/fm-045/) | Authentication and Authorization Confusion Across Services |
+| 27 | [FM-046](https://clrsig.com/failures/fm-046/) | Security Policy and Secret Leakage Failures |
+| 28 | [FM-047](https://clrsig.com/failures/fm-047/) | Character Encoding and Unicode Handling Failures |
+| 29 | [FM-048](https://clrsig.com/failures/fm-048/) | Streaming and Large-Response Handling Failures |
+| 30 | [FM-049](https://clrsig.com/failures/fm-049/) | API Documentation and Example Drift |
+| 31 | [FM-050](https://clrsig.com/failures/fm-050/) | Environment Configuration and Feature-Flag Drift |
 
 ## Conventions
 

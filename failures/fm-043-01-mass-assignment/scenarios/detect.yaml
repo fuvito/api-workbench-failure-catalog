@@ -1,0 +1,106 @@
+schemaVersion: "1"
+title: fm-043-01 — Mass Assignment
+description: "A customer sends protected fields in a profile update, at the top level and nested. Each attempt is followed by a read to confirm nothing changed. The control step proves editable fields still work."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: update the editable fields"
+    request:
+      method: PATCH
+      url: "{{baseUrl}}/customers/me"
+      auth:
+        type: bearer
+        token: "{{token}}"
+      body:
+        type: json
+        content: '{"name":"Alice Smith","billing":{"invoice_email":"billing@example.com"}}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Alice Smith"
+      - type: jsonpath
+        path: "$.billing.invoice_email"
+        operator: eq
+        expected: "billing@example.com"
+    failPolicy: continue
+
+  - label: "Set role and tenant_id — must be 400"
+    request:
+      method: PATCH
+      url: "{{baseUrl}}/customers/me"
+      auth:
+        type: bearer
+        token: "{{token}}"
+      body:
+        type: json
+        content: '{"name":"Mallory","role":"admin","tenant_id":"tenant-b"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 400
+    failPolicy: continue
+
+  - label: "Role, tenant and name are unchanged"
+    request:
+      method: GET
+      url: "{{baseUrl}}/customers/me"
+      auth:
+        type: bearer
+        token: "{{token}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.role"
+        operator: eq
+        expected: "member"
+      - type: jsonpath
+        path: "$.tenant_id"
+        operator: eq
+        expected: "tenant-a"
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Alice Smith"
+    failPolicy: continue
+
+  - label: "Set nested billing.credit_limit — must be 400"
+    request:
+      method: PATCH
+      url: "{{baseUrl}}/customers/me"
+      auth:
+        type: bearer
+        token: "{{token}}"
+      body:
+        type: json
+        content: '{"billing":{"invoice_email":"mallory@example.com","credit_limit":1000000}}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 400
+    failPolicy: continue
+
+  - label: "Credit limit and invoice email are unchanged"
+    request:
+      method: GET
+      url: "{{baseUrl}}/customers/me"
+      auth:
+        type: bearer
+        token: "{{token}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.billing.credit_limit"
+        operator: eq
+        expected: 500
+      - type: jsonpath
+        path: "$.billing.invoice_email"
+        operator: eq
+        expected: "billing@example.com"
+    failPolicy: continue
