@@ -1,0 +1,49 @@
+openapi: "3.0.3"
+info:
+  title: FM-036 Request Limits
+  description: >
+    A note body may be at most 1024 bytes (413 above that), with at most 10 tags
+    and metadata nested at most 5 levels (400 above those).
+  version: "1.0.0"
+paths:
+  /notes:
+    post:
+      operationId: createNote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title: {type: string, minLength: 1}
+                tags:
+                  type: array
+                  maxItems: 10
+                  items: {type: string}
+                metadata: {type: object}
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [title, tag_count]
+                properties:
+                  title: {type: string}
+                  tag_count: {type: integer, maximum: 10}
+        "400": {$ref: '#/components/responses/Error'}
+        "413": {$ref: '#/components/responses/Error'}
+components:
+  responses:
+    Error:
+      description: The request was rejected
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}

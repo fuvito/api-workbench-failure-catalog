@@ -1,0 +1,65 @@
+schemaVersion: "1"
+title: fm-036-01 — Request Limits
+description: "Sends requests at and just above each documented limit. The payloads are small and sent once: this checks that limits exist, it is not a load test."
+specFile: ../openapi.yaml
+variables:
+  # 900 and 1100 characters: below and above the 1024-byte body limit.
+  - name: nearLimit
+    value: "{{$randomString 900}}"
+  - name: overLimit
+    value: "{{$randomString 1100}}"
+steps:
+  - label: "Control: a body below the size limit is accepted"
+    request:
+      method: POST
+      url: "{{baseUrl}}/notes"
+      body: {type: json, content: '{"title":"{{nearLimit}}"}'}
+    assertions:
+      - {type: status, operator: eq, expected: 201}
+    failPolicy: continue
+
+  - label: "A body above the size limit gets 413"
+    request:
+      method: POST
+      url: "{{baseUrl}}/notes"
+      body: {type: json, content: '{"title":"{{overLimit}}"}'}
+    assertions:
+      - {type: status, operator: eq, expected: 413}
+    failPolicy: continue
+
+  - label: "Control: exactly 10 tags are accepted"
+    request:
+      method: POST
+      url: "{{baseUrl}}/notes"
+      body: {type: json, content: '{"title":"tags","tags":["1","2","3","4","5","6","7","8","9","10"]}'}
+    assertions:
+      - {type: status, operator: eq, expected: 201}
+      - {type: jsonpath, path: "$.tag_count", operator: eq, expected: 10}
+    failPolicy: continue
+
+  - label: "11 tags get 400"
+    request:
+      method: POST
+      url: "{{baseUrl}}/notes"
+      body: {type: json, content: '{"title":"tags","tags":["1","2","3","4","5","6","7","8","9","10","11"]}'}
+    assertions:
+      - {type: status, operator: eq, expected: 400}
+    failPolicy: continue
+
+  - label: "Control: metadata 5 levels deep is accepted"
+    request:
+      method: POST
+      url: "{{baseUrl}}/notes"
+      body: {type: json, content: '{"title":"depth","metadata":{"a":{"b":{"c":{"d":{"e":1}}}}}}'}
+    assertions:
+      - {type: status, operator: eq, expected: 201}
+    failPolicy: continue
+
+  - label: "Metadata 6 levels deep gets 400"
+    request:
+      method: POST
+      url: "{{baseUrl}}/notes"
+      body: {type: json, content: '{"title":"depth","metadata":{"a":{"b":{"c":{"d":{"e":{"f":1}}}}}}}'}
+    assertions:
+      - {type: status, operator: eq, expected: 400}
+    failPolicy: continue

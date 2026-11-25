@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-036-01** — Request Limits (Easy, port 19063)
+  - Broken server returns 500 for an oversized body and accepts too many tags and too deep metadata
+  - Detected by status assertions at and above each limit, with control steps below them
+
 - **fm-026-01** — Content Negotiation (Medium, port 19062)
   - Broken server ignores Accept and rejects application/json with a charset parameter
   - Detected by media type assertions for vendor types, quality values, 406 and 415

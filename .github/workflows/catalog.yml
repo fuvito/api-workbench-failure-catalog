@@ -71,6 +71,7 @@ jobs:
           - { dir: "fm-034-05-soft-delete",                port: 19036, kind: "server" }
           - { dir: "fm-034-06-bulk-delete",                port: 19039, kind: "server" }
           - { dir: "fm-035-01-request-headers",             port: 19059, kind: "server" }
+          - { dir: "fm-036-01-request-limits",             port: 19063, kind: "server" }
           - { dir: "fm-038-01-write-not-persisted",        port: 19046, kind: "server" }
           - { dir: "fm-043-01-mass-assignment",            port: 19052, kind: "server" }
           - { dir: "fm-044-01-sensitive-data",             port: 19044, kind: "server" }
