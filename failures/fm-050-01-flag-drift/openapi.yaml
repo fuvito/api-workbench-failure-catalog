@@ -1,0 +1,47 @@
+openapi: "3.0.3"
+info:
+  title: FM-050 Configuration Drift
+  description: >
+    Staging and production run the same release configuration on every instance.
+    GET /config reports its version and flags, and never secret values.
+  version: "1.0.0"
+paths:
+  /quote:
+    get:
+      operationId: getQuote
+      parameters:
+        - {name: subtotal_cents, in: query, required: true, schema: {type: integer, minimum: 1}}
+      responses:
+        "200":
+          description: Total with tax
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [total_cents]
+                properties:
+                  total_cents: {type: integer}
+        "400":
+          description: Invalid subtotal
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [error]
+                properties:
+                  error: {type: string}
+  /config:
+    get:
+      operationId: getConfig
+      responses:
+        "200":
+          description: Effective configuration of the instance that answered
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [config_version, new_tax_rule]
+                properties:
+                  config_version: {type: string}
+                  new_tax_rule: {type: boolean}

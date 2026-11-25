@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-050-01** — Configuration Drift (Medium, port 19073)
+  - Broken production instances disagree with staging and with each other about a tax flag
+  - Detected by comparing repeated production responses with values extracted from staging
+
 - **fm-014-01** — Daylight-Saving Schedule (Medium, port 19080)
   - Broken server repeats a schedule every 24 hours, drifting across clock changes
   - Detected by exact local times on fixed dates around US and European clock changes

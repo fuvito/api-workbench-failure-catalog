@@ -1,0 +1,58 @@
+schemaVersion: "1"
+title: fm-050-01 — Configuration Drift
+description: "Reads the behaviour of staging, then requires production to match it. Production is called several times, because instances behind one address can differ."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: record staging configuration"
+    request: {method: GET, url: "{{stagingUrl}}/config"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    extractions:
+      - {name: version, source: jsonpath, path: "$.config_version"}
+      - {name: newTax, source: jsonpath, path: "$.new_tax_rule"}
+
+  - label: "Control: record a staging quote"
+    request: {method: GET, url: "{{stagingUrl}}/quote?subtotal_cents=10000"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    extractions:
+      - {name: total, source: jsonpath, path: "$.total_cents"}
+
+  - label: "Production quote 1 matches staging"
+    request: {method: GET, url: "{{prodUrl}}/quote?subtotal_cents=10000"}
+    assertions:
+      - {type: jsonpath, path: "$.total_cents", operator: eq, expected: "{{total}}"}
+    failPolicy: continue
+
+  - label: "Production quote 2 matches staging"
+    request: {method: GET, url: "{{prodUrl}}/quote?subtotal_cents=10000"}
+    assertions:
+      - {type: jsonpath, path: "$.total_cents", operator: eq, expected: "{{total}}"}
+    failPolicy: continue
+
+  - label: "Production quote 3 matches staging"
+    request: {method: GET, url: "{{prodUrl}}/quote?subtotal_cents=10000"}
+    assertions:
+      - {type: jsonpath, path: "$.total_cents", operator: eq, expected: "{{total}}"}
+    failPolicy: continue
+
+  - label: "Production configuration 1 matches staging"
+    request: {method: GET, url: "{{prodUrl}}/config"}
+    assertions:
+      - {type: jsonpath, path: "$.config_version", operator: eq, expected: "{{version}}"}
+      - {type: jsonpath, path: "$.new_tax_rule", operator: eq, expected: "{{newTax}}"}
+    failPolicy: continue
+
+  - label: "Production configuration 2 matches staging"
+    request: {method: GET, url: "{{prodUrl}}/config"}
+    assertions:
+      - {type: jsonpath, path: "$.config_version", operator: eq, expected: "{{version}}"}
+      - {type: jsonpath, path: "$.new_tax_rule", operator: eq, expected: "{{newTax}}"}
+    failPolicy: continue
+
+  - label: "Production configuration 3 matches staging"
+    request: {method: GET, url: "{{prodUrl}}/config"}
+    assertions:
+      - {type: jsonpath, path: "$.config_version", operator: eq, expected: "{{version}}"}
+      - {type: jsonpath, path: "$.new_tax_rule", operator: eq, expected: "{{newTax}}"}
+    failPolicy: continue

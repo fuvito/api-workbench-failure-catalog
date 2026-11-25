@@ -89,6 +89,7 @@ jobs:
           - { dir: "fm-045-01-trusted-identity-headers",   port: 19056, kind: "server" }
           - { dir: "fm-046-01-secret-leakage",             port: 19058, kind: "server" }
           - { dir: "fm-047-01-unicode-round-trip",         port: 19055, kind: "server" }
+          - { dir: "fm-050-01-flag-drift",                 port: 19073, kind: "server" }
           # Add entries here as sub-projects land — see docs/TASKS.md §7.4
 
     steps:

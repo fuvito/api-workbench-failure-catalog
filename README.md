@@ -93,6 +93,7 @@ One official failure mode may have multiple concrete examples here.
 | 38 | [FM-045](https://clrsig.com/failures/fm-045/) | Authentication and Authorization Confusion Across Services | [fm-045-01-trusted-identity-headers](failures/fm-045-01-trusted-identity-headers/) |
 | 39 | [FM-046](https://clrsig.com/failures/fm-046/) | Security Policy and Secret Leakage Failures | [fm-046-01-secret-leakage](failures/fm-046-01-secret-leakage/) |
 | 40 | [FM-047](https://clrsig.com/failures/fm-047/) | Character Encoding and Unicode Handling Failures | [fm-047-01-unicode-round-trip](failures/fm-047-01-unicode-round-trip/) |
+| 41 | [FM-050](https://clrsig.com/failures/fm-050/) | Environment Configuration and Feature-Flag Drift | [fm-050-01-flag-drift](failures/fm-050-01-flag-drift/) |
 
 ## Failure Modes without Examples
 
@@ -110,7 +111,6 @@ As examples are added, rows move up into the index above.
 | 7 | [FM-033](https://clrsig.com/failures/fm-033/) | API Gateway Routing and Policy Drift Failures |
 | 8 | [FM-048](https://clrsig.com/failures/fm-048/) | Streaming and Large-Response Handling Failures |
 | 9 | [FM-049](https://clrsig.com/failures/fm-049/) | API Documentation and Example Drift |
-| 10 | [FM-050](https://clrsig.com/failures/fm-050/) | Environment Configuration and Feature-Flag Drift |
 
 ## Conventions
 

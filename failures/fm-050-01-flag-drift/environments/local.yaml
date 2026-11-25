@@ -1,0 +1,7 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: stagingUrl
+    value: "http://localhost:19072"
+  - name: prodUrl
+    value: "http://localhost:19073"
