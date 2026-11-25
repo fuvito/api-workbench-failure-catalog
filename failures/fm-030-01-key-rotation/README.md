@@ -55,7 +55,7 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 19069 -State Listen).OwningPro
 
 **What this doesn't cover:** it doesn't test time-based expiry of the overlap or of keys, cached credentials, or logs.
 
-**Secrets in output:** a failing check prints the server's response. When this was tested against the broken server, clrsig printed the listed key's `secret` field as `***`. Don't rely on that for other field names or other versions: use a test account, limit who can read the output, and revoke any key the run creates.
+**Secrets in output:** a failing check can show values from the server's response. In the text output of this broken run, clrsig 0.13.2 names the leaked `secret` field without printing its value, and shows the extracted new key as `***`. A failing `jsonpath` or `header` check does print the value it got, and other output formats and versions may differ. Use a test account, limit who can read the output, and revoke any key the run creates.
 
 The scenario creates and revokes keys and expects the old key to be listed first. It needs a fresh server each run. To use it on your own API, change the paths, header name and bodies, and only use disposable test keys.
 
