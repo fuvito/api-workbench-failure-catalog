@@ -1,0 +1,56 @@
+schemaVersion: "1"
+title: fm-037-01 — Query Injection
+description: "Sends harmless injection test strings that try to widen a search. Run only against systems you are allowed to test."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: normal search returns the caller's product"
+    request:
+      method: GET
+      url: "{{baseUrl}}/products"
+      queryParams: [{name: search, value: "lamp"}]
+      auth: {type: bearer, token: "{{token}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.count", operator: eq, expected: 1}
+    failPolicy: continue
+
+  - label: "Control: a name with an apostrophe is still searchable"
+    request:
+      method: GET
+      url: "{{baseUrl}}/products"
+      queryParams: [{name: search, value: "O'Brien"}]
+      auth: {type: bearer, token: "{{token}}"}
+    assertions:
+      - {type: jsonpath, path: "$.count", operator: eq, expected: 1}
+    failPolicy: continue
+
+  - label: "Injected OR condition matches nothing"
+    request:
+      method: GET
+      url: "{{baseUrl}}/products"
+      queryParams: [{name: search, value: "zzz OR owner=bob"}]
+      auth: {type: bearer, token: "{{token}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.count", operator: eq, expected: 0}
+    failPolicy: continue
+
+  - label: "Injected always-true condition matches nothing"
+    request:
+      method: GET
+      url: "{{baseUrl}}/products"
+      queryParams: [{name: search, value: "zzz OR name~"}]
+      auth: {type: bearer, token: "{{token}}"}
+    assertions:
+      - {type: jsonpath, path: "$.count", operator: eq, expected: 0}
+    failPolicy: continue
+
+  - label: "Sorting by an unlisted column is refused"
+    request:
+      method: GET
+      url: "{{baseUrl}}/products"
+      queryParams: [{name: sort, value: "cost"}]
+      auth: {type: bearer, token: "{{token}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 400}
+    failPolicy: continue

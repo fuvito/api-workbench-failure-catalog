@@ -1,0 +1,52 @@
+openapi: "3.0.3"
+info:
+  title: FM-037 Query Injection
+  description: >
+    Returns only the caller's products. search is matched literally against the
+    name. sort accepts only "name"; anything else gets 400.
+  version: "1.0.0"
+security:
+  - bearerAuth: []
+paths:
+  /products:
+    get:
+      operationId: listProducts
+      parameters:
+        - {name: search, in: query, required: false, schema: {type: string}}
+        - {name: sort, in: query, required: false, schema: {type: string, enum: [name]}}
+      responses:
+        "200":
+          description: The caller's matching products
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, items]
+                properties:
+                  count: {type: integer}
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required: [name, owner]
+                      properties:
+                        name: {type: string}
+                        owner:
+                          type: string
+        "400": {$ref: '#/components/responses/Error'}
+        "401": {$ref: '#/components/responses/Error'}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  responses:
+    Error:
+      description: The request was rejected
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}

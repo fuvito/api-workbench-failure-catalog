@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-037-01** — Query Injection (Medium, port 19064)
+  - Broken server pastes search text into a parsed filter expression and sorts by any column
+  - Detected by result counts for injection strings and an expected 400 for an unlisted sort column
+
 - **fm-036-01** — Request Limits (Easy, port 19063)
   - Broken server returns 500 for an oversized body and accepts too many tags and too deep metadata
   - Detected by status assertions at and above each limit, with control steps below them
