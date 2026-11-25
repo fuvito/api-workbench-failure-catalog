@@ -1,0 +1,76 @@
+schemaVersion: "1"
+title: fm-033-01 — Gateway Drift
+description: "Runs the same contract checks through the staging gateway and then the production gateway."
+specFile: ../openapi.yaml
+steps:
+  - label: "Staging (control): orders have the version 2 shape"
+    request:
+      method: GET
+      url: "{{stagingUrl}}/v2/orders/ord-1001"
+      headers: [{name: X-API-Key, value: "{{apiKey}}"}]
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.total.currency", operator: eq, expected: "EUR"}
+    failPolicy: continue
+
+  - label: "Staging (control): reports require a key"
+    request:
+      method: GET
+      url: "{{stagingUrl}}/v2/reports"
+    assertions:
+      - {type: status, operator: eq, expected: 401}
+    failPolicy: continue
+
+  - label: "Staging (control): reports work with a key"
+    request:
+      method: GET
+      url: "{{stagingUrl}}/v2/reports"
+      headers: [{name: X-API-Key, value: "{{apiKey}}"}]
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "Staging (control): request ID is passed through"
+    request:
+      method: GET
+      url: "{{stagingUrl}}/v2/orders/ord-1001"
+      headers: [{name: X-API-Key, value: "{{apiKey}}"}, {name: X-Request-ID, value: "req-42"}]
+    assertions:
+      - {type: header, path: "X-Request-ID", operator: eq, expected: "req-42"}
+    failPolicy: continue
+
+  - label: "Production: orders have the version 2 shape"
+    request:
+      method: GET
+      url: "{{prodUrl}}/v2/orders/ord-1001"
+      headers: [{name: X-API-Key, value: "{{apiKey}}"}]
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.total.currency", operator: eq, expected: "EUR"}
+    failPolicy: continue
+
+  - label: "Production: reports require a key"
+    request:
+      method: GET
+      url: "{{prodUrl}}/v2/reports"
+    assertions:
+      - {type: status, operator: eq, expected: 401}
+    failPolicy: continue
+
+  - label: "Production: reports work with a key"
+    request:
+      method: GET
+      url: "{{prodUrl}}/v2/reports"
+      headers: [{name: X-API-Key, value: "{{apiKey}}"}]
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "Production: request ID is passed through"
+    request:
+      method: GET
+      url: "{{prodUrl}}/v2/orders/ord-1001"
+      headers: [{name: X-API-Key, value: "{{apiKey}}"}, {name: X-Request-ID, value: "req-42"}]
+    assertions:
+      - {type: header, path: "X-Request-ID", operator: eq, expected: "req-42"}
+    failPolicy: continue

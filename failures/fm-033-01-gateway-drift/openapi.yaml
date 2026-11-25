@@ -1,0 +1,53 @@
+openapi: "3.0.3"
+info:
+  title: FM-033 Gateway Contract
+  description: >
+    The same contract applies through every gateway: version 2 orders, an API key
+    required on reports, and X-Request-ID passed through.
+  version: "2.0.0"
+paths:
+  /v2/orders/ord-1001:
+    get:
+      operationId: getOrder
+      responses:
+        "200":
+          description: A version 2 order
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, total]
+                properties:
+                  id: {type: string}
+                  total:
+                    type: object
+                    required: [amount, currency]
+                    properties:
+                      amount: {type: number}
+                      currency: {type: string}
+  /v2/reports:
+    get:
+      operationId: getReports
+      security: [{apiKey: []}]
+      responses:
+        "200":
+          description: Report summary
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count]
+                properties:
+                  count: {type: integer}
+        "401":
+          description: Missing or wrong key
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [error]
+                properties:
+                  error: {type: string}
+components:
+  securitySchemes:
+    apiKey: {type: apiKey, in: header, name: X-API-Key}

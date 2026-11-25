@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-033-01** — Gateway Drift (Medium, port 19075)
+  - Broken production gateway routes to the old service, drops auth on a route and loses X-Request-ID
+  - Detected by running the same contract checks through both gateways
+
 - **fm-050-01** — Configuration Drift (Medium, port 19073)
   - Broken production instances disagree with staging and with each other about a tax flag
   - Detected by comparing repeated production responses with values extracted from staging

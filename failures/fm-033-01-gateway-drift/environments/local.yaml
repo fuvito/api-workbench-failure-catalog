@@ -1,0 +1,11 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: stagingUrl
+    value: "http://localhost:19074"
+  - name: prodUrl
+    value: "http://localhost:19075"
+  # Synthetic key for the demo gateways.
+  - name: apiKey
+    value: "demo-key-not-real"
+    secret: true
