@@ -1,0 +1,55 @@
+openapi: "3.0.3"
+info:
+  title: FM-008 Token Validation
+  description: >
+    Tokens are HS256 JWTs. A token that is unsigned, wrongly signed, expired,
+    from another issuer or for another audience gets 401. A valid token without
+    the required scope gets 403.
+  version: "1.0.0"
+security:
+  - bearerAuth: []
+paths:
+  /payments:
+    get:
+      operationId: listPayments
+      responses:
+        "200":
+          description: Payments (needs payments:read)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [subject, count]
+                properties:
+                  subject: {type: string}
+                  count: {type: integer}
+        "401": {$ref: '#/components/responses/Error'}
+        "403": {$ref: '#/components/responses/Error'}
+  /refunds:
+    post:
+      operationId: createRefund
+      responses:
+        "201":
+          description: Refunded (needs payments:write)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: {type: string}
+        "401": {$ref: '#/components/responses/Error'}
+        "403": {$ref: '#/components/responses/Error'}
+components:
+  securitySchemes:
+    bearerAuth: {type: http, scheme: bearer, bearerFormat: JWT}
+  responses:
+    Error:
+      description: Refused
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}

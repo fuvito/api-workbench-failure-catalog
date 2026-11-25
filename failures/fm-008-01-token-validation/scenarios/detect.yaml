@@ -1,0 +1,67 @@
+schemaVersion: "1"
+title: fm-008-01 — Token Validation
+description: "Presents prepared test tokens, each wrong in one way, and checks which are accepted."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: valid token can read"
+    request:
+      method: GET
+      url: "{{baseUrl}}/payments"
+      auth: {type: bearer, token: "{{validToken}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "Expired token is refused"
+    request:
+      method: GET
+      url: "{{baseUrl}}/payments"
+      auth: {type: bearer, token: "{{expiredToken}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 401}
+    failPolicy: continue
+
+  - label: "Token for another API is refused"
+    request:
+      method: GET
+      url: "{{baseUrl}}/payments"
+      auth: {type: bearer, token: "{{wrongAudienceToken}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 401}
+    failPolicy: continue
+
+  - label: "Token from another issuer is refused"
+    request:
+      method: GET
+      url: "{{baseUrl}}/payments"
+      auth: {type: bearer, token: "{{wrongIssuerToken}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 401}
+    failPolicy: continue
+
+  - label: "Control: bad signature is refused"
+    request:
+      method: GET
+      url: "{{baseUrl}}/payments"
+      auth: {type: bearer, token: "{{badSignatureToken}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 401}
+    failPolicy: continue
+
+  - label: "Unsigned token is refused"
+    request:
+      method: GET
+      url: "{{baseUrl}}/payments"
+      auth: {type: bearer, token: "{{unsignedToken}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 401}
+    failPolicy: continue
+
+  - label: "Read scope cannot create a refund"
+    request:
+      method: POST
+      url: "{{baseUrl}}/refunds"
+      auth: {type: bearer, token: "{{validToken}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 403}
+    failPolicy: continue

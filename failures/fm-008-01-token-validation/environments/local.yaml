@@ -1,0 +1,30 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: baseUrl
+    value: "http://localhost:19078"
+  # Synthetic tokens, signed with the demo secret. They give access to nothing real.
+  # Valid: payments:read, expires in 2100
+  - name: validToken
+    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2F1dGguZXhhbXBsZS50ZXN0IiwiYXVkIjoicGF5bWVudHMtYXBpIiwic3ViIjoiYWxpY2UiLCJzY29wZSI6InBheW1lbnRzOnJlYWQiLCJleHAiOjQxMDI0NDQ4MDB9.ai0VMQBCOhugfKERwahlbvpzmTYupDnJM80jQU8crgo"
+    secret: true
+  # Expired in 2020
+  - name: expiredToken
+    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2F1dGguZXhhbXBsZS50ZXN0IiwiYXVkIjoicGF5bWVudHMtYXBpIiwic3ViIjoiYWxpY2UiLCJzY29wZSI6InBheW1lbnRzOnJlYWQiLCJleHAiOjE1Nzc4MzY4MDB9.qMF298M9wvty8lY0wNrP9cm_XXFUJYkhN6lHDr14crg"
+    secret: true
+  # Issued for reporting-api
+  - name: wrongAudienceToken
+    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2F1dGguZXhhbXBsZS50ZXN0IiwiYXVkIjoicmVwb3J0aW5nLWFwaSIsInN1YiI6ImFsaWNlIiwic2NvcGUiOiJwYXltZW50czpyZWFkIiwiZXhwIjo0MTAyNDQ0ODAwfQ.f2mEB8ILWmXvLfGfHTqyB96UDendcC688clfufQ6GuY"
+    secret: true
+  # Issued by another server
+  - name: wrongIssuerToken
+    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL290aGVyLmV4YW1wbGUudGVzdCIsImF1ZCI6InBheW1lbnRzLWFwaSIsInN1YiI6ImFsaWNlIiwic2NvcGUiOiJwYXltZW50czpyZWFkIiwiZXhwIjo0MTAyNDQ0ODAwfQ.BXXPlAvV1SgcDqYow7q2NtqkjX841wJRJi7hHTNOfsg"
+    secret: true
+  # Signed with the wrong key
+  - name: badSignatureToken
+    value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2F1dGguZXhhbXBsZS50ZXN0IiwiYXVkIjoicGF5bWVudHMtYXBpIiwic3ViIjoiYWxpY2UiLCJzY29wZSI6InBheW1lbnRzOnJlYWQiLCJleHAiOjQxMDI0NDQ4MDB9.rQ-Du01ZWvzZHhiLS0PpR22b_Fl1y_Vmy6_h9-iu9u4"
+    secret: true
+  # alg "none", no signature
+  - name: unsignedToken
+    value: "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwczovL2F1dGguZXhhbXBsZS50ZXN0IiwiYXVkIjoicGF5bWVudHMtYXBpIiwic3ViIjoiYWxpY2UiLCJzY29wZSI6InBheW1lbnRzOnJlYWQiLCJleHAiOjQxMDI0NDQ4MDB9."
+    secret: true

@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-008-01** — Token Validation (Medium, port 19078)
+  - Broken server accepts expired, wrong-audience, wrong-issuer and unsigned tokens and ignores scopes
+  - Detected by status assertions with prepared tokens that are each wrong in one way
+
 - **fm-021-01** — Upload Processing (Medium, port 19071)
   - Broken server reports a failed storage write as success and accepts empty and mismatched files
   - Detected by an injected storage failure, validation status assertions and record counts
