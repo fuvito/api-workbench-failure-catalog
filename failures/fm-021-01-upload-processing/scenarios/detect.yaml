@@ -1,0 +1,63 @@
+schemaVersion: "1"
+title: fm-021-01 — Upload Processing
+description: "Uploads small files, checks they can be downloaded, and makes storage fail. The fixture folder is set in the environment, relative to where you run clrsig."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: upload with a correct checksum"
+    request:
+      method: POST
+      url: "{{baseUrl}}/files"
+      headers: [{name: X-Content-SHA256, value: "{{reportSha256}}"}]
+      body: {type: multipart, content: '[{"n":"file","t":"file","v":"{{fixturesDir}}/report.txt"}]'}
+    assertions:
+      - {type: status, operator: eq, expected: 201}
+    extractions:
+      - {name: fileId, source: jsonpath, path: "$.id"}
+
+  - label: "Control: the uploaded file can be downloaded"
+    request: {method: GET, url: "{{baseUrl}}/files/{{fileId}}/content"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "Count records"
+    request: {method: GET, url: "{{baseUrl}}/files"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    extractions:
+      - {name: countBefore, source: jsonpath, path: "$.count"}
+
+  - label: "A storage failure is not reported as success"
+    request:
+      method: POST
+      url: "{{baseUrl}}/files"
+      headers: [{name: X-Test-Fault, value: "storage-write"}]
+      body: {type: multipart, content: '[{"n":"file","t":"file","v":"{{fixturesDir}}/report.txt"}]'}
+    assertions:
+      - {type: status, operator: eq, expected: 502}
+    failPolicy: continue
+
+  - label: "An empty file is refused"
+    request:
+      method: POST
+      url: "{{baseUrl}}/files"
+      body: {type: multipart, content: '[{"n":"file","t":"file","v":"{{fixturesDir}}/empty.txt"}]'}
+    assertions:
+      - {type: status, operator: eq, expected: 400}
+    failPolicy: continue
+
+  - label: "A checksum mismatch is refused"
+    request:
+      method: POST
+      url: "{{baseUrl}}/files"
+      headers: [{name: X-Content-SHA256, value: "0000000000000000000000000000000000000000000000000000000000000000"}]
+      body: {type: multipart, content: '[{"n":"file","t":"file","v":"{{fixturesDir}}/report.txt"}]'}
+    assertions:
+      - {type: status, operator: eq, expected: 422}
+    failPolicy: continue
+
+  - label: "Failed uploads left no records"
+    request: {method: GET, url: "{{baseUrl}}/files"}
+    assertions:
+      - {type: jsonpath, path: "$.count", operator: eq, expected: "{{countBefore}}"}
+    failPolicy: continue

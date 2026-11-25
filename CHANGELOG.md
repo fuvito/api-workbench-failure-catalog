@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-021-01** — Upload Processing (Medium, port 19071)
+  - Broken server reports a failed storage write as success and accepts empty and mismatched files
+  - Detected by an injected storage failure, validation status assertions and record counts
+
 - **fm-019-01** — Webhook Processing (Medium, port 19070)
   - Broken consumer double-processes redeliveries, skips signature checks and acknowledges failed processing
   - Detected by redelivering, tampering with and failing signed events, then reading the ledger

@@ -43,6 +43,7 @@ jobs:
           - { dir: "fm-018-02-duplicate-create",           port: 19042, kind: "server" }
           - { dir: "fm-019-01-webhook-processing",         port: 19070, kind: "server" }
           - { dir: "fm-020-01-batch-atomicity",            port: 19020, kind: "server" }
+          - { dir: "fm-021-01-upload-processing",          port: 19071, kind: "server" }
           - { dir: "fm-022-01-semantically-invalid",       port: 19022, kind: "server" }
           - { dir: "fm-022-02-filter-ignored",             port: 19028, kind: "server" }
           - { dir: "fm-022-03-enum-violation",             port: 19030, kind: "server" }

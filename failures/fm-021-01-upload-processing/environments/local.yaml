@@ -1,0 +1,11 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: baseUrl
+    value: "http://localhost:19071"
+  # Relative to the folder you run clrsig from (the repo root here).
+  - name: fixturesDir
+    value: "failures/fm-021-01-upload-processing/fixtures"
+  # SHA-256 of fixtures/report.txt, which has no trailing newline.
+  - name: reportSha256
+    value: "2ab59aea421008a1d62b68b3353b725f7a343f582340feed5c97b641992e7b97"

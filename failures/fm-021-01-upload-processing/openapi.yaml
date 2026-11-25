@@ -1,0 +1,74 @@
+openapi: "3.0.3"
+info:
+  title: FM-021 Upload Processing
+  description: >
+    201 means the file is durably stored and can be downloaded. Empty files get
+    400, a wrong X-Content-SHA256 gets 422, and a storage failure gets 502 and
+    leaves no record.
+  version: "1.0.0"
+paths:
+  /files:
+    post:
+      operationId: uploadFile
+      parameters:
+        - {name: X-Content-SHA256, in: header, required: false, schema: {type: string}}
+        - {name: X-Test-Fault, in: header, required: false, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file: {type: string, format: binary}
+      responses:
+        "201":
+          description: Stored
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, size, status]
+                properties:
+                  id: {type: string}
+                  size: {type: integer, minimum: 1}
+                  status: {type: string, enum: [stored]}
+        "400": {$ref: '#/components/responses/Error'}
+        "422": {$ref: '#/components/responses/Error'}
+        "502": {$ref: '#/components/responses/Error'}
+    get:
+      operationId: countFiles
+      responses:
+        "200":
+          description: Number of file records
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count]
+                properties:
+                  count: {type: integer}
+  /files/{id}/content:
+    get:
+      operationId: downloadFile
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      responses:
+        "200":
+          description: The file
+          content:
+            application/octet-stream:
+              schema: {type: string, format: binary}
+        "404": {$ref: '#/components/responses/Error'}
+components:
+  responses:
+    Error:
+      description: Not accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}
