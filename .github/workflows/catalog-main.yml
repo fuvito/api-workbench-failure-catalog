@@ -102,8 +102,8 @@ jobs:
           go-version: "1.26"
 
       # git clone has no retry option, so this matches the download retry in
-      # catalog.yml: up to 5 retries, 10 seconds apart. A build error isn't retried.
-      - name: Build clrsig from api-workbench@main
+      # catalog.yml: up to 5 retries, 10 seconds apart.
+      - name: Clone api-workbench@main
         run: |
           for attempt in 1 2 3 4 5 6; do
             git clone --depth 1 https://github.com/fuvito/api-workbench /tmp/api-workbench && break
@@ -115,7 +115,25 @@ jobs:
             rm -rf /tmp/api-workbench
             sleep 10
           done
-          cd /tmp/api-workbench && go build -o /usr/local/bin/clrsig ./apps/cli/
+
+      # A module download from proxy.golang.org has failed partway before. Fetch
+      # what the CLI needs, with retries, so the build itself isn't retried.
+      # go list -deps skips the modules only the desktop app uses.
+      - name: Download clrsig's dependencies
+        run: |
+          cd /tmp/api-workbench
+          for attempt in 1 2 3 4 5 6; do
+            go list -deps ./apps/cli/ > /dev/null && break
+            if [ "$attempt" -eq 6 ]; then
+              echo "dependency download failed after 6 attempts"
+              exit 1
+            fi
+            echo "dependency download failed (attempt $attempt of 6), retrying in 10 s"
+            sleep 10
+          done
+
+      - name: Build clrsig from api-workbench@main
+        run: cd /tmp/api-workbench && go build -o /usr/local/bin/clrsig ./apps/cli/
 
       # Optional per-example settings for clrsig, such as a test CA (fm-032)
       - name: Load per-example settings
