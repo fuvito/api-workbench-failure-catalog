@@ -74,7 +74,8 @@ One official failure mode may have multiple concrete examples here.
 | 19 | [FM-038](https://clrsig.com/failures/fm-038/) | Eventual Consistency and Read-After-Write Failures | [fm-038-01-write-not-persisted](failures/fm-038-01-write-not-persisted/) |
 | 20 | [FM-043](https://clrsig.com/failures/fm-043/) | Mass Assignment and Unauthorized Field Modification | [fm-043-01-mass-assignment](failures/fm-043-01-mass-assignment/) |
 | 21 | [FM-044](https://clrsig.com/failures/fm-044/) | Sensitive Data Exposure in API Responses | [fm-044-01-sensitive-data](failures/fm-044-01-sensitive-data/) |
-| 22 | [FM-047](https://clrsig.com/failures/fm-047/) | Character Encoding and Unicode Handling Failures | [fm-047-01-unicode-round-trip](failures/fm-047-01-unicode-round-trip/) |
+| 22 | [FM-045](https://clrsig.com/failures/fm-045/) | Authentication and Authorization Confusion Across Services | [fm-045-01-trusted-identity-headers](failures/fm-045-01-trusted-identity-headers/) |
+| 23 | [FM-047](https://clrsig.com/failures/fm-047/) | Character Encoding and Unicode Handling Failures | [fm-047-01-unicode-round-trip](failures/fm-047-01-unicode-round-trip/) |
 
 ## Failure Modes without Examples
 
@@ -106,11 +107,10 @@ As examples are added, rows move up into the index above.
 | 21 | [FM-040](https://clrsig.com/failures/fm-040/) | Database Transaction and Atomicity Failures |
 | 22 | [FM-041](https://clrsig.com/failures/fm-041/) | Retry Storm and Cascading Failure |
 | 23 | [FM-042](https://clrsig.com/failures/fm-042/) | Dependency Failure and Fault Isolation |
-| 24 | [FM-045](https://clrsig.com/failures/fm-045/) | Authentication and Authorization Confusion Across Services |
-| 25 | [FM-046](https://clrsig.com/failures/fm-046/) | Security Policy and Secret Leakage Failures |
-| 26 | [FM-048](https://clrsig.com/failures/fm-048/) | Streaming and Large-Response Handling Failures |
-| 27 | [FM-049](https://clrsig.com/failures/fm-049/) | API Documentation and Example Drift |
-| 28 | [FM-050](https://clrsig.com/failures/fm-050/) | Environment Configuration and Feature-Flag Drift |
+| 24 | [FM-046](https://clrsig.com/failures/fm-046/) | Security Policy and Secret Leakage Failures |
+| 25 | [FM-048](https://clrsig.com/failures/fm-048/) | Streaming and Large-Response Handling Failures |
+| 26 | [FM-049](https://clrsig.com/failures/fm-049/) | API Documentation and Example Drift |
+| 27 | [FM-050](https://clrsig.com/failures/fm-050/) | Environment Configuration and Feature-Flag Drift |
 
 ## Conventions
 

@@ -1,0 +1,145 @@
+schemaVersion: "1"
+title: fm-045-01 — Trusted Identity Headers
+description: "Sends forged X-User-ID and X-User-Role headers through the gateway and straight to the backend. The control steps show that normal access and normal refusals work."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: member is identified through the gateway"
+    request:
+      method: GET
+      url: "{{baseUrl}}/me"
+      auth:
+        type: bearer
+        token: "{{memberToken}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.user_id"
+        operator: eq
+        expected: "alice"
+      - type: jsonpath
+        path: "$.role"
+        operator: eq
+        expected: "member"
+    failPolicy: continue
+
+  - label: "Control: admin can list users"
+    request:
+      method: GET
+      url: "{{baseUrl}}/admin/users"
+      auth:
+        type: bearer
+        token: "{{adminToken}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+    failPolicy: continue
+
+  - label: "Control: member cannot list users"
+    request:
+      method: GET
+      url: "{{baseUrl}}/admin/users"
+      auth:
+        type: bearer
+        token: "{{memberToken}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 403
+    failPolicy: continue
+
+  - label: "Control: no token is refused"
+    request:
+      method: GET
+      url: "{{baseUrl}}/admin/users"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 401
+    failPolicy: continue
+
+  - label: "Gateway: forged headers without a token — must be 401"
+    request:
+      method: GET
+      url: "{{baseUrl}}/admin/users"
+      headers:
+        - name: X-User-ID
+          value: "{{adminUserId}}"
+        - name: X-User-Role
+          value: admin
+    assertions:
+      - type: status
+        operator: eq
+        expected: 401
+    failPolicy: continue
+
+  - label: "Gateway: member adds an admin role header — must be 403"
+    request:
+      method: GET
+      url: "{{baseUrl}}/admin/users"
+      headers:
+        - name: X-User-Role
+          value: admin
+      auth:
+        type: bearer
+        token: "{{memberToken}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 403
+    failPolicy: continue
+
+  - label: "Gateway: member claims another user ID — identity must not change"
+    request:
+      method: GET
+      url: "{{baseUrl}}/me"
+      headers:
+        - name: X-User-ID
+          value: "{{adminUserId}}"
+      auth:
+        type: bearer
+        token: "{{memberToken}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.user_id"
+        operator: eq
+        expected: "alice"
+    failPolicy: continue
+
+  - label: "Backend directly: forged headers without a token — must be 401"
+    request:
+      method: GET
+      url: "{{backendUrl}}/admin/users"
+      headers:
+        - name: X-User-ID
+          value: "{{adminUserId}}"
+        - name: X-User-Role
+          value: admin
+    assertions:
+      - type: status
+        operator: eq
+        expected: 401
+    failPolicy: continue
+
+  - label: "Backend directly: member token with forged admin headers — must be 403"
+    request:
+      method: GET
+      url: "{{backendUrl}}/admin/users"
+      headers:
+        - name: X-User-ID
+          value: "{{adminUserId}}"
+        - name: X-User-Role
+          value: admin
+      auth:
+        type: bearer
+        token: "{{memberToken}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 403
+    failPolicy: continue

@@ -1,0 +1,17 @@
+schemaVersion: "1"
+name: local
+variables:
+  # The public gateway.
+  - name: baseUrl
+    value: "http://localhost:19056"
+  # The service behind the gateway, reachable in this demo.
+  - name: backendUrl
+    value: "http://localhost:19057"
+  # Synthetic tokens for the demo server.
+  - name: memberToken
+    value: "tok-alice"
+  - name: adminToken
+    value: "tok-carol"
+  # The user ID an attacker tries to claim.
+  - name: adminUserId
+    value: "carol"

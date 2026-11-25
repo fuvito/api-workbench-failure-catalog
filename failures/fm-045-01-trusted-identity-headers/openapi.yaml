@@ -1,0 +1,77 @@
+openapi: "3.0.3"
+info:
+  title: FM-045 Trusted Identity Headers
+  description: >
+    The caller's identity and role come only from a verified bearer token. Headers
+    such as X-User-ID and X-User-Role sent by a caller have no effect. This holds
+    on the public gateway and on the backend behind it.
+  version: "1.0.0"
+security:
+  - bearerAuth: []
+paths:
+  /me:
+    get:
+      operationId: getMe
+      summary: Who the API thinks the caller is
+      responses:
+        "200":
+          description: The authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+  /admin/users:
+    get:
+      operationId: listUsers
+      summary: List users (admin role required)
+      responses:
+        "200":
+          description: All users
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [users]
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: string
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          description: The caller is not an admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  responses:
+    Unauthorized:
+      description: Missing or invalid token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    User:
+      type: object
+      required: [user_id, role]
+      properties:
+        user_id:
+          type: string
+        role:
+          type: string
+          enum: [member, admin]
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-045-01** — Trusted Identity Headers (Medium, ports 19056 and 19057)
+  - Broken gateway keeps identity headers sent by the caller, and the backend trusts them
+  - Detected by forged headers sent through the gateway and straight to the backend, with four control steps
+
 - **fm-047-01** — Unicode Round Trip (Easy, port 19055)
   - Broken server cuts names at 20 bytes, replaces 4-byte characters with "?" and removes combining marks
   - Detected by exact name assertions on create and read-back, plus a 21-character rejection check

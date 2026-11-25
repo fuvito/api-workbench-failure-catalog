@@ -70,6 +70,7 @@ jobs:
           - { dir: "fm-038-01-write-not-persisted",        port: 19046, kind: "server" }
           - { dir: "fm-043-01-mass-assignment",            port: 19052, kind: "server" }
           - { dir: "fm-044-01-sensitive-data",             port: 19044, kind: "server" }
+          - { dir: "fm-045-01-trusted-identity-headers",   port: 19056, kind: "server" }
           - { dir: "fm-047-01-unicode-round-trip",         port: 19055, kind: "server" }
           # Add entries here as sub-projects land — see docs/TASKS.md §7.4
 
