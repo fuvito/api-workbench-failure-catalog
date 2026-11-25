@@ -1,0 +1,195 @@
+schemaVersion: "1"
+title: fm-047-01 — Unicode Round Trip
+description: "Creates contacts with names in different scripts and reads each one back. Every name must come back exactly as sent, and the 20-character limit must count characters, not bytes."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: ASCII name — create"
+    request:
+      method: POST
+      url: "{{baseUrl}}/contacts"
+      body:
+        type: json
+        content: '{"name":"Alice Smith"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 201
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Alice Smith"
+    extractions:
+      - name: asciiId
+        source: jsonpath
+        path: "$.id"
+    failPolicy: continue
+
+  - label: "Control: ASCII name — read back"
+    request:
+      method: GET
+      url: "{{baseUrl}}/contacts/{{asciiId}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Alice Smith"
+    failPolicy: continue
+
+  - label: "Accented and Turkish letters — create"
+    request:
+      method: POST
+      url: "{{baseUrl}}/contacts"
+      body:
+        type: json
+        content: '{"name":"Çağrı İpek"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 201
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Çağrı İpek"
+    extractions:
+      - name: turkishId
+        source: jsonpath
+        path: "$.id"
+    failPolicy: continue
+
+  - label: "Accented and Turkish letters — read back"
+    request:
+      method: GET
+      url: "{{baseUrl}}/contacts/{{turkishId}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Çağrı İpek"
+    failPolicy: continue
+
+  - label: "20 characters that take 39 bytes — create"
+    notes: "At the character limit but well over 20 bytes."
+    request:
+      method: POST
+      url: "{{baseUrl}}/contacts"
+      body:
+        type: json
+        content: '{"name":"Анна Константинопуло"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 201
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Анна Константинопуло"
+    extractions:
+      - name: cyrillicId
+        source: jsonpath
+        path: "$.id"
+    failPolicy: continue
+
+  - label: "20 characters that take 39 bytes — read back"
+    request:
+      method: GET
+      url: "{{baseUrl}}/contacts/{{cyrillicId}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Анна Константинопуло"
+    failPolicy: continue
+
+  - label: "Emoji outside the Basic Multilingual Plane — create"
+    notes: "Short in bytes, so only 4-byte character handling is tested."
+    request:
+      method: POST
+      url: "{{baseUrl}}/contacts"
+      body:
+        type: json
+        content: '{"name":"Zoë 🚀"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 201
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Zoë 🚀"
+    extractions:
+      - name: emojiId
+        source: jsonpath
+        path: "$.id"
+    failPolicy: continue
+
+  - label: "Emoji outside the Basic Multilingual Plane — read back"
+    request:
+      method: GET
+      url: "{{baseUrl}}/contacts/{{emojiId}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Zoë 🚀"
+    failPolicy: continue
+
+  - label: "Combining mark is kept as sent — create"
+    notes: "e followed by U+0301. It looks like the single character U+00E9 but is a different string."
+    request:
+      method: POST
+      url: "{{baseUrl}}/contacts"
+      body:
+        type: json
+        content: '{"name":"Jose\u0301"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 201
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Jose\u0301"
+    extractions:
+      - name: combiningId
+        source: jsonpath
+        path: "$.id"
+    failPolicy: continue
+
+  - label: "Combining mark is kept as sent — read back"
+    request:
+      method: GET
+      url: "{{baseUrl}}/contacts/{{combiningId}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.name"
+        operator: eq
+        expected: "Jose\u0301"
+    failPolicy: continue
+
+  - label: "21 characters are rejected, not truncated"
+    request:
+      method: POST
+      url: "{{baseUrl}}/contacts"
+      body:
+        type: json
+        content: '{"name":"Анна Константинопулос"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 400
+    failPolicy: continue

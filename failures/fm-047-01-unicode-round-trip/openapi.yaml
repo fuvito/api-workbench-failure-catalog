@@ -1,0 +1,79 @@
+openapi: "3.0.3"
+info:
+  title: FM-047 Unicode Round Trip
+  description: >
+    Request and response bodies are UTF-8. A name is stored and returned exactly
+    as sent: no characters are replaced or removed, and no Unicode normalization
+    is applied. The limit is 20 characters (Unicode code points), not bytes, and
+    a longer name is rejected with 400.
+  version: "1.0.0"
+paths:
+  /contacts:
+    post:
+      operationId: createContact
+      summary: Create a contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 20
+      responses:
+        "201":
+          description: The created contact
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        "400":
+          description: Missing or too long name
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /contacts/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getContact
+      summary: Get a contact
+      responses:
+        "200":
+          description: The contact
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        "404":
+          description: No such contact
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Contact:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          maxLength: 20
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

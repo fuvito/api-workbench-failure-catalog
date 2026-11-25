@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-047-01** — Unicode Round Trip (Easy, port 19055)
+  - Broken server cuts names at 20 bytes, replaces 4-byte characters with "?" and removes combining marks
+  - Detected by exact name assertions on create and read-back, plus a 21-character rejection check
+
 - **fm-031-01** — CORS Preflight (Medium, port 19054)
   - Broken server leaves Authorization, X-Request-ID and PUT out of the preflight response, omits CORS headers on errors, and allows any origin with credentials
   - Detected by header assertions on preflight and cross-origin requests, with a control step without an Origin header
