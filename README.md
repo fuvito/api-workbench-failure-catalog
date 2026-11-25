@@ -133,13 +133,11 @@ Two independent workflows keep the catalog honest:
 
 - **`catalog.yml`** — runs the matrix against the latest pinned clrsig release on every push and nightly at 06:00 UTC.
 - **`catalog-main.yml`** — builds clrsig from `api-workbench@main` nightly at 07:00 UTC to catch engine regressions before they ship.
-- **`update-outputs.yml`** — regenerates the expected-output blocks in sub-project READMEs so docs can't drift from real output.
 
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the sub-project template, port
-convention, `/health` contract, and how to propose a failure mode from the
-backlog.
+convention, `/health` contract, and how to propose a new example.
 
 ## License
 
