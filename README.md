@@ -9,9 +9,10 @@ for your own workspace.
 [![Failure Catalog (released)](https://github.com/fuvito/api-workbench-failure-catalog/actions/workflows/catalog.yml/badge.svg)](https://github.com/fuvito/api-workbench-failure-catalog/actions/workflows/catalog.yml)
 [![Failure Catalog (main)](https://github.com/fuvito/api-workbench-failure-catalog/actions/workflows/catalog-main.yml/badge.svg)](https://github.com/fuvito/api-workbench-failure-catalog/actions/workflows/catalog-main.yml)
 
-> **Status:** pre-build. The design source of truth is
-> [`docs/PRD.md`](docs/PRD.md). Sub-projects land incrementally; the index
-> below marks each as it ships.
+> **Status:** 47 of the 50 official failure modes have at least one runnable
+> example, listed in the [index](#failure-mode-index) below. The other three are
+> [explained here](#failure-modes-without-examples). For the original design, see
+> [`docs/PRD.md`](docs/PRD.md).
 
 ## How it works
 
