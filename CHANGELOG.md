@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-042-01** — Fault Isolation (Medium, port 19066)
+  - Broken server fails or stalls order reads when an optional recommendation service is down or slow
+  - Detected by status and duration assertions while a test hook breaks the dependency
+
 - **fm-039-01** — Out-of-Order Events (Medium, port 19065)
   - Broken consumer applies events in arrival order, allows invalid transitions and creates orders from early events
   - Detected by delivering events out of order and asserting results and stored state

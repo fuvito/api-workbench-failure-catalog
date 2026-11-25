@@ -1,0 +1,58 @@
+schemaVersion: "1"
+title: fm-042-01 — Fault Isolation
+description: "Switches an optional dependency down and slow through a test hook, and checks that reading an order still works. The last step switches it back on."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: everything up"
+    request: {method: GET, url: "{{baseUrl}}/orders/ord-1001"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.degraded", operator: eq, expected: false}
+    failPolicy: continue
+
+  - label: "Switch recommendations off"
+    request:
+      method: PUT
+      url: "{{baseUrl}}/test/recommendation-service"
+      body: {type: json, content: '{"state":"down"}'}
+    assertions:
+      - {type: status, operator: eq, expected: 204}
+    failPolicy: continue
+
+  - label: "Order is still available"
+    request: {method: GET, url: "{{baseUrl}}/orders/ord-1001"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.degraded", operator: eq, expected: true}
+    failPolicy: continue
+
+  - label: "Control: recommendations report the outage"
+    request: {method: GET, url: "{{baseUrl}}/orders/ord-1001/recommendations"}
+    assertions:
+      - {type: status, operator: eq, expected: 503}
+    failPolicy: continue
+
+  - label: "Make recommendations slow"
+    request:
+      method: PUT
+      url: "{{baseUrl}}/test/recommendation-service"
+      body: {type: json, content: '{"state":"slow"}'}
+    assertions:
+      - {type: status, operator: eq, expected: 204}
+    failPolicy: continue
+
+  - label: "Order is still fast"
+    request: {method: GET, url: "{{baseUrl}}/orders/ord-1001"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: duration, operator: lt, expected: "{{maxOrderMs}}"}
+    failPolicy: continue
+
+  - label: "Cleanup: switch recommendations back on"
+    request:
+      method: PUT
+      url: "{{baseUrl}}/test/recommendation-service"
+      body: {type: json, content: '{"state":"up"}'}
+    assertions:
+      - {type: status, operator: eq, expected: 204}
+    failPolicy: continue

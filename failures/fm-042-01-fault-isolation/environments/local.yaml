@@ -1,0 +1,9 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: baseUrl
+    value: "http://localhost:19066"
+  # Far above the fixed server's 200 ms budget and far below the 3 s delay,
+  # so a busy CI machine doesn't change the result.
+  - name: maxOrderMs
+    value: "1500"
