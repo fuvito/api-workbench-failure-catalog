@@ -1,0 +1,110 @@
+openapi: "3.0.3"
+info:
+  title: FM-023 Broken Object-Level Authorization
+  description: >
+    A caller may only read, update or delete invoices owned by their own tenant.
+    An invoice owned by another tenant returns 404, the same as a missing one, so
+    the response does not reveal that the ID exists.
+  version: "1.0.0"
+security:
+  - bearerAuth: []
+paths:
+  /invoices/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getInvoice
+      summary: Get one of the caller's invoices
+      responses:
+        "200":
+          description: The invoice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: updateInvoice
+      summary: Change the memo of one of the caller's invoices
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [memo]
+              properties:
+                memo:
+                  type: string
+                  minLength: 1
+      responses:
+        "200":
+          description: The updated invoice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        "400":
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteInvoice
+      summary: Delete one of the caller's invoices
+      responses:
+        "204":
+          description: Deleted
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  responses:
+    Unauthorized:
+      description: Missing or invalid token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: No such invoice for this caller
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Invoice:
+      type: object
+      required: [id, tenant_id, amount, memo]
+      properties:
+        id:
+          type: string
+        tenant_id:
+          type: string
+        amount:
+          type: number
+        memo:
+          type: string
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

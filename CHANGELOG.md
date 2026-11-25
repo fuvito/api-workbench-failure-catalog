@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-023-01** — Broken Object-Level Authorization (Easy, port 19051)
+  - Broken server lets any authenticated user read, update and delete another tenant's invoice by ID
+  - Detected by status assertions with two users, plus control steps and owner re-reads
+
 - **fm-025-06** — Out-of-Range Page Returns 500 (Easy, port 19050)
   - Broken server returns 500 when `?page=9999` exceeds the dataset; spec requires 200 with empty list
   - Detected by status assertion: out-of-range page expects 200

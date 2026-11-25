@@ -1,0 +1,14 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: baseUrl
+    value: "http://localhost:19051"
+  # Synthetic tokens for the demo server, one user per tenant.
+  - name: aliceToken
+    value: "tok-alice"
+  - name: bobToken
+    value: "tok-bob"
+  - name: aliceInvoiceId
+    value: "inv-1001"
+  - name: bobInvoiceId
+    value: "inv-1002"

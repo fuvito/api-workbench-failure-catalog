@@ -46,6 +46,7 @@ jobs:
           - { dir: "fm-022-07-empty-string-accepted",      port: 19045, kind: "server" }
           - { dir: "fm-022-08-conditional-required",       port: 19047, kind: "server" }
           - { dir: "fm-022-09-id-mismatch",                port: 19013, kind: "server" }
+          - { dir: "fm-023-01-object-level-authz",          port: 19051, kind: "server" }
           - { dir: "fm-025-01-incorrect-status",           port: 19025, kind: "server" }
           - { dir: "fm-025-02-auth-error-code",            port: 19007, kind: "server" }
           - { dir: "fm-025-03-redirect-instead-of-response", port: 19011, kind: "server" }

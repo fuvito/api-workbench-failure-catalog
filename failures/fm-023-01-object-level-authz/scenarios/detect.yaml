@@ -1,0 +1,110 @@
+schemaVersion: "1"
+title: fm-023-01 — Broken Object-Level Authorization
+description: "Alice (tenant-a) tries to read, change and delete an invoice owned by Bob (tenant-b). The control steps prove each owner still has access, so a server that denies everything also fails."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: Alice reads her own invoice"
+    request:
+      method: GET
+      url: "{{baseUrl}}/invoices/{{aliceInvoiceId}}"
+      auth:
+        type: bearer
+        token: "{{aliceToken}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.tenant_id"
+        operator: eq
+        expected: "tenant-a"
+    failPolicy: continue
+
+  - label: "Control: Bob reads his own invoice"
+    request:
+      method: GET
+      url: "{{baseUrl}}/invoices/{{bobInvoiceId}}"
+      auth:
+        type: bearer
+        token: "{{bobToken}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.tenant_id"
+        operator: eq
+        expected: "tenant-b"
+    failPolicy: continue
+
+  - label: "Alice reads Bob's invoice — must be 404"
+    request:
+      method: GET
+      url: "{{baseUrl}}/invoices/{{bobInvoiceId}}"
+      auth:
+        type: bearer
+        token: "{{aliceToken}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 404
+    failPolicy: continue
+
+  - label: "Alice updates Bob's invoice — must be 404"
+    request:
+      method: PATCH
+      url: "{{baseUrl}}/invoices/{{bobInvoiceId}}"
+      auth:
+        type: bearer
+        token: "{{aliceToken}}"
+      body:
+        type: json
+        content: '{"memo":"changed by alice"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 404
+    failPolicy: continue
+
+  - label: "Bob's memo is unchanged"
+    request:
+      method: GET
+      url: "{{baseUrl}}/invoices/{{bobInvoiceId}}"
+      auth:
+        type: bearer
+        token: "{{bobToken}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.memo"
+        operator: eq
+        expected: "Bob hardware"
+    failPolicy: continue
+
+  - label: "Alice deletes Bob's invoice — must be 404"
+    request:
+      method: DELETE
+      url: "{{baseUrl}}/invoices/{{bobInvoiceId}}"
+      auth:
+        type: bearer
+        token: "{{aliceToken}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 404
+    failPolicy: continue
+
+  - label: "Bob's invoice still exists"
+    request:
+      method: GET
+      url: "{{baseUrl}}/invoices/{{bobInvoiceId}}"
+      auth:
+        type: bearer
+        token: "{{bobToken}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+    failPolicy: continue

@@ -64,12 +64,13 @@ One official failure mode may have multiple concrete examples here.
 | 9 | [FM-018](https://clrsig.com/failures/fm-018/) | Idempotency and Duplicate-Operation Failures | [fm-018-01-idempotency](failures/fm-018-01-idempotency/) · [fm-018-02-duplicate-create](failures/fm-018-02-duplicate-create/) |
 | 10 | [FM-020](https://clrsig.com/failures/fm-020/) | Distributed Transaction and Partial-Workflow Failures | [fm-020-01-batch-atomicity](failures/fm-020-01-batch-atomicity/) |
 | 11 | [FM-022](https://clrsig.com/failures/fm-022/) | Syntactically Valid but Semantically Invalid Payloads | [fm-022-01-semantically-invalid](failures/fm-022-01-semantically-invalid/) · [fm-022-02-filter-ignored](failures/fm-022-02-filter-ignored/) · [fm-022-03-enum-violation](failures/fm-022-03-enum-violation/) · [fm-022-04-sort-order](failures/fm-022-04-sort-order/) · [fm-022-05-limit-ignored](failures/fm-022-05-limit-ignored/) · [fm-022-06-case-insensitive-enum](failures/fm-022-06-case-insensitive-enum/) · [fm-022-07-empty-string-accepted](failures/fm-022-07-empty-string-accepted/) · [fm-022-08-conditional-required](failures/fm-022-08-conditional-required/) · [fm-022-09-id-mismatch](failures/fm-022-09-id-mismatch/) |
-| 12 | [FM-025](https://clrsig.com/failures/fm-025/) | Incorrect HTTP Status and Business-Error Semantics | [fm-025-01-incorrect-status](failures/fm-025-01-incorrect-status/) · [fm-025-02-auth-error-code](failures/fm-025-02-auth-error-code/) · [fm-025-03-redirect-instead-of-response](failures/fm-025-03-redirect-instead-of-response/) · [fm-025-04-validation-error-code](failures/fm-025-04-validation-error-code/) · [fm-025-05-empty-result-404](failures/fm-025-05-empty-result-404/) · [fm-025-06-page-out-of-range-500](failures/fm-025-06-page-out-of-range-500/) |
-| 13 | [FM-027](https://clrsig.com/failures/fm-027/) | Concurrent Update and Lost-Update Failures | [fm-027-01-lost-update](failures/fm-027-01-lost-update/) |
-| 14 | [FM-028](https://clrsig.com/failures/fm-028/) | Long-Running Operation and Asynchronous API Failures | [fm-028-01-async-job](failures/fm-028-01-async-job/) |
-| 15 | [FM-034](https://clrsig.com/failures/fm-034/) | HTTP Method and Operation Semantics Failures | [fm-034-01-method-semantics](failures/fm-034-01-method-semantics/) · [fm-034-02-method-not-allowed](failures/fm-034-02-method-not-allowed/) · [fm-034-03-nonidempotent-get](failures/fm-034-03-nonidempotent-get/) · [fm-034-04-patch-semantics](failures/fm-034-04-patch-semantics/) · [fm-034-05-soft-delete](failures/fm-034-05-soft-delete/) · [fm-034-06-bulk-delete](failures/fm-034-06-bulk-delete/) |
-| 16 | [FM-038](https://clrsig.com/failures/fm-038/) | Eventual Consistency and Read-After-Write Failures | [fm-038-01-write-not-persisted](failures/fm-038-01-write-not-persisted/) |
-| 17 | [FM-044](https://clrsig.com/failures/fm-044/) | Sensitive Data Exposure in API Responses | [fm-044-01-sensitive-data](failures/fm-044-01-sensitive-data/) |
+| 12 | [FM-023](https://clrsig.com/failures/fm-023/) | Broken Object-Level Authorization and Tenant Isolation | [fm-023-01-object-level-authz](failures/fm-023-01-object-level-authz/) |
+| 13 | [FM-025](https://clrsig.com/failures/fm-025/) | Incorrect HTTP Status and Business-Error Semantics | [fm-025-01-incorrect-status](failures/fm-025-01-incorrect-status/) · [fm-025-02-auth-error-code](failures/fm-025-02-auth-error-code/) · [fm-025-03-redirect-instead-of-response](failures/fm-025-03-redirect-instead-of-response/) · [fm-025-04-validation-error-code](failures/fm-025-04-validation-error-code/) · [fm-025-05-empty-result-404](failures/fm-025-05-empty-result-404/) · [fm-025-06-page-out-of-range-500](failures/fm-025-06-page-out-of-range-500/) |
+| 14 | [FM-027](https://clrsig.com/failures/fm-027/) | Concurrent Update and Lost-Update Failures | [fm-027-01-lost-update](failures/fm-027-01-lost-update/) |
+| 15 | [FM-028](https://clrsig.com/failures/fm-028/) | Long-Running Operation and Asynchronous API Failures | [fm-028-01-async-job](failures/fm-028-01-async-job/) |
+| 16 | [FM-034](https://clrsig.com/failures/fm-034/) | HTTP Method and Operation Semantics Failures | [fm-034-01-method-semantics](failures/fm-034-01-method-semantics/) · [fm-034-02-method-not-allowed](failures/fm-034-02-method-not-allowed/) · [fm-034-03-nonidempotent-get](failures/fm-034-03-nonidempotent-get/) · [fm-034-04-patch-semantics](failures/fm-034-04-patch-semantics/) · [fm-034-05-soft-delete](failures/fm-034-05-soft-delete/) · [fm-034-06-bulk-delete](failures/fm-034-06-bulk-delete/) |
+| 17 | [FM-038](https://clrsig.com/failures/fm-038/) | Eventual Consistency and Read-After-Write Failures | [fm-038-01-write-not-persisted](failures/fm-038-01-write-not-persisted/) |
+| 18 | [FM-044](https://clrsig.com/failures/fm-044/) | Sensitive Data Exposure in API Responses | [fm-044-01-sensitive-data](failures/fm-044-01-sensitive-data/) |
 
 ## Failure Modes without Examples
 
@@ -89,28 +90,27 @@ As examples are added, rows move up into the index above.
 | 9 | [FM-015](https://clrsig.com/failures/fm-015/) | Deprecated Endpoint and Lifecycle Failures |
 | 10 | [FM-019](https://clrsig.com/failures/fm-019/) | Webhook Delivery and Event-Processing Failures |
 | 11 | [FM-021](https://clrsig.com/failures/fm-021/) | File Upload and Downstream Processing Failures |
-| 12 | [FM-023](https://clrsig.com/failures/fm-023/) | Broken Object-Level Authorization and Tenant Isolation |
-| 13 | [FM-024](https://clrsig.com/failures/fm-024/) | Localization and Machine-Readable Data Failures |
-| 14 | [FM-026](https://clrsig.com/failures/fm-026/) | HTTP Content-Negotiation Failures |
-| 15 | [FM-029](https://clrsig.com/failures/fm-029/) | Bulk API Partial-Success Failures |
-| 16 | [FM-030](https://clrsig.com/failures/fm-030/) | API Key and Client-Credential Rotation Failures |
-| 17 | [FM-031](https://clrsig.com/failures/fm-031/) | CORS and Browser-Based API Access Failures |
-| 18 | [FM-032](https://clrsig.com/failures/fm-032/) | TLS/mTLS and Certificate Lifecycle Failures |
-| 19 | [FM-033](https://clrsig.com/failures/fm-033/) | API Gateway Routing and Policy Drift Failures |
-| 20 | [FM-035](https://clrsig.com/failures/fm-035/) | Request Header Handling and Validation Failures |
-| 21 | [FM-036](https://clrsig.com/failures/fm-036/) | Request Size and Resource Exhaustion Failures |
-| 22 | [FM-037](https://clrsig.com/failures/fm-037/) | Input Injection and Unsafe Interpretation Failures |
-| 23 | [FM-039](https://clrsig.com/failures/fm-039/) | Out-of-Order Event and State Transition Failures |
-| 24 | [FM-040](https://clrsig.com/failures/fm-040/) | Database Transaction and Atomicity Failures |
-| 25 | [FM-041](https://clrsig.com/failures/fm-041/) | Retry Storm and Cascading Failure |
-| 26 | [FM-042](https://clrsig.com/failures/fm-042/) | Dependency Failure and Fault Isolation |
-| 27 | [FM-043](https://clrsig.com/failures/fm-043/) | Mass Assignment and Unauthorized Field Modification |
-| 28 | [FM-045](https://clrsig.com/failures/fm-045/) | Authentication and Authorization Confusion Across Services |
-| 29 | [FM-046](https://clrsig.com/failures/fm-046/) | Security Policy and Secret Leakage Failures |
-| 30 | [FM-047](https://clrsig.com/failures/fm-047/) | Character Encoding and Unicode Handling Failures |
-| 31 | [FM-048](https://clrsig.com/failures/fm-048/) | Streaming and Large-Response Handling Failures |
-| 32 | [FM-049](https://clrsig.com/failures/fm-049/) | API Documentation and Example Drift |
-| 33 | [FM-050](https://clrsig.com/failures/fm-050/) | Environment Configuration and Feature-Flag Drift |
+| 12 | [FM-024](https://clrsig.com/failures/fm-024/) | Localization and Machine-Readable Data Failures |
+| 13 | [FM-026](https://clrsig.com/failures/fm-026/) | HTTP Content-Negotiation Failures |
+| 14 | [FM-029](https://clrsig.com/failures/fm-029/) | Bulk API Partial-Success Failures |
+| 15 | [FM-030](https://clrsig.com/failures/fm-030/) | API Key and Client-Credential Rotation Failures |
+| 16 | [FM-031](https://clrsig.com/failures/fm-031/) | CORS and Browser-Based API Access Failures |
+| 17 | [FM-032](https://clrsig.com/failures/fm-032/) | TLS/mTLS and Certificate Lifecycle Failures |
+| 18 | [FM-033](https://clrsig.com/failures/fm-033/) | API Gateway Routing and Policy Drift Failures |
+| 19 | [FM-035](https://clrsig.com/failures/fm-035/) | Request Header Handling and Validation Failures |
+| 20 | [FM-036](https://clrsig.com/failures/fm-036/) | Request Size and Resource Exhaustion Failures |
+| 21 | [FM-037](https://clrsig.com/failures/fm-037/) | Input Injection and Unsafe Interpretation Failures |
+| 22 | [FM-039](https://clrsig.com/failures/fm-039/) | Out-of-Order Event and State Transition Failures |
+| 23 | [FM-040](https://clrsig.com/failures/fm-040/) | Database Transaction and Atomicity Failures |
+| 24 | [FM-041](https://clrsig.com/failures/fm-041/) | Retry Storm and Cascading Failure |
+| 25 | [FM-042](https://clrsig.com/failures/fm-042/) | Dependency Failure and Fault Isolation |
+| 26 | [FM-043](https://clrsig.com/failures/fm-043/) | Mass Assignment and Unauthorized Field Modification |
+| 27 | [FM-045](https://clrsig.com/failures/fm-045/) | Authentication and Authorization Confusion Across Services |
+| 28 | [FM-046](https://clrsig.com/failures/fm-046/) | Security Policy and Secret Leakage Failures |
+| 29 | [FM-047](https://clrsig.com/failures/fm-047/) | Character Encoding and Unicode Handling Failures |
+| 30 | [FM-048](https://clrsig.com/failures/fm-048/) | Streaming and Large-Response Handling Failures |
+| 31 | [FM-049](https://clrsig.com/failures/fm-049/) | API Documentation and Example Drift |
+| 32 | [FM-050](https://clrsig.com/failures/fm-050/) | Environment Configuration and Feature-Flag Drift |
 
 ## Conventions
 
