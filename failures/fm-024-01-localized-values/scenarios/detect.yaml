@@ -1,0 +1,60 @@
+schemaVersion: "1"
+title: fm-024-01 — Localized Values
+description: "Requests the same order in different languages. Text for people may change; values that programs read must not."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: English"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers: [{name: Accept-Language, value: "en"}]
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.status", operator: eq, expected: "in_progress"}
+      - {type: jsonpath, path: "$.total", operator: eq, expected: 1234.5}
+      - {type: jsonpath, path: "$.created_at", operator: eq, expected: "2026-03-04T09:30:00Z"}
+    failPolicy: continue
+
+  - label: "French changes the label only"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers: [{name: Accept-Language, value: "fr-CH, fr;q=0.9, en;q=0.5"}]
+    assertions:
+      - {type: jsonpath, path: "$.status_label", operator: eq, expected: "En cours"}
+      - {type: jsonpath, path: "$.status", operator: eq, expected: "in_progress"}
+      - {type: jsonpath, path: "$.total", operator: eq, expected: 1234.5}
+      - {type: jsonpath, path: "$.created_at", operator: eq, expected: "2026-03-04T09:30:00Z"}
+      - {type: header, path: Content-Language, operator: eq, expected: "fr"}
+      - {type: header, path: Vary, operator: matches, expected: "(?i)(^|,)\\s*accept-language\\s*(,|$)"}
+    failPolicy: continue
+
+  - label: "French error keeps the same code"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/missing"
+      headers: [{name: Accept-Language, value: "fr"}]
+    assertions:
+      - {type: status, operator: eq, expected: 404}
+      - {type: jsonpath, path: "$.code", operator: eq, expected: "ORDER_NOT_FOUND"}
+      - {type: jsonpath, path: "$.message", operator: eq, expected: "Commande introuvable"}
+    failPolicy: continue
+
+  - label: "Unsupported language falls back to English"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers: [{name: Accept-Language, value: "ja"}]
+    assertions:
+      - {type: jsonpath, path: "$.status_label", operator: eq, expected: "In progress"}
+      - {type: header, path: Content-Language, operator: eq, expected: "en"}
+    failPolicy: continue
+
+  - label: "Preferred language wins when it is listed second"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers: [{name: Accept-Language, value: "ja, fr;q=0.8"}]
+    assertions:
+      - {type: jsonpath, path: "$.status_label", operator: eq, expected: "En cours"}
+    failPolicy: continue

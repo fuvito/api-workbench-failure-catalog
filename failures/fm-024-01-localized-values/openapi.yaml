@@ -1,0 +1,44 @@
+openapi: "3.0.3"
+info:
+  title: FM-024 Localized Values
+  description: >
+    Accept-Language changes only status_label and the error message. Codes, enum
+    values, numbers and dates never change. Supported languages are en and fr;
+    anything else falls back to en. Responses send Content-Language and
+    Vary: Accept-Language.
+  version: "1.0.0"
+paths:
+  /orders/{id}:
+    get:
+      operationId: getOrder
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+        - {name: Accept-Language, in: header, required: false, schema: {type: string}}
+      responses:
+        "200":
+          description: The order
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, status, status_label, total, created_at]
+                properties:
+                  id: {type: string}
+                  status:
+                    type: string
+                    enum: [in_progress, shipped, cancelled]
+                  status_label: {type: string}
+                  total: {type: number}
+                  created_at: {type: string, format: date-time}
+        "404":
+          description: No such order
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [code, message]
+                properties:
+                  code:
+                    type: string
+                    enum: [ORDER_NOT_FOUND]
+                  message: {type: string}

@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-024-01** — Localized Values (Easy, port 19061)
+  - Broken server translates status and error codes and reformats numbers and dates by Accept-Language
+  - Detected by identical-value assertions across languages, spec enums, and fallback checks
+
 - **fm-015-01** — Deprecation Lifecycle (Easy, port 19060)
   - Broken server removes a deprecated endpoint early, sends no lifecycle headers and returns 404 for a retired one
   - Detected by status and header assertions against the published lifecycle dates
