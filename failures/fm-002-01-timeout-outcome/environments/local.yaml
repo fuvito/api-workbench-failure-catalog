@@ -1,0 +1,8 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: baseUrl
+    value: "http://localhost:19082"
+  # Between the 500 ms budget and the 3 s delay, with a wide margin for CI.
+  - name: maxResponseMs
+    value: "2000"

@@ -1,0 +1,51 @@
+schemaVersion: "1"
+title: fm-002-01 — Timeouts and Incomplete Responses
+description: "Makes an order slow after it is saved, retries it, and makes an export fail partway. Each run uses a new idempotency key."
+specFile: ../openapi.yaml
+variables:
+  - name: key
+    value: "{{$guid}}"
+steps:
+  - label: "Control: a complete export"
+    request: {method: GET, url: "{{baseUrl}}/orders/export"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.count", operator: eq, expected: 3}
+    failPolicy: continue
+
+  - label: "A slow order gets a clear timeout in time"
+    request:
+      method: POST
+      url: "{{baseUrl}}/orders"
+      headers:
+        - {name: Idempotency-Key, value: "{{key}}"}
+        - {name: X-Test-Fault, value: "slow-after-commit"}
+    assertions:
+      - {type: status, operator: eq, expected: 504}
+      - {type: jsonpath, path: "$.outcome", operator: eq, expected: "unknown"}
+      - {type: duration, operator: lt, expected: "{{maxResponseMs}}"}
+    failPolicy: continue
+
+  - label: "Retry with the same key returns the existing order"
+    request:
+      method: POST
+      url: "{{baseUrl}}/orders"
+      headers: [{name: Idempotency-Key, value: "{{key}}"}]
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "Only one order exists"
+    request: {method: GET, url: "{{baseUrl}}/orders/count?idempotency_key={{key}}"}
+    assertions:
+      - {type: jsonpath, path: "$.count", operator: eq, expected: 1}
+    failPolicy: continue
+
+  - label: "A failed export is not a partial success"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/export"
+      headers: [{name: X-Test-Fault, value: "export-fails-midway"}]
+    assertions:
+      - {type: status, operator: eq, expected: 500}
+    failPolicy: continue

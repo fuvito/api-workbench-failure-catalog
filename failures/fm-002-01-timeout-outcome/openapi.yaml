@@ -1,0 +1,87 @@
+openapi: "3.0.3"
+info:
+  title: FM-002 Timeouts and Incomplete Responses
+  description: >
+    Creating an order answers within about 500 ms. If it can't, the response is
+    504 with outcome "unknown", and a retry with the same Idempotency-Key returns
+    the existing order with 200. A failed export gets 500, never a partial 200.
+  version: "1.0.0"
+paths:
+  /orders:
+    post:
+      operationId: createOrder
+      parameters:
+        - {name: Idempotency-Key, in: header, required: true, schema: {type: string}}
+        - {name: X-Test-Fault, in: header, required: false, schema: {type: string}}
+      responses:
+        "200":
+          description: Already created by an earlier request with this key
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Order'}
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Order'}
+        "400": {$ref: '#/components/responses/Error'}
+        "504":
+          description: Timed out. The order may or may not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [error, outcome]
+                properties:
+                  error: {type: string}
+                  outcome: {type: string, enum: [unknown]}
+  /orders/count:
+    get:
+      operationId: countOrders
+      parameters:
+        - {name: idempotency_key, in: query, required: true, schema: {type: string}}
+      responses:
+        "200":
+          description: Orders created with this key
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count]
+                properties:
+                  count: {type: integer}
+  /orders/export:
+    get:
+      operationId: exportOrders
+      parameters:
+        - {name: X-Test-Fault, in: header, required: false, schema: {type: string}}
+      responses:
+        "200":
+          description: The complete export
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [orders, count]
+                properties:
+                  orders: {type: array, items: {type: string}}
+                  count: {type: integer}
+        "500": {$ref: '#/components/responses/Error'}
+components:
+  responses:
+    Error:
+      description: Failed
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}
+  schemas:
+    Order:
+      type: object
+      required: [id, total_cents]
+      properties:
+        id: {type: string}
+        total_cents: {type: integer}

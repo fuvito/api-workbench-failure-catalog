@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-002-01** — Timeouts and Incomplete Responses (Medium, port 19082)
+  - Broken server has no time limit, duplicates an order on retry and cuts off a failed export after sending 200
+  - Detected by duration and status assertions, order counts and clrsig's response read error
+
 - **fm-049-01** — Documentation Drift (Easy, port 19081)
   - Broken server no longer accepts the field and filter shown in the documented examples
   - Detected by running the documented examples as scenario steps

@@ -14,6 +14,7 @@ jobs:
         fm:
           - { dir: "fm-001-01-number-precision",           port: 19001, kind: "server" }
           - { dir: "fm-001-02-datetime-format",            port: 19002, kind: "server" }
+          - { dir: "fm-002-01-timeout-outcome",            port: 19082, kind: "server" }
           - { dir: "fm-003-01-pagination-contract",        port: 19003, kind: "server" }
           - { dir: "fm-003-02-page-overflow",              port: 19031, kind: "server" }
           - { dir: "fm-003-03-page-offset",                port: 19012, kind: "server" }
