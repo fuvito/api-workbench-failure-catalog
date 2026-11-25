@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-046-01** — Secret Leakage (Medium, port 19058)
+  - Broken server leaks internal details through headers, error messages, an extra error field and a debug endpoint
+  - Detected by exact error messages, absent-header checks, a strict error schema and an expected 404
+
 - **fm-045-01** — Trusted Identity Headers (Medium, ports 19056 and 19057)
   - Broken gateway keeps identity headers sent by the caller, and the backend trusts them
   - Detected by forged headers sent through the gateway and straight to the backend, with four control steps

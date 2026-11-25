@@ -1,0 +1,14 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: baseUrl
+    value: "http://localhost:19058"
+  # Synthetic token for the demo server. secret: true masks it in reports.
+  - name: token
+    value: "tok-alice"
+    secret: true
+  - name: reportId
+    value: "rpt-1001"
+  # A report whose lookup fails on the server.
+  - name: failingReportId
+    value: "rpt-2002"

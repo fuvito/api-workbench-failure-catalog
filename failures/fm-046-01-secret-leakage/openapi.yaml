@@ -1,0 +1,69 @@
+openapi: "3.0.3"
+info:
+  title: FM-046 Secret Leakage
+  description: >
+    Responses never contain credentials or internal details. Every error body has
+    only an error field with a fixed message, and there is no debug endpoint.
+  version: "1.0.0"
+security:
+  - bearerAuth: []
+paths:
+  /reports/{id}:
+    get:
+      operationId: getReport
+      summary: Get a report
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: The report
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [id, title]
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+        "400":
+          $ref: '#/components/responses/Error'
+        "401":
+          $ref: '#/components/responses/Error'
+        "404":
+          $ref: '#/components/responses/Error'
+        "500":
+          $ref: '#/components/responses/Error'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  responses:
+    Error:
+      description: A safe error with no internal details
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      # Without this line, extra fields such as "detail" are allowed.
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: string

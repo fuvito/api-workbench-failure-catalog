@@ -1,0 +1,102 @@
+schemaVersion: "1"
+title: fm-046-01 — Secret Leakage
+description: "Triggers authentication, validation and server errors and checks that responses hold nothing internal. clrsig has no does-not-contain check, so each error is compared with the exact safe message, and the spec forbids extra fields."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: a report can be read"
+    request:
+      method: GET
+      url: "{{baseUrl}}/reports/{{reportId}}"
+      auth:
+        type: bearer
+        token: "{{token}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.id"
+        operator: eq
+        expected: "{{reportId}}"
+    failPolicy: continue
+
+  - label: "No diagnostic headers"
+    request:
+      method: GET
+      url: "{{baseUrl}}/reports/{{reportId}}"
+      auth:
+        type: bearer
+        token: "{{token}}"
+    assertions:
+      # An empty value means the header was not sent.
+      - type: header
+        path: X-Backend-Host
+        operator: eq
+        expected: ""
+      - type: header
+        path: X-Debug-Query
+        operator: eq
+        expected: ""
+    failPolicy: continue
+
+  - label: "Rejected token is not echoed back"
+    request:
+      method: GET
+      url: "{{baseUrl}}/reports/{{reportId}}"
+      auth:
+        type: bearer
+        token: "canary-token-not-real"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 401
+      - type: jsonpath
+        path: "$.error"
+        operator: eq
+        expected: "unauthorized"
+    failPolicy: continue
+
+  - label: "Invalid date gets a safe 400"
+    request:
+      method: GET
+      url: "{{baseUrl}}/reports/{{reportId}}?from=not-a-date"
+      auth:
+        type: bearer
+        token: "{{token}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 400
+      - type: jsonpath
+        path: "$.error"
+        operator: eq
+        expected: "from must be a date (YYYY-MM-DD)"
+    failPolicy: continue
+
+  - label: "Server error reveals no cause"
+    notes: "The spec check on this step fails if the error body has any field besides error."
+    request:
+      method: GET
+      url: "{{baseUrl}}/reports/{{failingReportId}}"
+      auth:
+        type: bearer
+        token: "{{token}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 500
+      - type: jsonpath
+        path: "$.error"
+        operator: eq
+        expected: "internal error"
+    failPolicy: continue
+
+  - label: "Debug endpoint is not exposed"
+    request:
+      method: GET
+      url: "{{baseUrl}}/debug/config"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 404
+    failPolicy: continue
