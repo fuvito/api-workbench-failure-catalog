@@ -1,0 +1,27 @@
+schemaVersion: "1"
+title: fm-006-01 — Old Client Compatibility
+description: "Calls the new server the way a released app does, and checks the response against the contract that app was built with."
+# The old client's contract, not the server's latest spec.
+specFile: ../openapi.yaml
+steps:
+  - label: "App 1.x can still read the order"
+    notes: "Sends no Api-Version header, like the released app."
+    request: {method: GET, url: "{{baseUrl}}/orders/ord-1001"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.status", operator: eq, expected: "shipped"}
+      - {type: jsonpath, path: "$.tracking_code", operator: eq, expected: "TRK-1"}
+    failPolicy: continue
+
+  - label: "Control: the new app gets the new behaviour"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers: [{name: Api-Version, value: "2"}]
+    # This response follows the new contract, so don't check it against the old one.
+    validateSpec: false
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.status", operator: eq, expected: "awaiting_pickup"}
+      - {type: jsonpath, path: "$.shipment.pickup_point", operator: eq, expected: "Locker 7"}
+    failPolicy: continue

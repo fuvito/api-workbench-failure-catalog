@@ -24,6 +24,7 @@ jobs:
           - { dir: "fm-005-02-null-collection",            port: 19023, kind: "server" }
           - { dir: "fm-005-03-nested-required",            port: 19032, kind: "server" }
           - { dir: "fm-005-04-default-not-applied",        port: 19019, kind: "server" }
+          - { dir: "fm-006-01-old-client-compatibility",   port: 19079, kind: "server" }
           - { dir: "fm-007-01-version-routing",            port: 19024, kind: "server" }
           - { dir: "fm-008-01-token-validation",           port: 19078, kind: "server" }
           - { dir: "fm-010-01-spec-drift",                 port: 19010, kind: "server" }

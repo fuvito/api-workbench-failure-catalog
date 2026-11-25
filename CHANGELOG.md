@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-006-01** — Old Client Compatibility (Easy, port 19079)
+  - Broken server sends a new status and a moved field to clients built for the old contract
+  - Detected by checking the live server against the old client's spec
+
 - **fm-008-01** — Token Validation (Medium, port 19078)
   - Broken server accepts expired, wrong-audience, wrong-issuer and unsigned tokens and ignores scopes
   - Detected by status assertions with prepared tokens that are each wrong in one way

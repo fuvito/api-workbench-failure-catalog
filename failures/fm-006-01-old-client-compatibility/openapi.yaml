@@ -1,0 +1,25 @@
+# The contract the OLD app was released with. Keep a copy of it for every client
+# version you still support, and don't update it when the API changes.
+openapi: "3.0.3"
+info:
+  title: FM-006 Order API as mobile app 1.x knows it
+  version: "1.0.0"
+paths:
+  /orders/ord-1001:
+    get:
+      operationId: getOrder
+      responses:
+        "200":
+          description: The order
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, status, tracking_code]
+                properties:
+                  id: {type: string}
+                  status:
+                    type: string
+                    # App 1.x handles exactly these values.
+                    enum: [pending, shipped, cancelled]
+                  tracking_code: {type: string}
