@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-031-01** — CORS Preflight (Medium, port 19054)
+  - Broken server leaves Authorization, X-Request-ID and PUT out of the preflight response, omits CORS headers on errors, and allows any origin with credentials
+  - Detected by header assertions on preflight and cross-origin requests, with a control step without an Origin header
+
 - **fm-029-01** — Bulk Partial Success (Medium, port 19053)
   - Broken server returns only success and failure counts, and pays successful items again when a batch is resent
   - Detected by `specFile:` binding, per-item result assertions and payment counts

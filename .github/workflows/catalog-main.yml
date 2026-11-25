@@ -56,6 +56,7 @@ jobs:
           - { dir: "fm-027-01-lost-update",                port: 19027, kind: "server" }
           - { dir: "fm-028-01-async-job",                  port: 19026, kind: "server" }
           - { dir: "fm-029-01-bulk-partial-success",       port: 19053, kind: "server" }
+          - { dir: "fm-031-01-cors-preflight",             port: 19054, kind: "server" }
           - { dir: "fm-034-01-method-semantics",           port: 19034, kind: "server" }
           - { dir: "fm-034-02-method-not-allowed",         port: 19014, kind: "server" }
           - { dir: "fm-034-03-nonidempotent-get",          port: 19033, kind: "server" }

@@ -1,0 +1,157 @@
+schemaVersion: "1"
+title: fm-031-01 — CORS Preflight
+description: "Sends the requests a browser would send for a page on the allowed origin and on another origin, and checks the CORS response headers. The first step shows the API works for a client that sends no Origin."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: works without a browser (no Origin header)"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      auth:
+        type: bearer
+        token: "{{token}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+    failPolicy: continue
+
+  - label: "Preflight allows the portal's method and headers"
+    notes: "A browser sends no credentials on a preflight, so none are sent here."
+    request:
+      method: OPTIONS
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers:
+        - name: Origin
+          value: "{{allowedOrigin}}"
+        - name: Access-Control-Request-Method
+          value: PUT
+        - name: Access-Control-Request-Headers
+          value: "authorization,content-type,x-request-id"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 204
+      - type: header
+        path: Access-Control-Allow-Origin
+        operator: eq
+        expected: "{{allowedOrigin}}"
+      - type: header
+        path: Access-Control-Allow-Credentials
+        operator: eq
+        expected: "true"
+      - type: header
+        path: Access-Control-Allow-Methods
+        operator: matches
+        expected: "(^|,)\\s*PUT\\s*(,|$)"
+      - type: header
+        path: Access-Control-Allow-Headers
+        operator: matches
+        expected: "(?i)(^|,)\\s*authorization\\s*(,|$)"
+      - type: header
+        path: Access-Control-Allow-Headers
+        operator: matches
+        expected: "(?i)(^|,)\\s*content-type\\s*(,|$)"
+      - type: header
+        path: Access-Control-Allow-Headers
+        operator: matches
+        expected: "(?i)(^|,)\\s*x-request-id\\s*(,|$)"
+    failPolicy: continue
+
+  - label: "Response is readable by the portal"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers:
+        - name: Origin
+          value: "{{allowedOrigin}}"
+        - name: X-Request-ID
+          value: "req-123"
+      auth:
+        type: bearer
+        token: "{{token}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: header
+        path: Access-Control-Allow-Origin
+        operator: eq
+        expected: "{{allowedOrigin}}"
+      - type: header
+        path: Access-Control-Allow-Credentials
+        operator: eq
+        expected: "true"
+      - type: header
+        path: Access-Control-Expose-Headers
+        operator: matches
+        expected: "(?i)(^|,)\\s*x-request-id\\s*(,|$)"
+      - type: header
+        path: Vary
+        operator: matches
+        expected: "(?i)(^|,)\\s*origin\\s*(,|$)"
+    failPolicy: continue
+
+  - label: "401 is readable by the portal"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers:
+        - name: Origin
+          value: "{{allowedOrigin}}"
+      auth:
+        type: bearer
+        token: "expired-token"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 401
+      - type: header
+        path: Access-Control-Allow-Origin
+        operator: eq
+        expected: "{{allowedOrigin}}"
+      - type: header
+        path: Access-Control-Allow-Credentials
+        operator: eq
+        expected: "true"
+    failPolicy: continue
+
+  - label: "Preflight from another origin is not allowed"
+    request:
+      method: OPTIONS
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers:
+        - name: Origin
+          value: "{{otherOrigin}}"
+        - name: Access-Control-Request-Method
+          value: PUT
+        - name: Access-Control-Request-Headers
+          value: "authorization,content-type"
+    assertions:
+      # An empty value means the header was not sent.
+      - type: header
+        path: Access-Control-Allow-Origin
+        operator: eq
+        expected: ""
+      - type: header
+        path: Access-Control-Allow-Credentials
+        operator: eq
+        expected: ""
+    failPolicy: continue
+
+  - label: "Response is not readable by another origin"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers:
+        - name: Origin
+          value: "{{otherOrigin}}"
+      auth:
+        type: bearer
+        token: "{{token}}"
+    assertions:
+      - type: header
+        path: Access-Control-Allow-Origin
+        operator: eq
+        expected: ""
+    failPolicy: continue

@@ -1,0 +1,13 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: baseUrl
+    value: "http://localhost:19054"
+  # Synthetic token for the demo server.
+  - name: token
+    value: "tok-alice"
+  # The origin your web app is served from, and one that must be refused.
+  - name: allowedOrigin
+    value: "https://portal.example.test"
+  - name: otherOrigin
+    value: "https://attacker.example.test"

@@ -1,0 +1,88 @@
+openapi: "3.0.3"
+info:
+  title: FM-031 CORS Preflight
+  description: >
+    Browser pages at https://portal.example.test may call this API with
+    credentials, using GET and PUT with the Authorization, Content-Type and
+    X-Request-ID headers, and may read the X-Request-ID response header. Pages
+    on any other origin get no CORS headers.
+  version: "1.0.0"
+security:
+  - bearerAuth: []
+paths:
+  /orders/ord-1001:
+    options:
+      operationId: preflightOrder
+      summary: CORS preflight
+      security: []
+      responses:
+        "204":
+          description: Preflight answered. CORS headers are sent only to an allowed origin.
+    get:
+      operationId: getOrder
+      summary: Get the order
+      responses:
+        "200":
+          description: The order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+    put:
+      operationId: updateOrder
+      summary: Change the order's delivery note
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [note]
+              properties:
+                note:
+                  type: string
+                  minLength: 1
+      responses:
+        "200":
+          description: The updated order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        "400":
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  responses:
+    Unauthorized:
+      description: Missing or invalid token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Order:
+      type: object
+      required: [id, note]
+      properties:
+        id:
+          type: string
+        note:
+          type: string
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
