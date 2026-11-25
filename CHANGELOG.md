@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-035-01** — Request Header Handling (Medium, port 19059)
+  - Broken server mishandles Authorization, X-Correlation-ID, If-None-Match and If-Match
+  - Detected by header, status and state assertions using an ETag extracted from the first response
+
 - **fm-046-01** — Secret Leakage (Medium, port 19058)
   - Broken server leaks internal details through headers, error messages, an extra error field and a debug endpoint
   - Detected by exact error messages, absent-header checks, a strict error schema and an expected 404

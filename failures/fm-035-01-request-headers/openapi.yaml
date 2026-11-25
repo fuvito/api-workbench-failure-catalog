@@ -1,0 +1,114 @@
+openapi: "3.0.3"
+info:
+  title: FM-035 Request Header Handling
+  description: >
+    The Authorization scheme is case-insensitive. A valid X-Correlation-ID is
+    returned unchanged; an invalid one is rejected with 400; without one the
+    server creates one. Reads honour If-None-Match. Updates require If-Match with
+    the current ETag: 428 if it is missing, 412 if it does not match.
+  version: "1.0.0"
+security:
+  - bearerAuth: []
+paths:
+  /documents/doc-1001:
+    parameters:
+      - name: X-Correlation-ID
+        in: header
+        required: false
+        schema:
+          type: string
+          pattern: "^[A-Za-z0-9._-]{1,64}$"
+    get:
+      operationId: getDocument
+      summary: Read the document
+      parameters:
+        - name: If-None-Match
+          in: header
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The document
+          headers:
+            ETag:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        "304":
+          description: The caller's copy is current
+        "400":
+          $ref: '#/components/responses/Error'
+        "401":
+          $ref: '#/components/responses/Error'
+    put:
+      operationId: updateDocument
+      summary: Replace the document title
+      parameters:
+        - name: If-Match
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+      responses:
+        "200":
+          description: The updated document
+          headers:
+            ETag:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        "400":
+          $ref: '#/components/responses/Error'
+        "401":
+          $ref: '#/components/responses/Error'
+        "412":
+          $ref: '#/components/responses/Error'
+        "428":
+          $ref: '#/components/responses/Error'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  responses:
+    Error:
+      description: The request was not accepted
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Document:
+      type: object
+      required: [id, title]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

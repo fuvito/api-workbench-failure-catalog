@@ -1,0 +1,174 @@
+schemaVersion: "1"
+title: fm-035-01 — Request Header Handling
+description: "Checks how the API reads Authorization, X-Correlation-ID, If-None-Match and If-Match. The current ETag is read from the first response, so no version is hard-coded."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: read the document and its ETag"
+    request:
+      method: GET
+      url: "{{baseUrl}}/documents/doc-1001"
+      headers:
+        - name: Authorization
+          value: "Bearer {{token}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: header
+        path: ETag
+        operator: matches
+        expected: '^"[^"]+"$'
+    extractions:
+      - name: etag
+        source: header
+        path: ETag
+    # Later steps need the ETag.
+    failPolicy: stop
+
+  - label: "Lowercase auth scheme is accepted"
+    request:
+      method: GET
+      url: "{{baseUrl}}/documents/doc-1001"
+      headers:
+        - name: Authorization
+          value: "bearer {{token}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+    failPolicy: continue
+
+  - label: "Correlation ID is returned unchanged"
+    request:
+      method: GET
+      url: "{{baseUrl}}/documents/doc-1001"
+      headers:
+        - name: Authorization
+          value: "Bearer {{token}}"
+        - name: X-Correlation-ID
+          value: "Req-7F3a.b_9"
+    assertions:
+      - type: header
+        path: X-Correlation-ID
+        operator: eq
+        expected: "Req-7F3a.b_9"
+    failPolicy: continue
+
+  - label: "Invalid correlation ID is rejected and not echoed"
+    request:
+      method: GET
+      url: "{{baseUrl}}/documents/doc-1001"
+      headers:
+        - name: Authorization
+          value: "Bearer {{token}}"
+        - name: X-Correlation-ID
+          value: "not a valid id <>"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 400
+      - type: header
+        path: X-Correlation-ID
+        operator: matches
+        expected: "^[A-Za-z0-9._-]{1,64}$"
+    failPolicy: continue
+
+  - label: "If-None-Match with the current ETag gives 304"
+    request:
+      method: GET
+      url: "{{baseUrl}}/documents/doc-1001"
+      headers:
+        - name: Authorization
+          value: "Bearer {{token}}"
+        - name: If-None-Match
+          value: "{{etag}}"
+    assertions:
+      - type: status
+        operator: eq
+        expected: 304
+    failPolicy: continue
+
+  - label: "If-None-Match with a list and a weak tag gives 304"
+    request:
+      method: GET
+      url: "{{baseUrl}}/documents/doc-1001"
+      headers:
+        - name: Authorization
+          value: "Bearer {{token}}"
+        - name: If-None-Match
+          value: '"some-other-tag", W/{{etag}}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 304
+    failPolicy: continue
+
+  - label: "Update with the current ETag succeeds"
+    request:
+      method: PUT
+      url: "{{baseUrl}}/documents/doc-1001"
+      headers:
+        - name: Authorization
+          value: "Bearer {{token}}"
+        - name: If-Match
+          value: "{{etag}}"
+      body:
+        type: json
+        content: '{"title":"Second draft"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: header
+        path: ETag
+        operator: ne
+        expected: "{{etag}}"
+    failPolicy: continue
+
+  - label: "Update with the old ETag is refused"
+    request:
+      method: PUT
+      url: "{{baseUrl}}/documents/doc-1001"
+      headers:
+        - name: Authorization
+          value: "Bearer {{token}}"
+        - name: If-Match
+          value: "{{etag}}"
+      body:
+        type: json
+        content: '{"title":"Stale overwrite"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 412
+    failPolicy: continue
+
+  - label: "Update without If-Match is refused"
+    request:
+      method: PUT
+      url: "{{baseUrl}}/documents/doc-1001"
+      headers:
+        - name: Authorization
+          value: "Bearer {{token}}"
+      body:
+        type: json
+        content: '{"title":"Blind overwrite"}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 428
+    failPolicy: continue
+
+  - label: "Refused updates changed nothing"
+    request:
+      method: GET
+      url: "{{baseUrl}}/documents/doc-1001"
+      headers:
+        - name: Authorization
+          value: "Bearer {{token}}"
+    assertions:
+      - type: jsonpath
+        path: "$.title"
+        operator: eq
+        expected: "Second draft"
+    failPolicy: continue
