@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-014-01** — Daylight-Saving Schedule (Medium, port 19080)
+  - Broken server repeats a schedule every 24 hours, drifting across clock changes
+  - Detected by exact local times on fixed dates around US and European clock changes
+
 - **fm-006-01** — Old Client Compatibility (Easy, port 19079)
   - Broken server sends a new status and a moved field to clients built for the old contract
   - Detected by checking the live server against the old client's spec

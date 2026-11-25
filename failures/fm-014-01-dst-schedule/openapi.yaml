@@ -1,0 +1,39 @@
+openapi: "3.0.3"
+info:
+  title: FM-014 Daylight-Saving Schedule
+  description: >
+    A daily schedule keeps its local wall-clock time in the given IANA time zone.
+    A time that occurs twice runs once, at the first occurrence. A time that is
+    skipped runs after the clocks move on (02:30 becomes 03:30).
+  version: "1.0.0"
+paths:
+  /schedule/preview:
+    get:
+      operationId: previewSchedule
+      parameters:
+        - {name: timezone, in: query, required: true, schema: {type: string}}
+        - {name: time, in: query, required: true, schema: {type: string}}
+        - {name: from, in: query, required: true, schema: {type: string, format: date}}
+        - {name: days, in: query, required: true, schema: {type: integer, minimum: 1, maximum: 7}}
+      responses:
+        "200":
+          description: Upcoming runs
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [timezone, runs]
+                properties:
+                  timezone: {type: string}
+                  runs:
+                    type: array
+                    items: {type: string, format: date-time}
+        "400":
+          description: Invalid schedule
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [error]
+                properties:
+                  error: {type: string}

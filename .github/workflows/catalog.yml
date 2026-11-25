@@ -38,6 +38,7 @@ jobs:
           - { dir: "fm-010-05-boolean-type",               port: 19029, kind: "server" }
           - { dir: "fm-010-06-array-item-type",            port: 19015, kind: "server" }
           - { dir: "fm-010-07-minimum-value",              port: 19041, kind: "server" }
+          - { dir: "fm-014-01-dst-schedule",               port: 19080, kind: "server" }
           - { dir: "fm-015-01-deprecation-lifecycle",      port: 19060, kind: "server" }
           - { dir: "fm-016-01-rate-limit",                 port: 19016, kind: "server" }
           - { dir: "fm-017-01-stale-read",                 port: 19017, kind: "server" }
