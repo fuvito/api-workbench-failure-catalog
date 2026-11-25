@@ -1,0 +1,32 @@
+# The provider's published spec. It doesn't mention legacyAccountCode or the
+# ACCOUNT_CLOSED code, although a consumer relies on both.
+openapi: "3.0.3"
+info:
+  title: FM-013 Account API
+  version: "1.0.0"
+paths:
+  /accounts/{id}:
+    get:
+      operationId: getAccount
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      responses:
+        "200":
+          description: The account
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, name]
+                properties:
+                  id: {type: string}
+                  name: {type: string}
+        "410":
+          description: Closed account
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [message]
+                properties:
+                  message: {type: string}

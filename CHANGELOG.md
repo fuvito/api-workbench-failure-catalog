@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-013-01** — Undocumented Dependency (Easy, port 19084)
+  - Broken provider removes an undocumented field and error code that a consumer relies on
+  - Detected by running the consumer's recorded expectations; the provider's spec check alone passes
+
 - **fm-002-01** — Timeouts and Incomplete Responses (Medium, port 19082)
   - Broken server has no time limit, duplicates an order on retry and cuts off a failed export after sending 200
   - Detected by duration and status assertions, order counts and clrsig's response read error

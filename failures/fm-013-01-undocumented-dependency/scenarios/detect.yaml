@@ -1,0 +1,25 @@
+schemaVersion: "1"
+title: fm-013-01 — Undocumented Dependency
+description: "The finance export team's expectations, written down as a scenario and run by the provider. The first step is the provider's own contract check."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: the response matches the published spec"
+    request: {method: GET, url: "{{baseUrl}}/accounts/acc-1001"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "Finance export: reads legacyAccountCode"
+    notes: "Owner: finance export job. Used for month-end reconciliation."
+    request: {method: GET, url: "{{baseUrl}}/accounts/acc-1001"}
+    assertions:
+      - {type: jsonpath, path: "$.legacyAccountCode", operator: matches, expected: "^[A-Z]{2}-[0-9]{4}$"}
+    failPolicy: continue
+
+  - label: "Finance export: skips closed accounts by error code"
+    notes: "Owner: finance export job."
+    request: {method: GET, url: "{{baseUrl}}/accounts/acc-closed"}
+    assertions:
+      - {type: status, operator: eq, expected: 410}
+      - {type: jsonpath, path: "$.code", operator: eq, expected: "ACCOUNT_CLOSED"}
+    failPolicy: continue
