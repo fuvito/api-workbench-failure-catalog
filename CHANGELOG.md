@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-049-01** — Documentation Drift (Easy, port 19081)
+  - Broken server no longer accepts the field and filter shown in the documented examples
+  - Detected by running the documented examples as scenario steps
+
 - **fm-033-01** — Gateway Drift (Medium, port 19075)
   - Broken production gateway routes to the old service, drops auth on a route and loses X-Request-ID
   - Detected by running the same contract checks through both gateways

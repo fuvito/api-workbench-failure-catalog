@@ -1,0 +1,24 @@
+schemaVersion: "1"
+title: fm-049-01 — Documentation Drift
+description: "Each step is a documented example, copied as written. If a step fails, the documentation and the API disagree."
+specFile: ../openapi.yaml
+steps:
+  - label: "Documented example: create a ticket"
+    request:
+      method: POST
+      url: "{{baseUrl}}/tickets"
+      headers: [{name: Api-Key, value: "{{apiKey}}"}]
+      body: {type: json, content: '{"subject":"Printer is offline","priority":"high"}'}
+    assertions:
+      - {type: status, operator: eq, expected: 201}
+      - {type: jsonpath, path: "$.subject", operator: eq, expected: "Printer is offline"}
+    failPolicy: continue
+
+  - label: "Documented example: list high-priority tickets"
+    request:
+      method: GET
+      url: "{{baseUrl}}/tickets?priority=high"
+      headers: [{name: Api-Key, value: "{{apiKey}}"}]
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue

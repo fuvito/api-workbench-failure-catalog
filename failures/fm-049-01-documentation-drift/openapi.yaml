@@ -1,0 +1,70 @@
+# This spec is also the published documentation: its examples are what
+# integrators copy.
+openapi: "3.0.3"
+info:
+  title: FM-049 Ticket API
+  version: "1.0.0"
+security:
+  - apiKey: []
+paths:
+  /tickets:
+    post:
+      operationId: createTicket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [subject, priority]
+              properties:
+                subject: {type: string}
+                priority: {type: string, enum: [low, high]}
+            example: {subject: "Printer is offline", priority: "high"}
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Ticket'}
+        "400": {$ref: '#/components/responses/Error'}
+        "401": {$ref: '#/components/responses/Error'}
+    get:
+      operationId: listTickets
+      parameters:
+        - {name: priority, in: query, required: false, schema: {type: string, enum: [low, high]}, example: "high"}
+      responses:
+        "200":
+          description: Tickets
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [tickets]
+                properties:
+                  tickets:
+                    type: array
+                    items: {$ref: '#/components/schemas/Ticket'}
+        "400": {$ref: '#/components/responses/Error'}
+        "401": {$ref: '#/components/responses/Error'}
+components:
+  securitySchemes:
+    apiKey: {type: apiKey, in: header, name: Api-Key}
+  responses:
+    Error:
+      description: Not accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}
+  schemas:
+    Ticket:
+      type: object
+      required: [id, subject, priority]
+      properties:
+        id: {type: string}
+        subject: {type: string}
+        priority: {type: string, enum: [low, high]}

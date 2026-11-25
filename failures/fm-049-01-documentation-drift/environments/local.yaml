@@ -1,0 +1,9 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: baseUrl
+    value: "http://localhost:19081"
+  # Synthetic key for the demo server.
+  - name: apiKey
+    value: "demo-key-not-real"
+    secret: true
