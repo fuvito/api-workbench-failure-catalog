@@ -1,0 +1,73 @@
+openapi: "3.0.3"
+info:
+  title: FM-026 Content Negotiation
+  description: >
+    GET offers application/json (v1) and application/vnd.example.order-v2+json
+    (v2), chosen by Accept with quality values. No Accept or */* means v1. If
+    neither is acceptable the response is 406. Responses send Vary: Accept. POST
+    takes application/json, with or without parameters; anything else gets 415.
+  version: "1.0.0"
+paths:
+  /orders/ord-1001:
+    get:
+      operationId: getOrder
+      responses:
+        "200":
+          description: The order in the negotiated version
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, total]
+                properties:
+                  id: {type: string}
+                  total: {type: number}
+            application/vnd.example.order-v2+json:
+              schema:
+                type: object
+                required: [id, total]
+                properties:
+                  id: {type: string}
+                  total:
+                    type: object
+                    required: [amount, currency]
+                    properties:
+                      amount: {type: number}
+                      currency: {type: string}
+        "406": {$ref: '#/components/responses/Error'}
+  /orders:
+    post:
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [total]
+              properties:
+                total: {type: number}
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, total]
+                properties:
+                  id: {type: string}
+                  total: {type: number}
+        "400": {$ref: '#/components/responses/Error'}
+        "415": {$ref: '#/components/responses/Error'}
+components:
+  responses:
+    Error:
+      description: The request was not accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}

@@ -1,0 +1,63 @@
+schemaVersion: "1"
+title: fm-026-01 — Content Negotiation
+description: "Asks for the same order in different media types and sends request bodies with different Content-Type values."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: application/json gets version 1"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers: [{name: Accept, value: "application/json"}]
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: header, path: Content-Type, operator: contains, expected: "application/json"}
+    failPolicy: continue
+
+  - label: "Vendor media type gets version 2"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers: [{name: Accept, value: "application/vnd.example.order-v2+json"}]
+    assertions:
+      - {type: header, path: Content-Type, operator: contains, expected: "application/vnd.example.order-v2+json"}
+      - {type: jsonpath, path: "$.total.currency", operator: eq, expected: "EUR"}
+      - {type: header, path: Vary, operator: matches, expected: "(?i)(^|,)\\s*accept\\s*(,|$)"}
+    failPolicy: continue
+
+  - label: "Quality values pick version 2"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers: [{name: Accept, value: "application/json;q=0.5, application/vnd.example.order-v2+json;q=0.9"}]
+    assertions:
+      - {type: header, path: Content-Type, operator: contains, expected: "application/vnd.example.order-v2+json"}
+    failPolicy: continue
+
+  - label: "Unsupported type gets 406"
+    request:
+      method: GET
+      url: "{{baseUrl}}/orders/ord-1001"
+      headers: [{name: Accept, value: "application/xml"}]
+    assertions:
+      - {type: status, operator: eq, expected: 406}
+    failPolicy: continue
+
+  - label: "JSON with a charset parameter is accepted"
+    request:
+      method: POST
+      url: "{{baseUrl}}/orders"
+      headers: [{name: Content-Type, value: "application/json; charset=utf-8"}]
+      body: {type: raw, content: '{"total":12.5}'}
+    assertions:
+      - {type: status, operator: eq, expected: 201}
+    failPolicy: continue
+
+  - label: "Control: text/plain body gets 415"
+    request:
+      method: POST
+      url: "{{baseUrl}}/orders"
+      headers: [{name: Content-Type, value: "text/plain"}]
+      body: {type: raw, content: '{"total":12.5}'}
+    assertions:
+      - {type: status, operator: eq, expected: 415}
+    failPolicy: continue

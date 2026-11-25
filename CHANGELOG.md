@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-026-01** — Content Negotiation (Medium, port 19062)
+  - Broken server ignores Accept and rejects application/json with a charset parameter
+  - Detected by media type assertions for vendor types, quality values, 406 and 415
+
 - **fm-024-01** — Localized Values (Easy, port 19061)
   - Broken server translates status and error codes and reformats numbers and dates by Accept-Language
   - Detected by identical-value assertions across languages, spec enums, and fallback checks

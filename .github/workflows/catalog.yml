@@ -59,6 +59,7 @@ jobs:
           - { dir: "fm-025-04-validation-error-code",      port: 19043, kind: "server" }
           - { dir: "fm-025-05-empty-result-404",           port: 19048, kind: "server" }
           - { dir: "fm-025-06-page-out-of-range-500",      port: 19050, kind: "server" }
+          - { dir: "fm-026-01-content-negotiation",        port: 19062, kind: "server" }
           - { dir: "fm-027-01-lost-update",                port: 19027, kind: "server" }
           - { dir: "fm-028-01-async-job",                  port: 19026, kind: "server" }
           - { dir: "fm-029-01-bulk-partial-success",       port: 19053, kind: "server" }
