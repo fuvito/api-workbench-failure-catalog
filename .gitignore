@@ -33,6 +33,9 @@ failures/**/fixed-server
 # env file
 .env
 
+# Test certificates written by demo servers at start-up
+failures/**/.certs/
+
 ##### Node / JavaScript / TypeScript #####
 # Logs
 logs
