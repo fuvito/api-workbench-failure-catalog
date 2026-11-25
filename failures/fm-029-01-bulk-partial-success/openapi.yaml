@@ -1,0 +1,125 @@
+openapi: "3.0.3"
+info:
+  title: FM-029 Bulk Partial Success
+  description: >
+    Items in a payment batch are processed independently. The response holds one
+    result per item, in request order, tagged with the item's ref. A ref is paid
+    at most once: sending a paid item again returns the original payment.
+  version: "1.0.0"
+paths:
+  /payments/batch:
+    post:
+      operationId: createPaymentBatch
+      summary: Pay several items, each independently
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  minItems: 1
+                  items:
+                    $ref: '#/components/schemas/Item'
+      responses:
+        "200":
+          description: Batch processed. Some or all items may have failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResult'
+        "400":
+          description: The batch could not be read; nothing was processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /payments:
+    get:
+      operationId: listPayments
+      summary: List the payments that were made
+      responses:
+        "200":
+          description: All payments
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, payments]
+                properties:
+                  count:
+                    type: integer
+                  payments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Payment'
+components:
+  schemas:
+    Item:
+      type: object
+      required: [ref, amount_cents]
+      properties:
+        ref:
+          type: string
+          minLength: 1
+          description: Caller's unique reference for this payment
+        amount_cents:
+          type: integer
+          description: Must be greater than 0, checked per item
+    Payment:
+      type: object
+      required: [id, ref, amount_cents]
+      properties:
+        id:
+          type: string
+        ref:
+          type: string
+        amount_cents:
+          type: integer
+    BatchResult:
+      type: object
+      required: [succeeded, failed, results]
+      properties:
+        succeeded:
+          type: integer
+          minimum: 0
+        failed:
+          type: integer
+          minimum: 0
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemResult'
+    ItemResult:
+      type: object
+      required: [ref, status]
+      properties:
+        ref:
+          type: string
+        status:
+          type: string
+          enum: [succeeded, failed]
+        payment_id:
+          type: string
+          description: Present when status is succeeded
+        error:
+          type: object
+          description: Present when status is failed
+          required: [code, message, retryable]
+          properties:
+            code:
+              type: string
+              enum: [invalid_amount, ref_conflict]
+            message:
+              type: string
+            retryable:
+              type: boolean
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

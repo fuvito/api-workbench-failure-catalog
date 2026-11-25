@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-029-01** — Bulk Partial Success (Medium, port 19053)
+  - Broken server returns only success and failure counts, and pays successful items again when a batch is resent
+  - Detected by `specFile:` binding, per-item result assertions and payment counts
+
 - **fm-043-01** — Mass Assignment (Easy, port 19052)
   - Broken server lets a customer set role, tenant_id and the nested billing.credit_limit through PATCH
   - Detected by status assertions plus re-reads of the stored values, with a control step for editable fields

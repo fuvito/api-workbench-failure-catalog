@@ -1,0 +1,116 @@
+schemaVersion: "1"
+title: fm-029-01 — Bulk Partial Success
+description: "A batch of three payments with one invalid item. Each item must get its own result, sending the batch again must not pay anyone twice, and the corrected item must be payable on its own. Needs a fresh server: the payment counts start at zero."
+specFile: ../openapi.yaml
+steps:
+  - label: "Mixed batch — one result per item, matched by ref"
+    request:
+      method: POST
+      url: "{{baseUrl}}/payments/batch"
+      body:
+        type: json
+        content: '{"items":[{"ref":"pay-1","amount_cents":1000},{"ref":"pay-2","amount_cents":-500},{"ref":"pay-3","amount_cents":2500}]}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.results[0].ref"
+        operator: eq
+        expected: "pay-1"
+      - type: jsonpath
+        path: "$.results[0].status"
+        operator: eq
+        expected: "succeeded"
+      - type: jsonpath
+        path: "$.results[1].ref"
+        operator: eq
+        expected: "pay-2"
+      - type: jsonpath
+        path: "$.results[1].status"
+        operator: eq
+        expected: "failed"
+      - type: jsonpath
+        path: "$.results[1].error.code"
+        operator: eq
+        expected: "invalid_amount"
+      - type: jsonpath
+        path: "$.results[1].error.retryable"
+        operator: eq
+        expected: false
+      - type: jsonpath
+        path: "$.results[2].ref"
+        operator: eq
+        expected: "pay-3"
+      - type: jsonpath
+        path: "$.results[2].status"
+        operator: eq
+        expected: "succeeded"
+    failPolicy: continue
+
+  - label: "The two valid items were paid"
+    request:
+      method: GET
+      url: "{{baseUrl}}/payments"
+    assertions:
+      - type: jsonpath
+        path: "$.count"
+        operator: eq
+        expected: 2
+    failPolicy: continue
+
+  - label: "Send the same batch again"
+    request:
+      method: POST
+      url: "{{baseUrl}}/payments/batch"
+      body:
+        type: json
+        content: '{"items":[{"ref":"pay-1","amount_cents":1000},{"ref":"pay-2","amount_cents":-500},{"ref":"pay-3","amount_cents":2500}]}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+    failPolicy: continue
+
+  - label: "No item was paid twice"
+    request:
+      method: GET
+      url: "{{baseUrl}}/payments"
+    assertions:
+      - type: jsonpath
+        path: "$.count"
+        operator: eq
+        expected: 2
+    failPolicy: continue
+
+  - label: "Retry only the failed item, corrected"
+    request:
+      method: POST
+      url: "{{baseUrl}}/payments/batch"
+      body:
+        type: json
+        content: '{"items":[{"ref":"pay-2","amount_cents":500}]}'
+    assertions:
+      - type: status
+        operator: eq
+        expected: 200
+      - type: jsonpath
+        path: "$.results[0].ref"
+        operator: eq
+        expected: "pay-2"
+      - type: jsonpath
+        path: "$.results[0].status"
+        operator: eq
+        expected: "succeeded"
+    failPolicy: continue
+
+  - label: "All three items are paid exactly once"
+    request:
+      method: GET
+      url: "{{baseUrl}}/payments"
+    assertions:
+      - type: jsonpath
+        path: "$.count"
+        operator: eq
+        expected: 3
+    failPolicy: continue
