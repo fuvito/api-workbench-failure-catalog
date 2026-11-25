@@ -1,8 +1,8 @@
 # Contributing
 
 Thanks for helping grow the clrsig failure catalog. This document covers how to
-add a new failure-mode sub-project. For the full design, see
-[`docs/PRD.md`](docs/PRD.md).
+add a new failure-mode sub-project. [`docs/PRD.md`](docs/PRD.md) records the
+original design and isn't kept up to date; where they differ, follow this guide.
 
 ## What a sub-project is
 
@@ -37,7 +37,7 @@ workspace.
 
 ```
 failures/fm-NNN-EE-slug/
-├── README.md           # follows the template in docs/PRD.md §6.3
+├── README.md           # see "README template" below
 ├── broken/
 │   └── main.go         # server that exhibits the failure
 ├── fixed/
@@ -72,15 +72,37 @@ failures/fm-NNN-EE-slug/
 3. **Exit-code contract.** `clrsig` must exit `1` against `broken/` and exit
    `0` against `fixed/`. Both legs are required — the fix is what proves the
    detection fired for the right reason.
-4. **README template.** Use the template in [`docs/PRD.md`
-   §6.3](docs/PRD.md). CI doesn't run the commands in your README: the
-   workflows have their own build and `clrsig` steps. Run the README commands
-   yourself and make sure they work as written.
+4. **README template.** Follow the [README template](#readme-template) below.
+   CI doesn't run the commands in your README: the workflows have their own build
+   and `clrsig` steps. Run the README commands yourself and make sure they work
+   as written.
 5. **Register the matrix entry.** Add your sub-project to the `fm:` matrix in
    `.github/workflows/catalog.yml` and `.github/workflows/catalog-main.yml`
    with the correct `kind` (`server` or `diff`).
 6. **Link the catalog page.** The README header links to
    `https://clrsig.com/failures/fm-NNN/`.
+
+## README template
+
+[`fm-035-01-request-headers`](failures/fm-035-01-request-headers/README.md) is a
+complete example. Some older READMEs use other layouts; use this one for new
+sub-projects.
+
+The header has the title (`# fm-NNN-EE — Name`), the catalog link, **Difficulty**,
+**Detected by**, **Port** and **Primary failure mode**. Then these sections:
+
+| Section | Contents |
+|---|---|
+| What this failure is | What breaks, why it happens in practice and what a consumer experiences |
+| Prerequisites | Go version and clrsig |
+| Reproduce it | Commands to run from the repo root, the expected result and how to stop the server |
+| Why clrsig catches it | Which checks fail and why, **what the example doesn't cover**, and how to adapt it to a real API, with any warning about data it changes |
+| Fix | Commands for the fixed server and what changed |
+| GitHub Actions CI setup | The matrix entry, and how to verify locally on Windows |
+| In the wild | Where this pattern appears in real projects |
+
+Spec-only sub-projects have no server, so they leave out the server commands.
+Don't paste expected output: nothing keeps it up to date.
 
 ## Proposing a new failure mode
 

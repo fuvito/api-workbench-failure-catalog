@@ -2,7 +2,10 @@
 
 **Repository:** `github.com/fuvito/api-workbench-failure-catalog` (new, public)
 **Owner:** Fuat Yazar
-**Status:** Pre-build — this document is the source of truth for implementation
+**Status:** Historical. This is the original design, kept for reference and not updated as
+the catalog grew. For how things work now, see the [README](../README.md) and
+[CONTRIBUTING.md](../CONTRIBUTING.md). Some of what it describes was changed or never built,
+including the `update-outputs.yml` workflow.
 **Product site:** [clrsig.com](https://clrsig.com)
 **Failure mode catalog:** [clrsig.com/failures](https://clrsig.com/failures/)
 

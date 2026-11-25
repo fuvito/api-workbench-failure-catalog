@@ -1,6 +1,8 @@
 # Task List
 
-> Source of truth: [`PRD.md`](PRD.md). This file tracks build progress against the PRD task list.
+> **Historical.** This tracked the first version against the task list in the original design,
+> [`PRD.md`](PRD.md). It doesn't list the sub-projects added after that version. For current
+> coverage, see the [README index](../README.md#failure-mode-index).
 >
 > **Build order:** Easy failure modes first → Medium → Hard (PRD §6.5).
 
@@ -16,9 +18,9 @@
 
 ## 7.2 CI Scaffolding
 
-- [ ] `.github/workflows/catalog.yml` — push + nightly 06:00 UTC, released clrsig
-- [ ] `.github/workflows/catalog-main.yml` — nightly 07:00 UTC only, builds clrsig from api-workbench@main
-- [ ] `.github/workflows/update-outputs.yml` — regenerates expected-output blocks in sub-project READMEs
+- [x] `.github/workflows/catalog.yml` — push + nightly 06:00 UTC, released clrsig
+- [x] `.github/workflows/catalog-main.yml` — nightly 07:00 UTC only, builds clrsig from api-workbench@main
+- ~~`.github/workflows/update-outputs.yml`~~ — not built; the empty expected-output blocks it was meant to fill were removed
 - [x] CI badges in root `README.md`
 - [ ] `verify.sh` / `verify.ps1` — cross-platform local verification wrappers
 - [ ] (optional) Renovate `regexManagers` rule to auto-update `CLRSIG_VERSION` on new releases
