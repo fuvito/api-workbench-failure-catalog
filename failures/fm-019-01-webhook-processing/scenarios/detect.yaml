@@ -1,0 +1,74 @@
+schemaVersion: "1"
+title: fm-019-01 — Webhook Processing
+description: "Delivers signed billing events, repeats one, tampers with one and fails one, and checks the ledger. Needs a fresh server: event IDs and counts are fixed."
+specFile: ../openapi.yaml
+# Each signature matches the exact bytes of its body, so don't reformat the bodies.
+steps:
+  - label: "Control: a signed event is processed"
+    request:
+      method: POST
+      url: "{{baseUrl}}/webhooks/billing"
+      headers: [{name: X-Webhook-Signature, value: "sha256=a05acd1e8664bfe9145dbd664686eee12e92e3f36b0aa782ccdae12c9229b931"}]
+      body: {type: json, content: '{"event_id":"evt-1001","type":"invoice.paid","invoice_id":"inv-1","amount_cents":5000}'}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.result", operator: eq, expected: "processed"}
+    failPolicy: continue
+
+  - label: "The same event is delivered again"
+    notes: "The sender didn't receive the first acknowledgement."
+    request:
+      method: POST
+      url: "{{baseUrl}}/webhooks/billing"
+      headers: [{name: X-Webhook-Signature, value: "sha256=a05acd1e8664bfe9145dbd664686eee12e92e3f36b0aa782ccdae12c9229b931"}]
+      body: {type: json, content: '{"event_id":"evt-1001","type":"invoice.paid","invoice_id":"inv-1","amount_cents":5000}'}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.result", operator: eq, expected: "duplicate"}
+    failPolicy: continue
+
+  - label: "The ledger holds one entry"
+    request: {method: GET, url: "{{baseUrl}}/ledger"}
+    assertions:
+      - {type: jsonpath, path: "$.count", operator: eq, expected: 1}
+    failPolicy: continue
+
+  - label: "A tampered body is refused"
+    notes: "The amount was changed after signing: the signature is for amount_cents 100."
+    request:
+      method: POST
+      url: "{{baseUrl}}/webhooks/billing"
+      headers: [{name: X-Webhook-Signature, value: "sha256=7bbf751662cbfb3a7f8e3cffd1e6a7492c3ad29424bcc1a78fbf450a874741ca"}]
+      body: {type: json, content: '{"event_id":"evt-1003","type":"invoice.paid","invoice_id":"inv-3","amount_cents":100000}'}
+    assertions:
+      - {type: status, operator: eq, expected: 401}
+    failPolicy: continue
+
+  - label: "A failed delivery asks for a retry"
+    request:
+      method: POST
+      url: "{{baseUrl}}/webhooks/billing"
+      headers:
+        - {name: X-Webhook-Signature, value: "sha256=d9c89a1e442a18879ce8cd861bd5e963041ab35db45887aa98de222805ee428d"}
+        - {name: X-Test-Fault, value: "ledger-write"}
+      body: {type: json, content: '{"event_id":"evt-1002","type":"invoice.paid","invoice_id":"inv-2","amount_cents":700}'}
+    assertions:
+      - {type: status, operator: eq, expected: 500}
+    failPolicy: continue
+
+  - label: "The retried delivery is processed"
+    request:
+      method: POST
+      url: "{{baseUrl}}/webhooks/billing"
+      headers: [{name: X-Webhook-Signature, value: "sha256=d9c89a1e442a18879ce8cd861bd5e963041ab35db45887aa98de222805ee428d"}]
+      body: {type: json, content: '{"event_id":"evt-1002","type":"invoice.paid","invoice_id":"inv-2","amount_cents":700}'}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.result", operator: eq, expected: "processed"}
+    failPolicy: continue
+
+  - label: "The ledger holds exactly the two good events"
+    request: {method: GET, url: "{{baseUrl}}/ledger"}
+    assertions:
+      - {type: jsonpath, path: "$.count", operator: eq, expected: 2}
+    failPolicy: continue

@@ -1,0 +1,65 @@
+openapi: "3.0.3"
+info:
+  title: FM-019 Webhook Processing
+  description: >
+    Deliveries are signed with HMAC-SHA256 over the raw body, sent as
+    X-Webhook-Signature: sha256=<hex>. A bad signature gets 401. Each event_id
+    takes effect once; a repeat gets 200 with result "duplicate". If processing
+    fails the response is 500, so the sender retries.
+  version: "1.0.0"
+paths:
+  /webhooks/billing:
+    post:
+      operationId: receiveBillingEvent
+      parameters:
+        - {name: X-Webhook-Signature, in: header, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [event_id, type, invoice_id, amount_cents]
+              properties:
+                event_id: {type: string}
+                type: {type: string}
+                invoice_id: {type: string}
+                amount_cents: {type: integer}
+      responses:
+        "200":
+          description: Acknowledged
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [result]
+                properties:
+                  result: {type: string, enum: [processed, duplicate]}
+        "400": {$ref: '#/components/responses/Error'}
+        "401": {$ref: '#/components/responses/Error'}
+        "500": {$ref: '#/components/responses/Error'}
+  /ledger:
+    get:
+      operationId: getLedger
+      responses:
+        "200":
+          description: Effects of processed events
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, entries]
+                properties:
+                  count: {type: integer}
+                  entries: {type: array, items: {type: object}}
+components:
+  responses:
+    Error:
+      description: Not processed
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}
