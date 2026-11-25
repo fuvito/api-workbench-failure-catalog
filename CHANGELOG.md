@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-015-01** — Deprecation Lifecycle (Easy, port 19060)
+  - Broken server removes a deprecated endpoint early, sends no lifecycle headers and returns 404 for a retired one
+  - Detected by status and header assertions against the published lifecycle dates
+
 - **fm-035-01** — Request Header Handling (Medium, port 19059)
   - Broken server mishandles Authorization, X-Correlation-ID, If-None-Match and If-Match
   - Detected by header, status and state assertions using an ETag extracted from the first response

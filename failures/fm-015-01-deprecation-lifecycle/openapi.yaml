@@ -1,0 +1,75 @@
+openapi: "3.0.3"
+info:
+  title: FM-015 Deprecation Lifecycle
+  description: >
+    Version 1 was deprecated on 2026-06-01 and stays available until
+    2027-12-31T23:59:59Z. Its responses carry Deprecation, Sunset and a
+    successor-version Link. Version 0 is retired: it returns 410 with the same Link.
+  version: "2.0.0"
+paths:
+  /v2/invoices:
+    get:
+      operationId: listInvoices
+      responses:
+        "200": {$ref: '#/components/responses/List'}
+  /v2/customers:
+    get:
+      operationId: listCustomers
+      responses:
+        "200": {$ref: '#/components/responses/List'}
+  /v1/invoices:
+    get:
+      operationId: listInvoicesV1
+      deprecated: true
+      responses:
+        "200": {$ref: '#/components/responses/DeprecatedList'}
+  /v1/customers:
+    get:
+      operationId: listCustomersV1
+      deprecated: true
+      responses:
+        "200": {$ref: '#/components/responses/DeprecatedList'}
+  /v0/invoices:
+    get:
+      operationId: listInvoicesV0
+      deprecated: true
+      responses:
+        "410":
+          description: Retired
+          headers:
+            Link: {required: true, schema: {type: string}}
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [error]
+                properties:
+                  error: {type: string}
+components:
+  responses:
+    List:
+      description: Items
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/List'}
+    DeprecatedList:
+      description: Items from a deprecated endpoint
+      headers:
+        Deprecation: {required: true, schema: {type: string}}
+        Sunset: {required: true, schema: {type: string}}
+        Link: {required: true, schema: {type: string}}
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/List'}
+  schemas:
+    List:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [id]
+            properties:
+              id: {type: string}

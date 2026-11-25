@@ -1,0 +1,33 @@
+schemaVersion: "1"
+title: fm-015-01 — Deprecation Lifecycle
+description: "Checks a published lifecycle policy: deprecated endpoints still work and announce their sunset, retired ones return 410, and the replacement works."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: the replacement endpoint works"
+    request: {method: GET, url: "{{baseUrl}}/v2/invoices"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "Deprecated invoices still work before the sunset date"
+    request: {method: GET, url: "{{baseUrl}}/v1/invoices"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: header, path: Sunset, operator: eq, expected: "{{sunset}}"}
+    failPolicy: continue
+
+  - label: "Deprecated customers announce their lifecycle"
+    request: {method: GET, url: "{{baseUrl}}/v1/customers"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: header, path: Deprecation, operator: eq, expected: "{{deprecation}}"}
+      - {type: header, path: Sunset, operator: eq, expected: "{{sunset}}"}
+      - {type: header, path: Link, operator: contains, expected: '</v2/customers>; rel="successor-version"'}
+    failPolicy: continue
+
+  - label: "Retired endpoint returns 410 and names its replacement"
+    request: {method: GET, url: "{{baseUrl}}/v0/invoices"}
+    assertions:
+      - {type: status, operator: eq, expected: 410}
+      - {type: header, path: Link, operator: contains, expected: '</v2/invoices>; rel="successor-version"'}
+    failPolicy: continue

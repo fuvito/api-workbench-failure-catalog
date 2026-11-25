@@ -1,0 +1,10 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: baseUrl
+    value: "http://localhost:19060"
+  # The dates your lifecycle policy publishes for version 1.
+  - name: deprecation
+    value: "@1780272000"
+  - name: sunset
+    value: "Fri, 31 Dec 2027 23:59:59 GMT"
