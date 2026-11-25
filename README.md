@@ -103,8 +103,15 @@ One official failure mode may have multiple concrete examples here.
 
 ## Failure Modes without Examples
 
-Official [clrsig.com](https://clrsig.com/failures/) failure modes not yet covered in this catalog.
-As examples are added, rows move up into the index above.
+These official [clrsig.com](https://clrsig.com/failures/) failure modes have no example, because a
+clrsig run can't genuinely detect them:
+
+- **FM-009:** HL7 v2 messages aren't JSON, and FHIR profile and terminology conformance need healthcare validators.
+- **FM-011:** only a payment provider's own certification suite can show that an integration is certified.
+- **FM-012:** accessibility depends on what the frontend presents to assistive technology.
+
+Some covered failure modes are only partly testable. Each example's README says what it doesn't cover;
+[fm-048-01-streaming-completion](failures/fm-048-01-streaming-completion/) is explicitly partial.
 
 | # | Official FM | Title |
 |---|---|---|
