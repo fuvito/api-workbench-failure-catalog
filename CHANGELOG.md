@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-030-01** — API Key Rotation (Medium, port 19069)
+  - Broken server revokes the old key as soon as a new one is created and lists key secrets
+  - Detected by using both keys during the overlap and by a strict key-list schema
+
 - **fm-041-01** — Retry Storm (Hard, port 19068)
   - Broken server retries a failing or rejecting dependency 10 times for every request
   - Detected by asserting the dependency call count after one and two requests and after a rejection

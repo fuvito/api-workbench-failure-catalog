@@ -1,0 +1,87 @@
+openapi: "3.0.3"
+info:
+  title: FM-030 Key Rotation
+  description: >
+    Creating a key leaves the previous one working, with status "retiring", until
+    it is revoked. A secret is returned only when its key is created.
+  version: "1.0.0"
+paths:
+  /reports:
+    get:
+      operationId: getReports
+      security: [{apiKey: []}]
+      responses:
+        "200":
+          description: Report summary
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count]
+                properties:
+                  count: {type: integer}
+        "401": {$ref: '#/components/responses/Error'}
+  /admin/keys:
+    post:
+      operationId: createKey
+      security: [{adminToken: []}]
+      responses:
+        "201":
+          description: The new key, with its secret
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, secret, status]
+                properties:
+                  id: {type: string}
+                  secret: {type: string}
+                  status: {type: string}
+        "401": {$ref: '#/components/responses/Error'}
+    get:
+      operationId: listKeys
+      security: [{adminToken: []}]
+      responses:
+        "200":
+          description: Keys without secrets
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [keys]
+                properties:
+                  keys:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: false
+                      required: [id, status]
+                      properties:
+                        id: {type: string}
+                        status: {type: string, enum: [active, retiring, revoked]}
+        "401": {$ref: '#/components/responses/Error'}
+  /admin/keys/{id}:
+    delete:
+      operationId: revokeKey
+      security: [{adminToken: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      responses:
+        "204":
+          description: Revoked
+        "401": {$ref: '#/components/responses/Error'}
+        "404": {$ref: '#/components/responses/Error'}
+components:
+  securitySchemes:
+    apiKey: {type: apiKey, in: header, name: X-API-Key}
+    adminToken: {type: http, scheme: bearer}
+  responses:
+    Error:
+      description: Not accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}

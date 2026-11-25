@@ -1,0 +1,78 @@
+schemaVersion: "1"
+title: fm-030-01 — API Key Rotation
+description: "Runs a full rotation: create a new key while the old one is in use, switch, then revoke the old one. It revokes the old key, so it needs a fresh server."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: the current key works"
+    request:
+      method: GET
+      url: "{{baseUrl}}/reports"
+      auth: {type: apikey, key: X-API-Key, value: "{{oldKey}}", location: header}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+
+  - label: "Create a new key"
+    request:
+      method: POST
+      url: "{{baseUrl}}/admin/keys"
+      auth: {type: bearer, token: "{{adminToken}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 201}
+    extractions:
+      - {name: newKey, source: jsonpath, path: "$.secret"}
+      - {name: newKeyId, source: jsonpath, path: "$.id"}
+
+  - label: "New key works"
+    request:
+      method: GET
+      url: "{{baseUrl}}/reports"
+      auth: {type: apikey, key: X-API-Key, value: "{{newKey}}", location: header}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "Old key still works during the overlap"
+    request:
+      method: GET
+      url: "{{baseUrl}}/reports"
+      auth: {type: apikey, key: X-API-Key, value: "{{oldKey}}", location: header}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "Key list shows the state and no secrets"
+    request:
+      method: GET
+      url: "{{baseUrl}}/admin/keys"
+      auth: {type: bearer, token: "{{adminToken}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.keys[0].status", operator: eq, expected: "retiring"}
+    failPolicy: continue
+
+  - label: "Revoke the old key"
+    request:
+      method: DELETE
+      url: "{{baseUrl}}/admin/keys/{{oldKeyId}}"
+      auth: {type: bearer, token: "{{adminToken}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 204}
+    failPolicy: continue
+
+  - label: "Control: revoked key is refused"
+    request:
+      method: GET
+      url: "{{baseUrl}}/reports"
+      auth: {type: apikey, key: X-API-Key, value: "{{oldKey}}", location: header}
+    assertions:
+      - {type: status, operator: eq, expected: 401}
+    failPolicy: continue
+
+  - label: "Control: new key still works"
+    request:
+      method: GET
+      url: "{{baseUrl}}/reports"
+      auth: {type: apikey, key: X-API-Key, value: "{{newKey}}", location: header}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue

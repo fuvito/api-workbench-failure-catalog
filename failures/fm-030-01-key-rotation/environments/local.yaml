@@ -1,0 +1,14 @@
+schemaVersion: "1"
+name: local
+variables:
+  - name: baseUrl
+    value: "http://localhost:19069"
+  # Synthetic credentials for the demo server.
+  - name: oldKey
+    value: "demo-key-1-not-real"
+    secret: true
+  - name: oldKeyId
+    value: "key-1"
+  - name: adminToken
+    value: "tok-admin"
+    secret: true
