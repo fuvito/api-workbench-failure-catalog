@@ -1,7 +1,7 @@
 name: Failure Catalog (released)
 
 env:
-  CLRSIG_VERSION: v0.11.0 # bump manually on each clrsig release; see docs/TASKS.md §7.2
+  CLRSIG_VERSION: v0.13.2 # bump manually on each clrsig release; see docs/TASKS.md §7.2
 
 on:
   push:
