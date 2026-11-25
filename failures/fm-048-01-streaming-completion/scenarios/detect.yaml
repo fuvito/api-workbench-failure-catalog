@@ -1,0 +1,31 @@
+schemaVersion: "1"
+title: fm-048-01 — Streaming Completion
+description: "Checks that a streamed export says whether it is complete, and that an interrupted one can be resumed."
+specFile: ../openapi.yaml
+steps:
+  - label: "Control: a full export is complete"
+    request: {method: GET, url: "{{baseUrl}}/exports/records"}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.complete", operator: eq, expected: true}
+      - {type: jsonpath, path: "$.records[4].id", operator: eq, expected: 5}
+    failPolicy: continue
+
+  - label: "An interrupted export says it is incomplete"
+    request:
+      method: GET
+      url: "{{baseUrl}}/exports/records"
+      headers: [{name: X-Test-Fault, value: "source-fails-after-2"}]
+    assertions:
+      - {type: jsonpath, path: "$.records[1].id", operator: eq, expected: 2}
+      - {type: jsonpath, path: "$.complete", operator: eq, expected: false}
+      - {type: jsonpath, path: "$.next_after", operator: eq, expected: 2}
+    failPolicy: continue
+
+  - label: "The export resumes without gaps or repeats"
+    request: {method: GET, url: "{{baseUrl}}/exports/records?after=2"}
+    assertions:
+      - {type: jsonpath, path: "$.records[0].id", operator: eq, expected: 3}
+      - {type: jsonpath, path: "$.records[2].id", operator: eq, expected: 5}
+      - {type: jsonpath, path: "$.complete", operator: eq, expected: true}
+    failPolicy: continue

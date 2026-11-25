@@ -88,6 +88,7 @@ jobs:
           - { dir: "fm-045-01-trusted-identity-headers",   port: 19056, kind: "server" }
           - { dir: "fm-046-01-secret-leakage",             port: 19058, kind: "server" }
           - { dir: "fm-047-01-unicode-round-trip",         port: 19055, kind: "server" }
+          - { dir: "fm-048-01-streaming-completion",       port: 19083, kind: "server" }
           - { dir: "fm-049-01-documentation-drift",        port: 19081, kind: "server" }
           - { dir: "fm-050-01-flag-drift",                 port: 19073, kind: "server" }
           # Keep this matrix in sync with catalog.yml

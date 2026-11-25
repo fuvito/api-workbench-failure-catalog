@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-048-01** — Streaming Completion (Medium, port 19083)
+  - Broken export reports a truncated stream as complete and ignores the resume cursor (partial coverage of FM-048)
+  - Detected by completion-marker and resume assertions after an injected source failure
+
 - **fm-013-01** — Undocumented Dependency (Easy, port 19084)
   - Broken provider removes an undocumented field and error code that a consumer relies on
   - Detected by running the consumer's recorded expectations; the provider's spec check alone passes

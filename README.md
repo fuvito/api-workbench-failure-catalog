@@ -96,8 +96,9 @@ One official failure mode may have multiple concrete examples here.
 | 41 | [FM-045](https://clrsig.com/failures/fm-045/) | Authentication and Authorization Confusion Across Services | [fm-045-01-trusted-identity-headers](failures/fm-045-01-trusted-identity-headers/) |
 | 42 | [FM-046](https://clrsig.com/failures/fm-046/) | Security Policy and Secret Leakage Failures | [fm-046-01-secret-leakage](failures/fm-046-01-secret-leakage/) |
 | 43 | [FM-047](https://clrsig.com/failures/fm-047/) | Character Encoding and Unicode Handling Failures | [fm-047-01-unicode-round-trip](failures/fm-047-01-unicode-round-trip/) |
-| 44 | [FM-049](https://clrsig.com/failures/fm-049/) | API Documentation and Example Drift | [fm-049-01-documentation-drift](failures/fm-049-01-documentation-drift/) |
-| 45 | [FM-050](https://clrsig.com/failures/fm-050/) | Environment Configuration and Feature-Flag Drift | [fm-050-01-flag-drift](failures/fm-050-01-flag-drift/) |
+| 44 | [FM-048](https://clrsig.com/failures/fm-048/) | Streaming and Large-Response Handling Failures | [fm-048-01-streaming-completion](failures/fm-048-01-streaming-completion/) |
+| 45 | [FM-049](https://clrsig.com/failures/fm-049/) | API Documentation and Example Drift | [fm-049-01-documentation-drift](failures/fm-049-01-documentation-drift/) |
+| 46 | [FM-050](https://clrsig.com/failures/fm-050/) | Environment Configuration and Feature-Flag Drift | [fm-050-01-flag-drift](failures/fm-050-01-flag-drift/) |
 
 ## Failure Modes without Examples
 
@@ -110,7 +111,6 @@ As examples are added, rows move up into the index above.
 | 2 | [FM-011](https://clrsig.com/failures/fm-011/) | Payment Gateway Certification and Protocol Conformance Failures |
 | 3 | [FM-012](https://clrsig.com/failures/fm-012/) | Accessibility Conformance Failures in API-Driven Applications |
 | 4 | [FM-032](https://clrsig.com/failures/fm-032/) | TLS/mTLS and Certificate Lifecycle Failures |
-| 5 | [FM-048](https://clrsig.com/failures/fm-048/) | Streaming and Large-Response Handling Failures |
 
 ## Conventions
 

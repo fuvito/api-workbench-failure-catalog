@@ -1,0 +1,32 @@
+openapi: "3.0.3"
+info:
+  title: FM-048 Streaming Completion
+  description: >
+    The export is streamed. Its last fields say whether it is complete. If it is
+    not, the client continues with after=next_after.
+  version: "1.0.0"
+paths:
+  /exports/records:
+    get:
+      operationId: exportRecords
+      parameters:
+        - {name: after, in: query, required: false, schema: {type: integer, minimum: 0}}
+        - {name: X-Test-Fault, in: header, required: false, schema: {type: string}}
+      responses:
+        "200":
+          description: Records after the given ID
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [records, complete, next_after]
+                properties:
+                  records:
+                    type: array
+                    items:
+                      type: object
+                      required: [id]
+                      properties:
+                        id: {type: integer}
+                  complete: {type: boolean}
+                  next_after: {type: integer}
