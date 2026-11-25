@@ -1,0 +1,64 @@
+openapi: "3.0.3"
+info:
+  title: FM-039 Out-of-Order Events
+  description: >
+    Events carry a per-order sequence. One that is not newer than the stored state
+    is acknowledged with result "ignored". A newer one that is not an allowed
+    transition, including any first event other than "created", gets 409.
+  version: "1.0.0"
+paths:
+  /events:
+    post:
+      operationId: receiveEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [order_id, status, sequence]
+              properties:
+                order_id: {type: string}
+                status: {type: string, enum: [created, shipped, delivered, cancelled]}
+                sequence: {type: integer, minimum: 1}
+      responses:
+        "200":
+          description: Event accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [result]
+                properties:
+                  result: {type: string, enum: [applied, ignored]}
+        "400": {$ref: '#/components/responses/Error'}
+        "409": {$ref: '#/components/responses/Error'}
+  /orders/{id}:
+    get:
+      operationId: getOrder
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      responses:
+        "200":
+          description: Current state
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, status, sequence]
+                properties:
+                  id: {type: string}
+                  status: {type: string, enum: [created, shipped, delivered, cancelled]}
+                  sequence: {type: integer}
+        "404": {$ref: '#/components/responses/Error'}
+components:
+  responses:
+    Error:
+      description: Not accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}

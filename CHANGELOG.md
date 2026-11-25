@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-039-01** — Out-of-Order Events (Medium, port 19065)
+  - Broken consumer applies events in arrival order, allows invalid transitions and creates orders from early events
+  - Detected by delivering events out of order and asserting results and stored state
+
 - **fm-037-01** — Query Injection (Medium, port 19064)
   - Broken server pastes search text into a parsed filter expression and sorts by any column
   - Detected by result counts for injection strings and an expected 400 for an unlisted sort column

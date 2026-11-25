@@ -1,0 +1,68 @@
+schemaVersion: "1"
+title: fm-039-01 — Out-of-Order Events
+description: "Delivers order events late and in the wrong order, then reads the stored state. Each run uses new order IDs."
+specFile: ../openapi.yaml
+variables:
+  - name: orderId
+    value: "ord-{{$randomString 12}}"
+  - name: earlyId
+    value: "early-{{$randomString 12}}"
+steps:
+  - label: "Control: created is applied"
+    request:
+      method: POST
+      url: "{{baseUrl}}/events"
+      body: {type: json, content: '{"order_id":"{{orderId}}","status":"created","sequence":1}'}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.result", operator: eq, expected: "applied"}
+    failPolicy: stop
+
+  - label: "Delivered arrives before shipped"
+    request:
+      method: POST
+      url: "{{baseUrl}}/events"
+      body: {type: json, content: '{"order_id":"{{orderId}}","status":"delivered","sequence":3}'}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+    failPolicy: continue
+
+  - label: "Late shipped event is ignored"
+    request:
+      method: POST
+      url: "{{baseUrl}}/events"
+      body: {type: json, content: '{"order_id":"{{orderId}}","status":"shipped","sequence":2}'}
+    assertions:
+      - {type: status, operator: eq, expected: 200}
+      - {type: jsonpath, path: "$.result", operator: eq, expected: "ignored"}
+    failPolicy: continue
+
+  - label: "Order is still delivered"
+    request: {method: GET, url: "{{baseUrl}}/orders/{{orderId}}"}
+    assertions:
+      - {type: jsonpath, path: "$.status", operator: eq, expected: "delivered"}
+    failPolicy: continue
+
+  - label: "A delivered order can't be cancelled"
+    request:
+      method: POST
+      url: "{{baseUrl}}/events"
+      body: {type: json, content: '{"order_id":"{{orderId}}","status":"cancelled","sequence":4}'}
+    assertions:
+      - {type: status, operator: eq, expected: 409}
+    failPolicy: continue
+
+  - label: "Cancel arrives before the order exists"
+    request:
+      method: POST
+      url: "{{baseUrl}}/events"
+      body: {type: json, content: '{"order_id":"{{earlyId}}","status":"cancelled","sequence":2}'}
+    assertions:
+      - {type: status, operator: eq, expected: 409}
+    failPolicy: continue
+
+  - label: "No order was invented from the early event"
+    request: {method: GET, url: "{{baseUrl}}/orders/{{earlyId}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 404}
+    failPolicy: continue

@@ -70,6 +70,7 @@ jobs:
           - { dir: "fm-036-01-request-limits",             port: 19063, kind: "server" }
           - { dir: "fm-037-01-query-injection",            port: 19064, kind: "server" }
           - { dir: "fm-038-01-write-not-persisted",        port: 19046, kind: "server" }
+          - { dir: "fm-039-01-out-of-order-events",        port: 19065, kind: "server" }
           - { dir: "fm-043-01-mass-assignment",            port: 19052, kind: "server" }
           - { dir: "fm-044-01-sensitive-data",             port: 19044, kind: "server" }
           - { dir: "fm-045-01-trusted-identity-headers",   port: 19056, kind: "server" }
