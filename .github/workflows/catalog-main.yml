@@ -101,9 +101,20 @@ jobs:
         with:
           go-version: "1.26"
 
+      # git clone has no retry option, so this matches the download retry in
+      # catalog.yml: up to 5 retries, 10 seconds apart. A build error isn't retried.
       - name: Build clrsig from api-workbench@main
         run: |
-          git clone --depth 1 https://github.com/fuvito/api-workbench /tmp/api-workbench
+          for attempt in 1 2 3 4 5 6; do
+            git clone --depth 1 https://github.com/fuvito/api-workbench /tmp/api-workbench && break
+            if [ "$attempt" -eq 6 ]; then
+              echo "git clone failed after 6 attempts"
+              exit 1
+            fi
+            echo "git clone failed (attempt $attempt of 6), retrying in 10 s"
+            rm -rf /tmp/api-workbench
+            sleep 10
+          done
           cd /tmp/api-workbench && go build -o /usr/local/bin/clrsig ./apps/cli/
 
       # Optional per-example settings for clrsig, such as a test CA (fm-032)
