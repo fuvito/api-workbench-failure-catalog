@@ -1,0 +1,60 @@
+schemaVersion: "1"
+title: fm-040-01 — Partial Write
+description: "Makes invoice creation fail halfway, in two ways, and checks that nothing was left behind. Each run uses new invoice numbers."
+specFile: ../openapi.yaml
+variables:
+  - name: okNumber
+    value: "ok-{{$randomString 12}}"
+  - name: faultNumber
+    value: "fault-{{$randomString 12}}"
+  - name: dupNumber
+    value: "dup-{{$randomString 12}}"
+steps:
+  - label: "Control: a valid invoice is created"
+    request:
+      method: POST
+      url: "{{baseUrl}}/invoices"
+      body: {type: json, content: '{"number":"{{okNumber}}","lines":[{"sku":"A","quantity":1},{"sku":"B","quantity":2}]}'}
+    assertions:
+      - {type: status, operator: eq, expected: 201}
+    failPolicy: continue
+
+  - label: "A failed line write returns 500"
+    request:
+      method: POST
+      url: "{{baseUrl}}/invoices"
+      headers: [{name: X-Test-Fault, value: "second-line-write"}]
+      body: {type: json, content: '{"number":"{{faultNumber}}","lines":[{"sku":"A","quantity":1},{"sku":"B","quantity":2}]}'}
+    assertions:
+      - {type: status, operator: eq, expected: 500}
+    failPolicy: continue
+
+  - label: "No half-written invoice after the failure"
+    request: {method: GET, url: "{{baseUrl}}/invoices/{{faultNumber}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 404}
+    failPolicy: continue
+
+  - label: "The same invoice can be retried"
+    request:
+      method: POST
+      url: "{{baseUrl}}/invoices"
+      body: {type: json, content: '{"number":"{{faultNumber}}","lines":[{"sku":"A","quantity":1},{"sku":"B","quantity":2}]}'}
+    assertions:
+      - {type: status, operator: eq, expected: 201}
+    failPolicy: continue
+
+  - label: "A constraint violation returns 409"
+    request:
+      method: POST
+      url: "{{baseUrl}}/invoices"
+      body: {type: json, content: '{"number":"{{dupNumber}}","lines":[{"sku":"A","quantity":1},{"sku":"A","quantity":2}]}'}
+    assertions:
+      - {type: status, operator: eq, expected: 409}
+    failPolicy: continue
+
+  - label: "No half-written invoice after the violation"
+    request: {method: GET, url: "{{baseUrl}}/invoices/{{dupNumber}}"}
+    assertions:
+      - {type: status, operator: eq, expected: 404}
+    failPolicy: continue

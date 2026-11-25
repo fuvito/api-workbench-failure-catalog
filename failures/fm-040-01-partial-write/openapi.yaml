@@ -1,0 +1,65 @@
+openapi: "3.0.3"
+info:
+  title: FM-040 Partial Write
+  description: >
+    Creating an invoice is atomic. After any error, nothing is stored and the
+    same invoice number can be used again.
+  version: "1.0.0"
+paths:
+  /invoices:
+    post:
+      operationId: createInvoice
+      parameters:
+        - {name: X-Test-Fault, in: header, required: false, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Invoice'}
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Invoice'}
+        "400": {$ref: '#/components/responses/Error'}
+        "409": {$ref: '#/components/responses/Error'}
+        "500": {$ref: '#/components/responses/Error'}
+  /invoices/{number}:
+    get:
+      operationId: getInvoice
+      parameters:
+        - {name: number, in: path, required: true, schema: {type: string}}
+      responses:
+        "200":
+          description: The invoice
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Invoice'}
+        "404": {$ref: '#/components/responses/Error'}
+components:
+  responses:
+    Error:
+      description: The request failed
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}
+  schemas:
+    Invoice:
+      type: object
+      required: [number, lines]
+      properties:
+        number: {type: string}
+        lines:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [sku, quantity]
+            properties:
+              sku: {type: string}
+              quantity: {type: integer, minimum: 1}

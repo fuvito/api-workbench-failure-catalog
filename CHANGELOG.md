@@ -11,6 +11,10 @@ Versions map to GitHub releases; use the release tag when cutting one.
 
 ### Added
 
+- **fm-040-01** — Partial Write (Medium, port 19067)
+  - Broken server keeps the invoice header and earlier lines when a later write fails
+  - Detected by reading back and retrying after an injected write failure and a constraint violation
+
 - **fm-042-01** — Fault Isolation (Medium, port 19066)
   - Broken server fails or stalls order reads when an optional recommendation service is down or slow
   - Detected by status and duration assertions while a test hook breaks the dependency
